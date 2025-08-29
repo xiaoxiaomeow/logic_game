@@ -10,5 +10,6 @@ export default defineConfig({
 	plugins: [mdx({
 		rehypePlugins: [rehypeKatex],
 		remarkPlugins: [remarkMath],
-	}), react(), tsconfigPaths()]
+	}), react(), tsconfigPaths()],
+	base: '/logic_game/'
 })

@@ -5,7 +5,7 @@ import LevelProverPage from './views/LevelProver';
 
 function App() {
 	return (
-		<BrowserRouter>
+		<BrowserRouter basename="/logic_game/">
 			<Routes>
 				<Route path="/" element={<Layout></Layout>}>
 					<Route index element={<LevelSelectorPage></LevelSelectorPage>}></Route>
