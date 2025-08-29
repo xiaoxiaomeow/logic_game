@@ -1,0 +1,70 @@
+import PropositionalLogicWithAtomicFormula from "/src/logic/PropositionalLogic";
+
+export const target = PropositionalLogicWithAtomicFormula.parseFormula('p->q');
+
+export const meta = {
+	worldId: "00_propositional_logic",
+	id: "00_axioms",
+	name: "Axioms",
+	statement: "$\\{p\\to q\\}\\vdash p\\to q$",
+	logicSystem: PropositionalLogicWithAtomicFormula,
+	axioms: [target],
+	target: target
+}
+
+import Speak from "/src/components/custom/Speak";
+import ConversationProgresser from "/src/components/custom/ConversationProgresser";
+import Star from "/src/components/custom/Star";
+import Sapphire from "/src/components/custom/Sapphire";
+import FormulaLatex from "/src/components/custom/FormulaLatex";
+import ResumeUntil from "/src/components/custom/ResumeUntil";
+
+<ConversationProgresser>
+
+<Speak speaker="sapphire">
+Hey <Star/>! Wanna play a game? I give you a collection of strings called **Axioms**, and you try to produce another string, following some specific rules. 
+</Speak>
+
+<Speak speaker="star">
+Sounds like a games Axiomites might like playing. What are the rules? 
+</Speak>
+
+<Speak speaker="sapphire">
+The first rule is really simple: 
+
+- You can produce any string given as an axiom. 
+
+As an example, I give you <FormulaLatex formula={meta.target}/> as an axiom. You try to produce the string <FormulaLatex formula={meta.target}/> from it. 
+</Speak>
+
+<Speak speaker="author">
+To produce an axiom, navigate to the `Axioms` tab of your inventory, and click that axiom. A command will appear in the input bar, then simply press `Enter` or click `Excecute`. 
+</Speak>
+
+<ResumeUntil condition={proof => proof != null && proof.validate()} text="Complete the level to continue."/>
+
+<Speak speaker="star">
+Easy. 
+</Speak>
+
+<Speak speaker="sapphire">
+Cool. We just showed that $\{p\to q\}\vdash p\to q$. 
+</Speak>
+
+<Speak speaker="star">
+Uh ... okay, I guess $\vdash$ means that the subsequent string can be produced from the preceding ones? 
+</Speak>
+
+<Speak speaker="sapphire">
+Exactly. Also, the $\vdash$ is read as **proves**. You can also say that the subsequent string can be **proved** from the preceding ones. 
+</Speak>
+
+<Speak speaker="star">
+Oh. Did I just proved something? 
+</Speak>
+
+<Speak speaker="sapphire">
+Probably not. Not something non-trivial. 
+</Speak>
+
+</ConversationProgresser>
