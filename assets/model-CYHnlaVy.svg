@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1.007ex" height="1.548ex" viewBox="0 -684 445 684" xmlns:xlink="http://www.w3.org/1999/xlink" style="vertical-align: 0px;" aria-hidden="true">
+	<defs>
+		<style>svg a{fill:blue;stroke:blue}[data-mml-node="merror"]>g{fill:red;stroke:red}[data-mml-node="merror"]>rect[data-background]{fill:yellow;stroke:none}[data-frame],[data-line]{stroke-width:70px;fill:none}.mjx-dashed{stroke-dasharray:140}.mjx-dotted{stroke-linecap:round;stroke-dasharray:0,140}use[data-c]{stroke-width:3px}</style>
+		<path id="MJX-1-NCM-N-22A7" d="M366 270L103 270L103 414L366 414C381 414 389 422 389 438C389 454 381 462 366 462L103 462L103 660C103 676 95 684 79 684C64 684 56 676 56 660L56 24C56 8 64 0 79 0C95 0 103 8 103 24L103 222L366 222C381 222 389 230 389 246C389 259 378 270 366 270Z" />
+	</defs>
+	<g stroke="#805ad5" fill="#805ad5" stroke-width="0" transform="scale(1,-1)">
+		<g data-mml-node="math">
+			<g data-mml-node="mo">
+				<use data-c="22A7" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#MJX-1-NCM-N-22A7" />
+			</g>
+		</g>
+	</g>
+</svg>
