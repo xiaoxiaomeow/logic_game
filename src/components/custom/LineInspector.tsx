@@ -2,7 +2,7 @@ import { useUIStore } from "@/contexts/UIStore";
 import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 import FormulaLatex from "./FormulaLatex";
 import MarkdownWithLatex from "./MarkdownWithLatex";
-import Proof, { FormulaLine, ProvedFormulaLine, type ProofLine } from "@/logic/Proof";
+import Proof, { UnprovedFormulaLine, ProvedFormulaLine, type ProofLine } from "@/logic/Proof";
 import { useTranslation } from "react-i18next";
 
 function LineInspector() {
@@ -17,7 +17,7 @@ function LineInspector() {
 			</Flex>
 			<VStack width="100%" padding="8px 8px">{
 				proof === null || proofLine === null ? <Text>Click on a line in the proof to inspect it.</Text> : (() => {
-					if (proofLine instanceof FormulaLine) {
+					if (proofLine instanceof UnprovedFormulaLine) {
 						const provedFormulaLine: ProvedFormulaLine = proofLine as ProvedFormulaLine;
 						return (<>
 							<HStack width="100%">

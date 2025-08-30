@@ -19,7 +19,7 @@ class Proof {
 		this.axioms = axioms;
 		this.target = target;
 		if (lines == null) {
-			const conclusionLine = new FormulaLine(target);
+			const conclusionLine = new UnprovedFormulaLine(target);
 			this.lines = [conclusionLine];
 		}
 		else {
@@ -31,7 +31,7 @@ class Proof {
 	}
 	excecute(command: string, lineIndex: number): ExcecutionResult {
 		try {
-			const currentLine: FormulaLine = this.lines[lineIndex] as FormulaLine;
+			const currentLine: UnprovedFormulaLine = this.lines[lineIndex] as UnprovedFormulaLine;
 			const segments: string[] = TokenizeCommand(command);
 			const commandWord = segments[0];
 			if (commandWord === "axiom") {
@@ -77,6 +77,42 @@ class Proof {
 			};
 		}
 	}
+	remove(lineIndex: number) {
+		const currentLine: UnprovedFormulaLine = this.lines[lineIndex] as UnprovedFormulaLine;
+		if (currentLine instanceof ProvedFormulaLine) {
+			if (this.isFormulaRequired(currentLine.formula, lineIndex)) {
+				this.lines[lineIndex] = new UnprovedFormulaLine(currentLine.formula);
+			}
+			else {
+				this.lines.splice(lineIndex, 1);
+			}
+		}
+		else if (currentLine instanceof UnprovedFormulaLine) {
+			if (this.isFormulaRequired(currentLine.formula, lineIndex)) {
+				return;
+			}
+			else {
+				this.lines.splice(lineIndex, 1);
+			}
+		}
+	}
+	isFormulaRequired(formula: Formula, startIndex: number) {
+		for (let index: number = startIndex + 1; index <= this.lines.length; index++) {
+			let requiredFormulas: Formula[];
+			let provedFormula: Formula | null;
+			if (index == this.lines.length) {
+				requiredFormulas = [this.target];
+				provedFormula = null;
+			}
+			else {
+				requiredFormulas = this.lines[index].getRequiredFormulas();
+				provedFormula = this.lines[index].getProvedFormula();
+			}
+			if (requiredFormulas.some(requiredFormulas => formula.equals(requiredFormulas))) return true;
+			if (provedFormula != null && provedFormula.equals(formula)) return false;
+		}
+		return false;
+	}
 	copy(): Proof {
 		return new Proof(this.logicSystem, this.axioms, this.target, this.lines);
 	}
@@ -86,10 +122,11 @@ export abstract class ProofLine {
 	abstract validate(proof: Proof): boolean;
 	abstract key(): string;
 	abstract getLineDescription(): string;
-	abstract getQuotedLines(): number[];
+	abstract getProvedFormula(): Formula | null;
+	abstract getRequiredFormulas(): Formula[];
 }
 
-export class FormulaLine extends ProofLine {
+export class UnprovedFormulaLine extends ProofLine {
 	formula: Formula;
 	constructor(formula: Formula) {
 		super();
@@ -104,28 +141,35 @@ export class FormulaLine extends ProofLine {
 	getLineDescription(): string {
 		return "ProofLine.FormulaLine.Description";
 	}
-	getQuotedLines(): number[] {
+	getProvedFormula(): Formula | null {
+		return this.formula;
+	}
+	getRequiredFormulas(): Formula[] {
 		return [];
 	}
 }
 
-export class ProvedFormulaLine extends FormulaLine {
+export class ProvedFormulaLine {
+	formula: Formula;
 	deductionMethod: DeductionMethod;
 	constructor(formula: Formula, deductionMethod: DeductionMethod) {
-		super(formula);
+		this.formula = formula;
 		this.deductionMethod = deductionMethod;
 	}
-	override validate(proof: Proof): boolean {
+	validate(proof: Proof): boolean {
 		return this.deductionMethod.validate(proof, this);
 	}
 	key(): string {
 		return typeof (this) + "/" + this.formula.toCode() + "/" + this.deductionMethod.key();
 	}
-	override getLineDescription(): string {
+	getLineDescription(): string {
 		return this.deductionMethod.getLongDescription();
 	}
-	override getQuotedLines(): number[] {
-		return [];
+	getProvedFormula(): Formula | null {
+		return this.formula;
+	}
+	getRequiredFormulas(): Formula[] {
+		return this.deductionMethod.getRequiredFormulas();
 	}
 }
 
@@ -134,7 +178,7 @@ export abstract class DeductionMethod {
 	abstract key(): string;
 	abstract getShortDescription(): string;
 	abstract getLongDescription(): string;
-	abstract getQuotedLines(): number[];
+	abstract getRequiredFormulas(): Formula[];
 }
 
 export class ByAxiom extends DeductionMethod {
@@ -150,7 +194,7 @@ export class ByAxiom extends DeductionMethod {
 	getLongDescription(): string {
 		return "DeductionMethod.ByAxiom.LongDescription";
 	}
-	getQuotedLines(): number[] {
+	getRequiredFormulas(): Formula[] {
 		return [];
 	}
 }

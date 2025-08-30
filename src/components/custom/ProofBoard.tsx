@@ -2,7 +2,7 @@ import type { LevelModule } from "@/logic/Level";
 import { Box, Button, Flex, HStack, IconButton, Input, InputGroup, ScrollArea, Table, Text, VStack } from "@chakra-ui/react";
 import FormulaLatex from "./FormulaLatex";
 import MarkdownWithLatex from "./MarkdownWithLatex";
-import Proof, { FormulaLine, ProofLine, ProvedFormulaLine, type ExcecutionResult } from "@/logic/Proof";
+import Proof, { UnprovedFormulaLine, ProofLine, ProvedFormulaLine, type ExcecutionResult } from "@/logic/Proof";
 import { useUIStore } from "@/contexts/UIStore";
 import { useEffect, useRef } from "react";
 import { FaChevronRight, FaRegTrashAlt } from "react-icons/fa";
@@ -70,6 +70,7 @@ function LevelInfo(props: ProofBoardInput) {
 
 function ProofEditor() {
 	const proof: Proof | null = useUIStore(state => state.proof);
+	const setProof: (proof: Proof) => void = useUIStore(state => state.setProof);
 	const lineIndex = useUIStore(state => state.lineIndex);
 	const setLineIndex = useUIStore(state => state.setLineIndex);
 	const t = useTranslation().t;
@@ -95,7 +96,7 @@ function ProofEditor() {
 							borderColor="logic.emphasized"
 							onClick={event => { setLineIndex(index); event.stopPropagation(); }}
 							backgroundColor={(() => {
-								if (line instanceof FormulaLine && !(line instanceof ProvedFormulaLine)) return "{colors.yellow.50}";
+								if (line instanceof UnprovedFormulaLine && !(line instanceof ProvedFormulaLine)) return "{colors.yellow.50}";
 								return "";
 							})()}>
 							<Table.Cell borderBottomWidth={0} padding="0">{lineIndex === index ? (<FaChevronRight color="#6b46c1" />) : null}</Table.Cell>
@@ -107,12 +108,29 @@ function ProofEditor() {
 										<Text>{t(line.deductionMethod.getShortDescription())}</Text>
 									</Flex>
 								);
-								else if (line instanceof FormulaLine) return (<HStack><Text color="logic.emphasized">{t("ProofEditor.NeedLeft")}</Text><FormulaLatex vague formula={line.formula} /><Text color="logic.emphasized">{t("ProofEditor.NeedRight")}</Text></HStack>);
+								else if (line instanceof UnprovedFormulaLine) return (
+									<HStack>
+										<Text color="logic.emphasized">{t("ProofEditor.NeedLeft")}</Text>
+										<FormulaLatex vague formula={line.formula} />
+										<Text color="logic.emphasized">{t("ProofEditor.NeedRight")}</Text>
+									</HStack>
+								);
 								else return null;
 							})()}</Table.Cell>
 							<Table.Cell borderBottomWidth={0} padding="4px">{(() => {
 								if (line instanceof ProvedFormulaLine) return (
-									<IconButton size="2xs" variant="ghost" onClick={() => { }}>
+									<IconButton size="2xs" variant="ghost" onClick={() => {
+										proof.remove(index);
+										setProof(proof.copy());
+									}}>
+										<FaRegTrashAlt />
+									</IconButton>
+								);
+								if (line instanceof UnprovedFormulaLine) return (
+									<IconButton size="2xs" variant="ghost" disabled={proof.isFormulaRequired(line.formula, index)} onClick={() => {
+										proof.remove(index);
+										setProof(proof.copy());
+									}}>
 										<FaRegTrashAlt />
 									</IconButton>
 								);
@@ -142,7 +160,7 @@ function CommandEditor() {
 	const endElement = inputCommand ? (
 		<IconButton size="2xs" variant="ghost" onClick={() => { setInputCommand(""); inputRef.current?.focus() }} me="-2" ><IoMdClose /></IconButton>
 	) : undefined;
-	const canExcecute: boolean = proof != null && lineIndex >= 0 && lineIndex < proof.lines.length && proof.lines[lineIndex] instanceof FormulaLine && !(proof.lines[lineIndex] instanceof ProvedFormulaLine);
+	const canExcecute: boolean = proof != null && lineIndex >= 0 && lineIndex < proof.lines.length && proof.lines[lineIndex] instanceof UnprovedFormulaLine && !(proof.lines[lineIndex] instanceof ProvedFormulaLine);
 	const excecuteCommand: () => void = () => {
 		if (proof != null && canExcecute) {
 			const result: ExcecutionResult = proof.excecute(inputCommand, lineIndex);
