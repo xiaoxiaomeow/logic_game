@@ -1,6 +1,6 @@
 import { useUIStore } from "@/contexts/UIStore";
 import type Proof from "@/logic/Proof";
-import { Button, Flex, Tabs, Text, VStack } from "@chakra-ui/react";
+import { Button, Flex, Tabs, Text, VStack, Wrap } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { InlineMath } from 'react-katex';
 
@@ -19,11 +19,16 @@ function Inventory() {
 						{proof != null ? <Tabs.Trigger value="axioms">{t("Inventory.Axioms")}</Tabs.Trigger> : null}
 					</Tabs.List>
 					{proof != null ? <Tabs.Content value="axioms" padding="8px 8px">
-						{proof.axioms.map(axiom => (
-							<Button key={axiom.toCode()} size="sm" onClick={event => { setInputCommand("axiom " + axiom.toCode()); event.stopPropagation(); }}>
-								<InlineMath math={axiom.toLatex()}></InlineMath>
-							</Button>
-						))}
+						<Wrap>
+							{proof.axioms.map(axiom => (
+								<Button key={axiom.toCode()} size="sm" onClick={event => {
+									setInputCommand("axiom " + axiom.toCode());
+									event.stopPropagation();
+								}}>
+									<InlineMath math={axiom.toLatex()}></InlineMath>
+								</Button>
+							))}
+						</Wrap>
 					</Tabs.Content> : null}
 				</Tabs.Root>
 			</VStack>

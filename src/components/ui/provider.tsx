@@ -34,9 +34,12 @@ const config = defineConfig({
 		code: {
 			fontFamily: "monospace",
 			backgroundColor: "logic.emphasized",
-			padding: '4px 6px',
+			padding: '6px 4px 4px 4px',
 			borderRadius: '4px',
-			fontSize: '100%',
+			fontSize: '100%'
+		},
+		p: {
+			alignContent: "center"
 		}
 	},
 	theme: {

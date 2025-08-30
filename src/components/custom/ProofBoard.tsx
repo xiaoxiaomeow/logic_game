@@ -4,34 +4,71 @@ import FormulaLatex from "./FormulaLatex";
 import MarkdownWithLatex from "./MarkdownWithLatex";
 import Proof, { UnprovedFormulaLine, ProofLine, ProvedFormulaLine, type ExcecutionResult } from "@/logic/Proof";
 import { useUIStore } from "@/contexts/UIStore";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { FaChevronRight, FaRegTrashAlt } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
+import type { ChapterModule } from "@/logic/Chapter";
+import { setLevelState } from "@/logic/LevelState";
+import { useNavigate } from "react-router-dom";
 
 export interface ProofBoardInput {
-	levelModule: LevelModule
+	levelModule: LevelModule,
+	chapterModule: ChapterModule
 }
 
 function ProofBoard(props: ProofBoardInput) {
 	const levelModule: LevelModule = props.levelModule;
+	const chapterModule: ChapterModule = props.chapterModule;
+	const key: string = chapterModule.meta.id + "/" + levelModule.meta.id;
 	const proof: Proof | null = useUIStore(state => state.proof);
 	const setProof: (proof: Proof) => void = useUIStore(state => state.setProof);
+	const navigate = useNavigate();
 	useEffect(() => {
-		const proof: Proof = new Proof(levelModule.meta.logicSystem, levelModule.meta.axioms, levelModule.meta.target, null);
+		const jsonString = localStorage.getItem(key);
+		let json: { type: string }[] | null = null;
+		if (jsonString != null) {
+			json = JSON.parse(jsonString) as { type: string }[];
+		}
+		const proof: Proof = new Proof(levelModule.meta.logicSystem, levelModule.meta.axioms, levelModule.meta.target, null, json);
 		setProof(proof);
 	}, []);
+	useEffect(() => {
+		if (proof != null) {
+			const jsonString = JSON.stringify(proof.toJsonArray());
+			localStorage.setItem(key, jsonString);
+
+			const newState: string = proof.proofComplete() ? "complete" : (proof.lines.length > 1 ? "partial" : "empty");
+			setLevelState(chapterModule.meta.id, levelModule.meta.id, newState);
+		}
+	}, [proof]);
 	return (
 		<Flex direction="column" width="100%" height="100%" justifyContent="space-between" padding="8px 0" gap="8px">
-			<LevelInfo levelModule={levelModule}></LevelInfo>
+			<LevelInfo levelModule={levelModule} chapterModule={chapterModule}></LevelInfo>
 			<ScrollArea.Root height="100%">
 				<ScrollArea.Viewport height="100%">
 					<ScrollArea.Content height="100%">
 						<ProofEditor />
-						{proof != null && proof.validate() ? <Box borderRadius="md" background="logic.author" width="100%" padding="8px">
-							<Text>{t("ProofBoard.LevelFinished")}</Text>
-						</Box> : null}
+						{(() => {
+							if (proof != null && proof.proofComplete()) {
+								const currentIndex = chapterModule.meta.levels.indexOf(levelModule);
+								return (
+									<HStack borderRadius="md" background="logic.author" width="100%" padding="8px">
+										<Text>{t("ProofBoard.LevelFinished")}</Text>
+										{currentIndex < chapterModule.meta.levels.length - 1 ? <Button size="sm" onClick={event => {
+											const nextLevelModule = chapterModule.meta.levels[currentIndex + 1];
+											navigate("/level/" + chapterModule.meta.id + "/" + nextLevelModule.meta.id);
+											event.stopPropagation();
+										}}>{t("ProofBoard.NextLevel")}</Button> : null}
+										<Button size="sm" onClick={event => {
+											navigate("/");
+											event.stopPropagation();
+										}}>{t("ProofBoard.LevelSelector")}</Button>
+									</HStack>);
+							}
+							else return null;
+						})()}
 					</ScrollArea.Content>
 				</ScrollArea.Viewport>
 				<ScrollArea.Scrollbar orientation="horizontal" />
@@ -58,7 +95,7 @@ function LevelInfo(props: ProofBoardInput) {
 			</HStack>
 			<HStack width="100%">
 				<Text fontWeight="bold">{t("ProofBoard.Axioms")}</Text>
-				{levelModule.meta.axioms.map(axiom => (<Box key={axiom.toCode()}><FormulaLatex formula={axiom} /></Box>))}
+				{levelModule.meta.axioms.map((axiom, index) => (<Box key={axiom.toCode()}><FormulaLatex formula={axiom} />{index != levelModule.meta.axioms.length - 1 ? "," : ""}</Box>))}
 			</HStack>
 			<HStack width="100%">
 				<Text fontWeight="bold">{t("ProofBoard.Target")}</Text>
@@ -74,9 +111,27 @@ function ProofEditor() {
 	const lineIndex = useUIStore(state => state.lineIndex);
 	const setLineIndex = useUIStore(state => state.setLineIndex);
 	const t = useTranslation().t;
+	const keydown: (event: KeyboardEvent) => void = useCallback(
+		(event: KeyboardEvent) => {
+			if (proof != null && event.key === "ArrowUp" && lineIndex > 0) {
+				setLineIndex(lineIndex - 1);
+				event.stopPropagation();
+			}
+			if (proof != null && event.key === "ArrowDown" && lineIndex < proof.lines.length - 1) {
+				setLineIndex(lineIndex + 1);
+				event.stopPropagation();
+			}
+		}, [proof, lineIndex]
+	);
 	useEffect(() => {
 		setLineIndex(0);
 	}, []);
+	useEffect(() => {
+		document.addEventListener("keydown", keydown);
+		return () => {
+			document.removeEventListener("keydown", keydown);
+		}
+	}, [proof, lineIndex]);
 	if (proof != null) return (
 		<VStack padding="8px 8px" marginBottom="auto">
 			<Table.Root variant="line" size="sm">
@@ -158,7 +213,7 @@ function CommandEditor() {
 	const t = useTranslation().t;
 	useEffect(() => { inputRef.current?.focus() }, [inputCommand]);
 	const endElement = inputCommand ? (
-		<IconButton size="2xs" variant="ghost" onClick={() => { setInputCommand(""); inputRef.current?.focus() }} me="-2" ><IoMdClose /></IconButton>
+		<IconButton size="2xs" variant="ghost" onClick={() => { setInputCommand(""); inputRef.current?.focus() }} marginEnd="-2" ><IoMdClose /></IconButton>
 	) : undefined;
 	const canExcecute: boolean = proof != null && lineIndex >= 0 && lineIndex < proof.lines.length && proof.lines[lineIndex] instanceof UnprovedFormulaLine && !(proof.lines[lineIndex] instanceof ProvedFormulaLine);
 	const excecuteCommand: () => void = () => {

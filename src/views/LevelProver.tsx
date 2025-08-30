@@ -13,8 +13,10 @@ import { useTranslation } from "react-i18next";
 
 function LevelProverPage() {
 	const [loading, setLoading] = useState(false);
+	const [chapterModule, setChapterModule] = useState<ChapterModule | null>(null);
 	const [levelModule, setLevelModule] = useState<LevelModule | null>(null);
-	const { chapterId, levelId } = useParams() as { chapterId: string; levelId: string };
+	const params = useParams();
+	const { chapterId, levelId } = params as { chapterId: string; levelId: string };
 	const setChapterName: (chapterName: string) => void = useUIStore(state => state.setChapterName);
 	const setLevelName: (levelName: string) => void = useUIStore(state => state.setLevelName);
 	const clearFormulas: () => void = useUIStore(state => state.clearFormulas);
@@ -26,6 +28,7 @@ function LevelProverPage() {
 			try {
 				const chapterModule: ChapterModule = await import(`../data/chapters/${chapterId}/index.tsx`);
 				const levelModule: LevelModule = await import(`../data/chapters/${chapterId}/levels/${levelId}.mdx`);
+				setChapterModule(chapterModule);
 				setLevelModule(levelModule);
 				setChapterName(t("LevelSelector.Chapter") + t(chapterModule.meta.name));
 				setLevelName(t("LevelSelector.Level") + t(levelModule.meta.name));
@@ -35,9 +38,9 @@ function LevelProverPage() {
 			setLoading(false);
 		}
 		load();
-	}, []);
+	}, [params]);
 	if (loading) return null;
-	else if (levelModule === null) return null;
+	else if (levelModule === null || chapterModule == null) return null;
 	else return (
 		<LayoutStackMain>
 			<LayoutStackLeft>
@@ -46,7 +49,7 @@ function LevelProverPage() {
 				</ConversationBox>
 			</LayoutStackLeft>
 			<LayoutStackMiddle>
-				<ProofBoard levelModule={levelModule} />
+				<ProofBoard levelModule={levelModule} chapterModule={chapterModule} />
 			</LayoutStackMiddle>
 			<LayoutStackRight>
 				<LineInspector></LineInspector>

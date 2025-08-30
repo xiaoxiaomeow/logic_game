@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Inventory from "@/components/custom/Inventory";
 import type Proof from "@/logic/Proof";
 import { useTranslation } from "react-i18next";
+import { getLevelState } from "@/logic/LevelState";
 
 function LevelSelectorPage() {
 	const setChapterName: (chapterName: string) => void = useUIStore(state => state.setChapterName);
@@ -67,21 +68,27 @@ function Chapter(props: { chapterModule: ChapterModule }) {
 			</Collapsible.Trigger>
 			<Collapsible.Content>
 				<HStack width="100%">
-					{props.chapterModule.meta.levels.map(module => (<Level chapterModule={props.chapterModule} levelModule={module} key={module.meta.id}></Level>))}
+					{props.chapterModule.meta.levels.map((module, index) => (<Level chapterModule={props.chapterModule} levelModule={module} index={index} key={module.meta.id}></Level>))}
 				</HStack>
 			</Collapsible.Content>
 		</Collapsible.Root>
 	);
 }
 
-function Level(props: { chapterModule: ChapterModule, levelModule: LevelModule }) {
+function Level(props: { chapterModule: ChapterModule, levelModule: LevelModule, index: number }) {
 	const navigate = useNavigate();
 	const t = useTranslation().t;
 	const onClick: MouseEventHandler = _ => {
 		navigate("/level/" + props.chapterModule.meta.id + "/" + props.levelModule.meta.id);
 	};
+	const state = getLevelState(props.chapterModule.meta.id, props.levelModule.meta.id);
+	const unlocked = props.chapterModule.meta.levels.every(
+		(otherLevel, otherIndex) => getLevelState(props.chapterModule.meta.id, otherLevel.meta.id) === "complete" || otherIndex >= props.index || otherLevel.meta.type !== "main"
+	);
 	return (
-		<Button onClick={onClick}>{t(props.levelModule.meta.name)}</Button>
+		<Button onClick={onClick} size="sm" disabled={!unlocked}
+			colorPalette={unlocked ? { "empty": "yellow", "partial": "blue", "complete": "green" }[state] : "gray"}
+		>{t(props.levelModule.meta.name)}</Button>
 	);
 }
 export default LevelSelectorPage;

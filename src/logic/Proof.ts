@@ -14,20 +14,39 @@ class Proof {
 
 	lines: ProofLine[];
 
-	constructor(logicSystem: LogicSystem, axioms: Formula[], target: Formula, lines: ProofLine[] | null) {
+	constructor(logicSystem: LogicSystem, axioms: Formula[], target: Formula, lines: ProofLine[] | null, json: { type: string }[] | null) {
 		this.logicSystem = logicSystem;
 		this.axioms = axioms;
 		this.target = target;
-		if (lines == null) {
+		if (lines != null) {
+			this.lines = lines;
+		}
+		else if (json != null) {
+			try {
+				this.lines = json.map(jsonObject => this.proofLineFromJsonObject(jsonObject)).filter(line => line != null);
+			} catch (error) {
+				console.log(error);
+				const conclusionLine = new UnprovedFormulaLine(target);
+				this.lines = [conclusionLine];
+			}
+			if (!this.validate()) {
+				const conclusionLine = new UnprovedFormulaLine(target);
+				this.lines = [conclusionLine];
+			}
+		}
+		else {
 			const conclusionLine = new UnprovedFormulaLine(target);
 			this.lines = [conclusionLine];
 		}
-		else {
-			this.lines = lines;
-		}
 	}
-	validate() {
-		return this.lines.every(line => line.validate(this));
+	validate(): boolean {
+		return this.lines.every(line => line.validate(this)) && this.lines.some(line => {
+			const formula: Formula | null = line.getProvedFormula();
+			return formula != null && formula.equals(this.target);
+		});
+	}
+	proofComplete(): boolean {
+		return this.validate() && this.lines.every(line => !(line instanceof UnprovedFormulaLine));
 	}
 	excecute(command: string, lineIndex: number): ExcecutionResult {
 		try {
@@ -113,8 +132,27 @@ class Proof {
 		}
 		return false;
 	}
+	toJsonArray(): {}[] {
+		return this.lines.map(line => line.toJsonObject());
+	}
+	proofLineFromJsonObject(jsonObject: { type: string }): ProofLine | null {
+		if (jsonObject.type === "UnprovedFormulaLine") {
+			return new UnprovedFormulaLine(this.logicSystem.parseFormula((jsonObject as any).formula));
+		}
+		else if (jsonObject.type === "ProvedFormulaLine") {
+			const deductionMethod: DeductionMethod | null = this.deductionMethodFromJsonObject((jsonObject as any).deductionMethod);
+			if (deductionMethod != null) return new ProvedFormulaLine(this.logicSystem.parseFormula((jsonObject as any).formula), deductionMethod);
+		}
+		return null;
+	}
+	deductionMethodFromJsonObject(jsonObject: { type: string }): DeductionMethod | null {
+		if (jsonObject.type === "ByAxiom") {
+			return new ByAxiom();
+		}
+		else return null;
+	}
 	copy(): Proof {
-		return new Proof(this.logicSystem, this.axioms, this.target, this.lines);
+		return new Proof(this.logicSystem, this.axioms, this.target, this.lines, null);
 	}
 }
 
@@ -124,6 +162,7 @@ export abstract class ProofLine {
 	abstract getLineDescription(): string;
 	abstract getProvedFormula(): Formula | null;
 	abstract getRequiredFormulas(): Formula[];
+	abstract toJsonObject(): {};
 }
 
 export class UnprovedFormulaLine extends ProofLine {
@@ -133,10 +172,10 @@ export class UnprovedFormulaLine extends ProofLine {
 		this.formula = formula;
 	}
 	validate(_: Proof): boolean {
-		return false;
+		return true;
 	}
 	key(): string {
-		return typeof (this) + "/" + this.formula.toCode();
+		return "UnprovedFormulaLine/" + this.formula.toCode();
 	}
 	getLineDescription(): string {
 		return "ProofLine.FormulaLine.Description";
@@ -146,6 +185,12 @@ export class UnprovedFormulaLine extends ProofLine {
 	}
 	getRequiredFormulas(): Formula[] {
 		return [];
+	}
+	toJsonObject(): {} {
+		return {
+			type: "UnprovedFormulaLine",
+			formula: this.formula.toCode()
+		};
 	}
 }
 
@@ -160,7 +205,7 @@ export class ProvedFormulaLine {
 		return this.deductionMethod.validate(proof, this);
 	}
 	key(): string {
-		return typeof (this) + "/" + this.formula.toCode() + "/" + this.deductionMethod.key();
+		return "ProvedFormulaLine/" + this.formula.toCode() + "/" + this.deductionMethod.key();
 	}
 	getLineDescription(): string {
 		return this.deductionMethod.getLongDescription();
@@ -171,6 +216,13 @@ export class ProvedFormulaLine {
 	getRequiredFormulas(): Formula[] {
 		return this.deductionMethod.getRequiredFormulas();
 	}
+	toJsonObject(): {} {
+		return {
+			type: "ProvedFormulaLine",
+			formula: this.formula.toCode(),
+			deductionMethod: this.deductionMethod.toJsonObject()
+		};
+	}
 }
 
 export abstract class DeductionMethod {
@@ -179,6 +231,7 @@ export abstract class DeductionMethod {
 	abstract getShortDescription(): string;
 	abstract getLongDescription(): string;
 	abstract getRequiredFormulas(): Formula[];
+	abstract toJsonObject(): {};
 }
 
 export class ByAxiom extends DeductionMethod {
@@ -186,7 +239,7 @@ export class ByAxiom extends DeductionMethod {
 		return proof.axioms.some(axiom => axiom.equals(formulaLine.formula));
 	}
 	key(): string {
-		return typeof (this);
+		return "ByAxiom";
 	}
 	getShortDescription(): string {
 		return "DeductionMethod.ByAxiom.ShortDescription";
@@ -196,6 +249,11 @@ export class ByAxiom extends DeductionMethod {
 	}
 	getRequiredFormulas(): Formula[] {
 		return [];
+	}
+	toJsonObject(): {} {
+		return {
+			type: "ByAxiom"
+		};
 	}
 }
 

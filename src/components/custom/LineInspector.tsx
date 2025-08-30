@@ -18,15 +18,29 @@ function LineInspector() {
 			<VStack width="100%" padding="8px 8px">{
 				proof === null || proofLine === null ? <Text>Click on a line in the proof to inspect it.</Text> : (() => {
 					if (proofLine instanceof UnprovedFormulaLine) {
-						const provedFormulaLine: ProvedFormulaLine = proofLine as ProvedFormulaLine;
 						return (<>
 							<HStack width="100%">
 								<Text fontWeight="bold">{t("LineInspector.LineNumber")}</Text>
 								<Text>{lineIndex}</Text>
 							</HStack>
 							<HStack width="100%">
-								<Text fontWeight="bold">{t(proofLine instanceof ProvedFormulaLine ? "LineInspector.Formula" : "LineInspector.PendingFormula")}</Text>
-								<FormulaLatex formula={provedFormulaLine.formula} />
+								<Text fontWeight="bold">{t("LineInspector.PendingFormula")}</Text>
+								<FormulaLatex formula={proofLine.formula} />
+							</HStack>
+							<Box width="100%">
+								<MarkdownWithLatex>{t(proofLine.getLineDescription())}</MarkdownWithLatex>
+							</Box>
+						</>);
+					}
+					else if (proofLine instanceof ProvedFormulaLine) {
+						return (<>
+							<HStack width="100%">
+								<Text fontWeight="bold">{t("LineInspector.LineNumber")}</Text>
+								<Text>{lineIndex}</Text>
+							</HStack>
+							<HStack width="100%">
+								<Text fontWeight="bold">{t("LineInspector.Formula")}</Text>
+								<FormulaLatex formula={proofLine.formula} />
 							</HStack>
 							<Box width="100%">
 								<MarkdownWithLatex>{t(proofLine.getLineDescription())}</MarkdownWithLatex>

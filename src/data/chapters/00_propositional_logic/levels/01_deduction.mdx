@@ -1,0 +1,75 @@
+import PropositionalLogicWithAtomicFormula from "/src/logic/PropositionalLogic";
+
+export const axiom1 = PropositionalLogicWithAtomicFormula.parseFormula('p->!q');
+export const axiom2 = PropositionalLogicWithAtomicFormula.parseFormula('p');
+export const target = PropositionalLogicWithAtomicFormula.parseFormula('!q');
+
+export const meta = {
+	chapterId: "00_propositional_logic",
+	id: "01_deduction",
+	name: "Level.PropositionalLogic.Deduction.Name",
+	statement: "$\\{p\\to\\lnot q,p\\}\\vdash \\lnot q$",
+	logicSystem: PropositionalLogicWithAtomicFormula,
+	axioms: [axiom1, axiom2],
+	target: target,
+	type: "main"
+}
+
+import Speak from "/src/components/custom/Speak";
+import ConversationProgresser from "/src/components/custom/ConversationProgresser";
+import LocalizedMarkdown from "/src/components/custom/LocalizedMarkdown";
+import Star from "/src/components/custom/Star";
+import Sapphire from "/src/components/custom/Sapphire";
+import FormulaLatex from "/src/components/custom/FormulaLatex";
+import ResumeUntil from "/src/components/custom/ResumeUntil";
+
+<ConversationProgresser>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+Time to produce your own string! You will use the second rule: 
+
+- (Deduction) If you have produced any string of the form $\varphi\to\psi$ and the string $\varphi$, then you can produce $\psi$. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+该制造你自己的字符串了！你会用到第二条规则：
+
+- （推理）如果你已经制造了任何形如 $\varphi\to\psi$ 的字符串和字符串 $\varphi$，你就可以制造 $\psi$。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+What are $\varphi$ and $\psi$? 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+什么是 $\varphi$ 和 $\psi$？
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+They represents any string you like. For example, if you choose $\varphi$ to represent $p$, and $\psi$ to represent $\lnot q$, then the rule becomes: 
+
+- If you have produced the string $p\to\lnot q$ and the string $p$, then you can produce $\lnot q$. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+它们代表你喜欢的任何字符串。比如说，如果你选择让 $\varphi$ 代表 $p$，并且让 $\psi$ 代表 $\lnot q$，那么这条规则就是：
+
+- 如果你已经制造了字符串 $p\to\lnot q$ 的和字符串 $p$，你就可以制造 $\lnot q$。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="author">
+<LocalizedMarkdown locale="en">
+To use Deduction, navigate to the Proof tab of your Inventory, and click `Deduction` (or directly type `deduction` in the input bar). Before excecuting, you also need to provide a parameter after a space: the line number where you produced $\varphi\to\psi$. The game can automatically detect whether and where you have produced $\varphi$. For instance, if you have produced $p\to\lnot q$ on the first line (with line number $0$), you can excecuting `deduction 0` to use Deduction for $\varphi=p$ and $\psi=\lnot q$. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+要使用推理，打开物品栏的证明面板，然后点击 `推理`（或者直接在输入框里输入 `deduction`）。在执行前，你还需要在空格之后提供一个参数：你制造出 $\varphi\to\psi$ 的行标。游戏可以自动检查你是否制造出了、在哪里制造出了 $\varphi$。比如，你在第一行（行标$0$）制造出了 $p\to\lnot q$ ，执行 `deduction 0` 就可以以 $\varphi=p$ 和 $\psi=\lnot q$ 使用推理。
+</LocalizedMarkdown>
+</Speak>
+
+<ResumeUntil condition={proof => proof != null && proof.proofComplete()} text="ConversationProgresser.CompleteLevelToContinue"/>
+
+
+</ConversationProgresser>

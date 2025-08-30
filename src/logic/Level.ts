@@ -8,6 +8,7 @@ export interface LevelMeta {
 	logicSystem: LogicSystem;
 	axioms: Formula[];
 	target: Formula;
+	type: "main" | "side" | "joke";
 }
 
 export interface LevelModule {

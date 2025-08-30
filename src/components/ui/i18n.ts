@@ -27,6 +27,8 @@ i18n
 					"ProofBoard.Axioms": "Axioms",
 					"ProofBoard.Target": "Target",
 					"ProofBoard.LevelFinished": "Level finished!",
+					"ProofBoard.NextLevel": "Next level",
+					"ProofBoard.LevelSelector": "Back to level selection",
 					"ProofBoard.Excecute": "Excecute",
 
 					"FormulaInspector.Title": "Formula Inspector",
@@ -60,7 +62,8 @@ i18n
 					"Language.PropositionalLogic.Name": "Propositional Logic",
 
 					"Chapter.PropositionalLogic.Name": "Propositional Logic",
-					"Level.PropositionalLogic.Axioms.Name": "Axioms"
+					"Level.PropositionalLogic.Axiom.Name": "Axiom",
+					"Level.PropositionalLogic.Deduction.Name": "Deduction"
 				}
 			},
 			zh: {
@@ -81,6 +84,8 @@ i18n
 					"ProofBoard.Axioms": "公理",
 					"ProofBoard.Target": "目标",
 					"ProofBoard.LevelFinished": "关卡完成！",
+					"ProofBoard.NextLevel": "下一关",
+					"ProofBoard.LevelSelector": "返回关卡选择",
 					"ProofBoard.Excecute": "执行",
 
 					"FormulaInspector.Title": "公式信息",
@@ -114,7 +119,8 @@ i18n
 					"Language.PropositionalLogic.Name": "命题逻辑",
 
 					"Chapter.PropositionalLogic.Name": "命题逻辑",
-					"Level.PropositionalLogic.Axioms.Name": "公理"
+					"Level.PropositionalLogic.Axiom.Name": "公理",
+					"Level.PropositionalLogic.Deduction.Name": "推理"
 				}
 			}
 		}

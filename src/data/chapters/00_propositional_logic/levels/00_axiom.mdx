@@ -1,15 +1,17 @@
 import PropositionalLogicWithAtomicFormula from "/src/logic/PropositionalLogic";
 
-export const target = PropositionalLogicWithAtomicFormula.parseFormula('p->!q');
+export const axiom = PropositionalLogicWithAtomicFormula.parseFormula('p->!q');
+export const target = axiom;
 
 export const meta = {
 	chapterId: "00_propositional_logic",
-	id: "00_axioms",
-	name: "Level.PropositionalLogic.Axioms.Name",
+	id: "00_axiom",
+	name: "Level.PropositionalLogic.Axiom.Name",
 	statement: "$\\{p\\to\\lnot q\\}\\vdash p\\to\\lnot q$",
 	logicSystem: PropositionalLogicWithAtomicFormula,
-	axioms: [target],
-	target: target
+	axioms: [axiom],
+	target: target,
+	type: "main"
 }
 
 import Speak from "/src/components/custom/Speak";
@@ -44,14 +46,14 @@ Sounds like a games Axiomites might like playing. Okay, what are the rules?
 <LocalizedMarkdown locale="en">
 The first rule is really simple: 
 
-- You can produce any string given as an axiom. 
+- (axiom) You can produce any string given as an axiom. 
 
 As an example, I give you <FormulaLatex formula={meta.target}/> as an axiom. You try to produce the string <FormulaLatex formula={meta.target}/> from it. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
 第一条规则很简单：
 
-- 你可以制造任何作为公理的字符串。
+- （公理）你可以制造任何作为公理的字符串。
 
 比如说，我把 <FormulaLatex formula={meta.target}/> 作为公理给你。你试着从它出发制造 <FormulaLatex formula={meta.target}/>。
 </LocalizedMarkdown>
@@ -66,7 +68,7 @@ To produce an axiom, navigate to the Axioms tab of your Inventory, and click tha
 </LocalizedMarkdown>
 </Speak>
 
-<ResumeUntil condition={proof => proof != null && proof.validate()} text="ConversationProgresser.CompleteLevelToContinue"/>
+<ResumeUntil condition={proof => proof != null && proof.proofComplete()} text="ConversationProgresser.CompleteLevelToContinue"/>
 
 <Speak speaker="star">
 <LocalizedMarkdown locale="en">
@@ -75,7 +77,6 @@ Easy.
 <LocalizedMarkdown locale="zh">
 简单。
 </LocalizedMarkdown>
-
 </Speak>
 
 <Speak speaker="sapphire">

@@ -16,7 +16,10 @@ function Header() {
 		<Grid width="100%" alignItems="center" templateColumns="1fr auto 1fr" background="logic.solid" color="logic.contrast" padding="6px 6px">
 			<GridItem justifySelf="start">
 				<HStack>
-					<IconButton onClick={() => navigate("/")} variant="ghost" color="logic.contrast"><AiOutlineHome /></IconButton>
+					<IconButton variant="ghost" color="logic.contrast" onClick={event => {
+						navigate("/");
+						event.stopPropagation();
+					}}><AiOutlineHome /></IconButton>
 					<Heading>{chapterName}</Heading>
 				</HStack>
 			</GridItem>
