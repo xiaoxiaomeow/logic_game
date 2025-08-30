@@ -2,8 +2,8 @@ import { Box, Flex } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
 interface SpeakInput {
-	speaker: string,
-	children: ReactNode
+	speaker: string;
+	children: ReactNode;
 }
 
 function Speak(speakInput: SpeakInput) {

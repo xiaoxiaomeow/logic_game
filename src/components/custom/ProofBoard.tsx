@@ -137,6 +137,7 @@ function CommandEditor() {
 	const lineIndex = useUIStore(state => state.lineIndex);
 	const setLineIndex = useUIStore(state => state.setLineIndex);
 	const setErrorMessage = useUIStore(state => state.setErrorMessage);
+	const t = useTranslation().t;
 	useEffect(() => { inputRef.current?.focus() }, [inputCommand]);
 	const endElement = inputCommand ? (
 		<IconButton size="2xs" variant="ghost" onClick={() => { setInputCommand(""); inputRef.current?.focus() }} me="-2" ><IoMdClose /></IconButton>
@@ -167,7 +168,7 @@ function CommandEditor() {
 				}}>
 				</Input>
 			</InputGroup>
-			<Button size="sm" disabled={!canExcecute} onClick={excecuteCommand}>Excecute</Button>
+			<Button size="sm" disabled={!canExcecute} onClick={excecuteCommand}>{t("ProofBoard.Excecute")}</Button>
 		</HStack>
 	);
 }

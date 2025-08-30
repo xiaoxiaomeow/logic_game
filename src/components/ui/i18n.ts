@@ -11,6 +11,9 @@ i18n
 		resources: {
 			en: {
 				translation: {
+					"Character.Star.Name": "Star",
+					"Character.Sapphire.Name": "Sapphire",
+
 					"LevelSelector.ChapterName": "Mathematical Logic Game",
 					"LevelSelector.LevelName": "Level Selection",
 					"LevelSelector.Chapter": "Chapter: ",
@@ -24,6 +27,7 @@ i18n
 					"ProofBoard.Axioms": "Axioms",
 					"ProofBoard.Target": "Target",
 					"ProofBoard.LevelFinished": "Level finished!",
+					"ProofBoard.Excecute": "Excecute",
 
 					"FormulaInspector.Title": "Formula Inspector",
 					"FormulaInspector.PickFormula": "Click on some formula to inspect it.",
@@ -56,11 +60,14 @@ i18n
 					"Language.PropositionalLogic.Name": "Propositional Logic",
 
 					"Chapter.PropositionalLogic.Name": "Propositional Logic",
-					"Level.PropositionalLogic.Axioms.Name": "Axioms",
+					"Level.PropositionalLogic.Axioms.Name": "Axioms"
 				}
 			},
 			zh: {
 				translation: {
+					"Character.Star.Name": "星",
+					"Character.Sapphire.Name": "蓝宝石",
+
 					"LevelSelector.ChapterName": "数理逻辑游戏",
 					"LevelSelector.LevelName": "关卡选择",
 					"LevelSelector.Chapter": "章节：",
@@ -74,6 +81,7 @@ i18n
 					"ProofBoard.Axioms": "公理",
 					"ProofBoard.Target": "目标",
 					"ProofBoard.LevelFinished": "关卡完成！",
+					"ProofBoard.Excecute": "执行",
 
 					"FormulaInspector.Title": "公式信息",
 					"FormulaInspector.PickFormula": "点击一个公式来查看它。",
@@ -106,7 +114,7 @@ i18n
 					"Language.PropositionalLogic.Name": "命题逻辑",
 
 					"Chapter.PropositionalLogic.Name": "命题逻辑",
-					"Level.PropositionalLogic.Axioms.Name": "公理",
+					"Level.PropositionalLogic.Axioms.Name": "公理"
 				}
 			}
 		}

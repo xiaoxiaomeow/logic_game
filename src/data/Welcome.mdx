@@ -1,30 +1,58 @@
 import Speak from "/src/components/custom/Speak";
 import ConversationProgresser from "/src/components/custom/ConversationProgresser";
+import LocalizedMarkdown from "/src/components/custom/LocalizedMarkdown";
 import Star from "/src/components/custom/Star";
 import Sapphire from "/src/components/custom/Sapphire";
 
 <ConversationProgresser>
 
 <Speak speaker="author">
+<LocalizedMarkdown locale="en">
 # Welcome to the Mathematical Logic Game!
 
 In this game, we will be following <Star/> and her beloved familiar <Sapphire/> to **formally** prove mathematical theorems. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+# 欢迎来到数理逻辑游戏！
+
+在这个游戏中，你会跟随<Star/>和她心爱的魔宠<Sapphire/>来**形式化**证明数学定理。
+</LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
 This is <Sapphire/>. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+这里是<Sapphire/>。
+</LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="star">
+<LocalizedMarkdown locale="en">
 This is <Star/>. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+这里是<Star/>。
+</LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="author">
-And this is the author. Generally, I will introduce the game rules and the interface, and <Star/> and <Sapphire/> will talk about the mathematical (mostly logical) insights on the current proof or topic. Technically you can skip all conversations between <Star/> and <Sapphire/>, or even my instructions throughout the game, but it is highly non-recommended: always look for important information provided in this column. 
+<LocalizedMarkdown locale="en">
+And this is the author. Generally, I will introduce the game rules and the interface, and <Star/> and <Sapphire/> will talk about the mathematical (mostly logical) insights on the current proof or topic. Technically you can skip all conversations between <Star/> and <Sapphire/>, or even instructions of the author throughout the game, but it is non-recommended: this column will provides lots of useful information. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+以及这里是作者。通常来说，我会讲解游戏规则和界面，<Star/>和<Sapphire/>则会讨论关于当前证明或主题的数学（主要是逻辑）见解。严格来说你可以在整个游玩过程中跳过所有<Star/>和<Sapphire/>的对话，甚至是作者的建议，但并不推荐这样做：这一栏会提供很多有用信息。
+</LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="author">
-Now you can pick the first level and start your wonderful journey in the chapter of logic. 
+<LocalizedMarkdown locale="en">
+Now you can pick the first level!
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+现在可以开始第一关了！
+</LocalizedMarkdown>
 </Speak>
 
 </ConversationProgresser>

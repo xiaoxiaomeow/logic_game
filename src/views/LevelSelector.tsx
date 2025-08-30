@@ -16,9 +16,10 @@ function LevelSelectorPage() {
 	const setLevelName: (levelName: string) => void = useUIStore(state => state.setLevelName);
 	const clearFormulas: () => void = useUIStore(state => state.clearFormulas);
 	const setProof: (proof: Proof | null) => void = useUIStore(state => state.setProof);
+	const t = useTranslation().t;
 	useEffect(() => {
-		setChapterName("LevelSelector.ChapterName");
-		setLevelName("LevelSelector.LevelName");
+		setChapterName(t("LevelSelector.ChapterName"));
+		setLevelName(t("LevelSelector.LevelName"));
 		clearFormulas();
 		setProof(null);
 	}, []);

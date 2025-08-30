@@ -12,17 +12,16 @@ function Header() {
 	const navigate = useNavigate();
 	const chapterName: string = useUIStore(state => state.chapterName);
 	const levelName: string = useUIStore(state => state.levelName);
-	const t = useTranslation().t;
 	return (
 		<Grid width="100%" alignItems="center" templateColumns="1fr auto 1fr" background="logic.solid" color="logic.contrast" padding="6px 6px">
 			<GridItem justifySelf="start">
 				<HStack>
 					<IconButton onClick={() => navigate("/")} variant="ghost" color="logic.contrast"><AiOutlineHome /></IconButton>
-					<Heading>{t(chapterName)}</Heading>
+					<Heading>{chapterName}</Heading>
 				</HStack>
 			</GridItem>
 			<GridItem justifySelf="center">
-				<Heading>{t(levelName)}</Heading>
+				<Heading>{levelName}</Heading>
 			</GridItem>
 			<GridItem justifySelf="end">
 				<HStack>

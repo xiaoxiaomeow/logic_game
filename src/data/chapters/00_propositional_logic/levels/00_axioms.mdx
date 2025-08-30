@@ -14,6 +14,7 @@ export const meta = {
 
 import Speak from "/src/components/custom/Speak";
 import ConversationProgresser from "/src/components/custom/ConversationProgresser";
+import LocalizedMarkdown from "/src/components/custom/LocalizedMarkdown";
 import Star from "/src/components/custom/Star";
 import Sapphire from "/src/components/custom/Sapphire";
 import FormulaLatex from "/src/components/custom/FormulaLatex";
@@ -22,49 +23,104 @@ import ResumeUntil from "/src/components/custom/ResumeUntil";
 <ConversationProgresser>
 
 <Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
 Hey <Star/>! Wanna play a game? I give you a collection of strings called **Axioms**, and you try to produce another string, following some specific rules. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+嘿<Star/>！要不要来玩游戏？我给你一组叫做**公理**的字符串，你来按规则制造另一个字符串。
+</LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="star">
-Sounds like a games Axiomites might like playing. What are the rules? 
+<LocalizedMarkdown locale="en">
+Sounds like a games Axiomites might like playing. Okay, what are the rules? 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+听起来像是那些御衡者喜欢玩的游戏。好吧，规则是什么？
+</LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
 The first rule is really simple: 
 
 - You can produce any string given as an axiom. 
 
 As an example, I give you <FormulaLatex formula={meta.target}/> as an axiom. You try to produce the string <FormulaLatex formula={meta.target}/> from it. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+第一条规则很简单：
+
+- 你可以制造任何作为公理的字符串。
+
+比如说，我把 <FormulaLatex formula={meta.target}/> 作为公理给你。你试着从它出发制造 <FormulaLatex formula={meta.target}/>。
+</LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="author">
-To produce an axiom, navigate to the `Axioms` tab of your inventory, and click that axiom. A command will appear in the input bar, then simply press `Enter` or click `Excecute`. 
+<LocalizedMarkdown locale="en">
+To produce an axiom, navigate to the Axioms tab of your Inventory, and click that axiom. A command will appear in the input bar, then simply press Enter or click `Excecute`. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+要制造一个公理，打开物品栏的公理面板，然后点击那个公理。输入框里会出现对应的命令，然后只要按回车或者点击 `执行` 按钮就好了。 
+</LocalizedMarkdown>
 </Speak>
 
 <ResumeUntil condition={proof => proof != null && proof.validate()} text="ConversationProgresser.CompleteLevelToContinue"/>
 
 <Speak speaker="star">
+<LocalizedMarkdown locale="en">
 Easy. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+简单。
+</LocalizedMarkdown>
+
 </Speak>
 
 <Speak speaker="sapphire">
-Cool. We just showed that $\{p\to q\}\vdash p\to q$. 
+<LocalizedMarkdown locale="en">
+Cool. You just showed that $\{p\to\lnot q\}\vdash p\to\lnot q$. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+酷。你刚刚完成了 $\{p\to\lnot q\}\vdash p\to\lnot q$。
+</LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="star">
-Uh ... okay, I guess $\vdash$ means that the subsequent string can be produced from the preceding ones? 
+<LocalizedMarkdown locale="en">
+Uh ... okay, I guess the $\vdash$ symbol means that the subsequent string can be produced from the preceding ones? 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+呃……好吧，我猜这个 $\vdash$ 符号的意思是后面的字符串可以被前面的制造出来。
+</LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="sapphire">
-Exactly. Also, the $\vdash$ is read as **proves**. You can also say that the subsequent string can be **proved** from the preceding ones. 
+<LocalizedMarkdown locale="en">
+Exactly. Also, the $\vdash$ symbol is read as **proves**. You can also say that the subsequent string can be **proved** from the preceding ones. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+对的。以及，这个 $\vdash$ 符号读作**证明**。你也可以说后面的字符串可以被前面的**证明**出来。
+</LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="star">
+<LocalizedMarkdown locale="en">
 Oh. Did I just proved something? 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+哦。我刚刚证明了什么吗？
+</LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
 Probably not. Not something non-trivial. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+大概没有。没证明什么不显然的。
+</LocalizedMarkdown>
 </Speak>
 
 </ConversationProgresser>
