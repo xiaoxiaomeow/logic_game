@@ -1,12 +1,12 @@
 import PropositionalLogicWithAtomicFormula from "/src/logic/PropositionalLogic";
 
-export const target = PropositionalLogicWithAtomicFormula.parseFormula('p->q');
+export const target = PropositionalLogicWithAtomicFormula.parseFormula('p->!q');
 
 export const meta = {
-	worldId: "00_propositional_logic",
+	chapterId: "00_propositional_logic",
 	id: "00_axioms",
-	name: "Axioms",
-	statement: "$\\{p\\to q\\}\\vdash p\\to q$",
+	name: "Level.PropositionalLogic.Axioms.Name",
+	statement: "$\\{p\\to\\lnot q\\}\\vdash p\\to\\lnot q$",
 	logicSystem: PropositionalLogicWithAtomicFormula,
 	axioms: [target],
 	target: target
@@ -41,7 +41,7 @@ As an example, I give you <FormulaLatex formula={meta.target}/> as an axiom. You
 To produce an axiom, navigate to the `Axioms` tab of your inventory, and click that axiom. A command will appear in the input bar, then simply press `Enter` or click `Excecute`. 
 </Speak>
 
-<ResumeUntil condition={proof => proof != null && proof.validate()} text="Complete the level to continue."/>
+<ResumeUntil condition={proof => proof != null && proof.validate()} text="ConversationProgresser.CompleteLevelToContinue"/>
 
 <Speak speaker="star">
 Easy. 

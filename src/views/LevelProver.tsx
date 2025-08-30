@@ -6,27 +6,29 @@ import LineInspector from "@/components/custom/LineInspector";
 import ProofBoard from "@/components/custom/ProofBoard";
 import { useUIStore } from "@/contexts/UIStore";
 import type { LevelModule } from "@/logic/Level";
-import type { WorldModule } from "@/logic/World";
+import type { ChapterModule } from "@/logic/Chapter";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function LevelProverPage() {
 	const [loading, setLoading] = useState(false);
 	const [levelModule, setLevelModule] = useState<LevelModule | null>(null);
-	const { worldId, levelId } = useParams() as { worldId: string; levelId: string };
-	const setWorldName: (worldName: string) => void = useUIStore(state => state.setWorldName);
+	const { chapterId, levelId } = useParams() as { chapterId: string; levelId: string };
+	const setChapterName: (chapterName: string) => void = useUIStore(state => state.setChapterName);
 	const setLevelName: (levelName: string) => void = useUIStore(state => state.setLevelName);
 	const clearFormulas: () => void = useUIStore(state => state.clearFormulas);
+	const t = useTranslation().t;
 	useEffect(() => {
 		clearFormulas();
 		setLoading(true);
 		const load = async () => {
 			try {
-				const worldModule: WorldModule = await import(`../data/worlds/${worldId}/index.tsx`);
-				const levelModule: LevelModule = await import(`../data/worlds/${worldId}/levels/${levelId}.mdx`);
+				const chapterModule: ChapterModule = await import(`../data/chapters/${chapterId}/index.tsx`);
+				const levelModule: LevelModule = await import(`../data/chapters/${chapterId}/levels/${levelId}.mdx`);
 				setLevelModule(levelModule);
-				setWorldName("World: " + worldModule.meta.name);
-				setLevelName("Level: " + levelModule.meta.name);
+				setChapterName(t("LevelSelector.Chapter") + t(chapterModule.meta.name));
+				setLevelName(t("LevelSelector.Level") + t(levelModule.meta.name));
 			} catch (error) {
 				console.error(error);
 			}

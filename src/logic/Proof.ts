@@ -27,8 +27,6 @@ class Proof {
 		}
 	}
 	validate() {
-		console.log("validate");
-		console.log(this.lines.every(line => line.validate(this)));
 		return this.lines.every(line => line.validate(this));
 	}
 	excecute(command: string, lineIndex: number): ExcecutionResult {
@@ -104,7 +102,7 @@ export class FormulaLine extends ProofLine {
 		return typeof (this) + "/" + this.formula.toCode();
 	}
 	getLineDescription(): string {
-		return "This formula is not proved yet. It just serves as a hint for what you need to prove around this line.";
+		return "ProofLine.FormulaLine.Description";
 	}
 	getQuotedLines(): number[] {
 		return [];
@@ -147,10 +145,10 @@ export class ByAxiom extends DeductionMethod {
 		return typeof (this);
 	}
 	getShortDescription(): string {
-		return "by Axiom";
+		return "DeductionMethod.ByAxiom.ShortDescription";
 	}
 	getLongDescription(): string {
-		return "This formula is an Axiom.";
+		return "DeductionMethod.ByAxiom.LongDescription";
 	}
 	getQuotedLines(): number[] {
 		return [];

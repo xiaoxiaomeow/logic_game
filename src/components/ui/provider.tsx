@@ -1,9 +1,11 @@
 "use client"
 
+import { I18nextProvider } from "react-i18next";
 import {
 	ColorModeProvider,
 	type ColorModeProviderProps,
 } from "./color-mode"
+import i18n from './i18n';
 
 import { ChakraProvider, createSystem, defaultConfig, defineConfig } from '@chakra-ui/react';
 
@@ -91,6 +93,32 @@ const config = defineConfig({
 					800: { value: "#7a3368" },
 					900: { value: "#59264d" },
 					950: { value: "#3c1026" }
+				},
+				yellow: {
+					50: { value: "#fefce8" },
+					100: { value: "#fef9c3" },
+					200: { value: "#fef08a" },
+					300: { value: "#fde047" },
+					400: { value: "#facc15" },
+					500: { value: "#eab308" },
+					600: { value: "#ca8a04" },
+					700: { value: "#a16207" },
+					800: { value: "#854d0e" },
+					900: { value: "#713f12" },
+					950: { value: "#422006" }
+				},
+				green: {
+					50: { value: "#f0fdf4" },
+					100: { value: "#dcfce7" },
+					200: { value: "#bbf7d0" },
+					300: { value: "#86efac" },
+					400: { value: "#4ade80" },
+					500: { value: "#22c55e" },
+					600: { value: "#16a34a" },
+					700: { value: "#15803d" },
+					800: { value: "#166534" },
+					900: { value: "#14532d" },
+					950: { value: "#052e16" }
 				}
 			}
 		},
@@ -143,8 +171,10 @@ const system = createSystem(defaultConfig, config);
 
 export function Provider(props: ColorModeProviderProps) {
 	return (
-		<ChakraProvider value={system}>
-			<ColorModeProvider {...props} />
-		</ChakraProvider>
+		<I18nextProvider i18n={i18n}>
+			<ChakraProvider value={system}>
+				<ColorModeProvider {...props} />
+			</ChakraProvider>
+		</I18nextProvider>
 	)
 }

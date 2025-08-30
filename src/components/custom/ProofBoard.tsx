@@ -7,6 +7,8 @@ import { useUIStore } from "@/contexts/UIStore";
 import { useEffect, useRef } from "react";
 import { FaChevronRight, FaRegTrashAlt } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 export interface ProofBoardInput {
 	levelModule: LevelModule
@@ -28,7 +30,7 @@ function ProofBoard(props: ProofBoardInput) {
 					<ScrollArea.Content height="100%">
 						<ProofEditor />
 						{proof != null && proof.validate() ? <Box borderRadius="md" background="logic.author" width="100%" padding="8px">
-							<Text>Level Finished!</Text>
+							<Text>{t("ProofBoard.LevelFinished")}</Text>
 						</Box> : null}
 					</ScrollArea.Content>
 				</ScrollArea.Viewport>
@@ -43,22 +45,23 @@ function ProofBoard(props: ProofBoardInput) {
 
 function LevelInfo(props: ProofBoardInput) {
 	const levelModule: LevelModule = props.levelModule;
+	const t = useTranslation().t;
 	return (
 		<VStack width="100%" borderRadius="md" background="logic.subtle" padding="8px 8px">
 			<HStack width="100%">
-				<Text fontWeight="bold">Statement</Text>
+				<Text fontWeight="bold">{t("ProofBoard.Statement")}</Text>
 				<MarkdownWithLatex>{levelModule.meta.statement}</MarkdownWithLatex>
 			</HStack>
 			<HStack width="100%">
-				<Text fontWeight="bold">Language</Text>
-				<Text>{levelModule.meta.logicSystem.name}</Text>
+				<Text fontWeight="bold">{t("ProofBoard.Language")}</Text>
+				<Text>{t(levelModule.meta.logicSystem.name)}</Text>
 			</HStack>
 			<HStack width="100%">
-				<Text fontWeight="bold">Axioms</Text>
+				<Text fontWeight="bold">{t("ProofBoard.Axioms")}</Text>
 				{levelModule.meta.axioms.map(axiom => (<Box key={axiom.toCode()}><FormulaLatex formula={axiom} /></Box>))}
 			</HStack>
 			<HStack width="100%">
-				<Text fontWeight="bold">Target</Text>
+				<Text fontWeight="bold">{t("ProofBoard.Target")}</Text>
 				<FormulaLatex formula={levelModule.meta.target} />
 			</HStack>
 		</VStack>
@@ -69,6 +72,7 @@ function ProofEditor() {
 	const proof: Proof | null = useUIStore(state => state.proof);
 	const lineIndex = useUIStore(state => state.lineIndex);
 	const setLineIndex = useUIStore(state => state.setLineIndex);
+	const t = useTranslation().t;
 	useEffect(() => {
 		setLineIndex(0);
 	}, []);
@@ -89,17 +93,21 @@ function ProofEditor() {
 							borderBottom={index === proof.lines.length - 1 ? "2px double" : "1px solid"}
 							borderTop={index === 0 ? "2px double" : ""}
 							borderColor="logic.emphasized"
-							onClick={event => { setLineIndex(index); event.stopPropagation(); }}>
+							onClick={event => { setLineIndex(index); event.stopPropagation(); }}
+							backgroundColor={(() => {
+								if (line instanceof FormulaLine && !(line instanceof ProvedFormulaLine)) return "{colors.yellow.50}";
+								return "";
+							})()}>
 							<Table.Cell borderBottomWidth={0} padding="0">{lineIndex === index ? (<FaChevronRight color="#6b46c1" />) : null}</Table.Cell>
 							<Table.Cell borderBottomWidth={0} padding="4px"><Text>{index}</Text></Table.Cell>
 							<Table.Cell borderBottomWidth={0} padding="4px">{(() => {
 								if (line instanceof ProvedFormulaLine) return (
 									<Flex justifyContent="space-between">
 										<FormulaLatex formula={line.formula}></FormulaLatex>
-										<Text>{line.deductionMethod.getShortDescription()}</Text>
+										<Text>{t(line.deductionMethod.getShortDescription())}</Text>
 									</Flex>
 								);
-								else if (line instanceof FormulaLine) return (<HStack><Text color="logic.emphasized">( Need </Text><FormulaLatex vague formula={line.formula} /><Text color="logic.emphasized">)</Text></HStack>);
+								else if (line instanceof FormulaLine) return (<HStack><Text color="logic.emphasized">{t("ProofEditor.NeedLeft")}</Text><FormulaLatex vague formula={line.formula} /><Text color="logic.emphasized">{t("ProofEditor.NeedRight")}</Text></HStack>);
 								else return null;
 							})()}</Table.Cell>
 							<Table.Cell borderBottomWidth={0} padding="4px">{(() => {

@@ -7,8 +7,8 @@ export interface UIStore {
 	increaseConversationProgress: () => void;
 	setConversationProgress: (progress: number) => void;
 	resetConversationProgress: () => void;
-	worldName: string;
-	setWorldName: (worldName: string) => void;
+	chapterName: string;
+	setChapterName: (chapterName: string) => void;
 	levelName: string;
 	setLevelName: (levelName: string) => void;
 	formulas: Formula[];
@@ -32,8 +32,8 @@ export const useUIStore: UseBoundStore<StoreApi<UIStore>> = create<UIStore>(set 
 	increaseConversationProgress: () => set(state => ({ conversationProgress: state.conversationProgress + 1 })),
 	setConversationProgress: (progress: number) => set({ conversationProgress: progress }),
 	resetConversationProgress: () => set({ conversationProgress: 0 }),
-	worldName: "",
-	setWorldName: (worldName: string) => set({ worldName: worldName }),
+	chapterName: "",
+	setChapterName: (chapterName: string) => set({ chapterName: chapterName }),
 	levelName: "",
 	setLevelName: (levelName: string) => set({ levelName: levelName }),
 	formulas: [],

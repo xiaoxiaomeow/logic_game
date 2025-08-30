@@ -3,21 +3,22 @@ import { LayoutStackLeft, LayoutStackMain, LayoutStackMiddle, LayoutStackRight }
 import { useUIStore } from "@/contexts/UIStore";
 import { Button, Collapsible, Heading, HStack, ScrollArea, VStack } from "@chakra-ui/react";
 import { useEffect, type MouseEventHandler } from "react";
-import type { WorldModule } from "@/logic/World";
+import type { ChapterModule } from "@/logic/Chapter";
 import type { LevelModule } from "@/logic/Level";
 import Welcome from "@/data/Welcome.mdx";
 import { useNavigate } from "react-router-dom";
 import Inventory from "@/components/custom/Inventory";
 import type Proof from "@/logic/Proof";
+import { useTranslation } from "react-i18next";
 
 function LevelSelectorPage() {
-	const setWorldName: (worldName: string) => void = useUIStore(state => state.setWorldName);
+	const setChapterName: (chapterName: string) => void = useUIStore(state => state.setChapterName);
 	const setLevelName: (levelName: string) => void = useUIStore(state => state.setLevelName);
 	const clearFormulas: () => void = useUIStore(state => state.clearFormulas);
 	const setProof: (proof: Proof | null) => void = useUIStore(state => state.setProof);
 	useEffect(() => {
-		setWorldName("Mathematical Logic Game");
-		setLevelName("Level Selection");
+		setChapterName("LevelSelector.ChapterName");
+		setLevelName("LevelSelector.LevelName");
 		clearFormulas();
 		setProof(null);
 	}, []);
@@ -38,7 +39,7 @@ function LevelSelectorPage() {
 	);
 }
 
-const worldModules: [string, WorldModule][] = Object.entries<WorldModule>(import.meta.glob('/src/data/worlds/*/index.tsx', { eager: true }));
+const chapterModules: [string, ChapterModule][] = Object.entries<ChapterModule>(import.meta.glob('/src/data/chapters/*/index.tsx', { eager: true }));
 function LevelSelector() {
 	return (
 		<VStack width="100%" height="100%" padding="8px 0px">
@@ -46,7 +47,7 @@ function LevelSelector() {
 				<ScrollArea.Viewport height="100%">
 					<ScrollArea.Content height="100%">
 						{
-							worldModules.map(([_, module]) => (<World worldModule={module} key={module.meta.id}></World>))
+							chapterModules.map(([_, module]) => (<Chapter chapterModule={module} key={module.meta.id}></Chapter>))
 						}
 					</ScrollArea.Content>
 				</ScrollArea.Viewport>
@@ -56,28 +57,30 @@ function LevelSelector() {
 	);
 }
 
-function World(props: { worldModule: WorldModule }) {
+function Chapter(props: { chapterModule: ChapterModule }) {
+	const t = useTranslation().t;
 	return (
 		<Collapsible.Root defaultOpen={true}>
 			<Collapsible.Trigger width="100%">
-				<Heading as="h1">World: {props.worldModule.meta.name}</Heading>
+				<Heading as="h1">{t("LevelSelector.Chapter") + t(props.chapterModule.meta.name)}</Heading>
 			</Collapsible.Trigger>
 			<Collapsible.Content>
 				<HStack width="100%">
-					{props.worldModule.meta.levels.map(module => (<Level worldModule={props.worldModule} levelModule={module} key={module.meta.id}></Level>))}
+					{props.chapterModule.meta.levels.map(module => (<Level chapterModule={props.chapterModule} levelModule={module} key={module.meta.id}></Level>))}
 				</HStack>
 			</Collapsible.Content>
 		</Collapsible.Root>
 	);
 }
 
-function Level(props: { worldModule: WorldModule, levelModule: LevelModule }) {
+function Level(props: { chapterModule: ChapterModule, levelModule: LevelModule }) {
 	const navigate = useNavigate();
+	const t = useTranslation().t;
 	const onClick: MouseEventHandler = _ => {
-		navigate("/level/" + props.worldModule.meta.id + "/" + props.levelModule.meta.id);
+		navigate("/level/" + props.chapterModule.meta.id + "/" + props.levelModule.meta.id);
 	};
 	return (
-		<Button onClick={onClick}>{props.levelModule.meta.name}</Button>
+		<Button onClick={onClick}>{t(props.levelModule.meta.name)}</Button>
 	);
 }
 export default LevelSelectorPage;

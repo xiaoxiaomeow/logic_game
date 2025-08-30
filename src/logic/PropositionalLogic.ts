@@ -78,10 +78,10 @@ export abstract class PropositionalLogicFormula<_ extends Formula> implements Fo
 		if (this.operatorPriority() > parentOperatorPriority) return this.toLatex();
 		else return "(" + this.toLatex() + ")";
 	};
-	abstract toDescription(): string;
-	toDescriptionWithBracket(parentOperatorPriority: number): string {
-		if (this.operatorPriority() > parentOperatorPriority) return this.toDescription();
-		else return "(" + this.toDescription() + ")";
+	abstract toDescription(localizer: (key: string, content: {}) => string): string;
+	toDescriptionWithBracket(localizer: (key: string, content: {}) => string, parentOperatorPriority: number): string {
+		if (this.operatorPriority() > parentOperatorPriority) return this.toDescription(localizer);
+		else return "(" + this.toDescription(localizer) + ")";
 	};
 	abstract getFormulaDescription(): string;
 	abstract getSubformulas(): Formula[];
@@ -104,11 +104,14 @@ export class Implies<TAtomicFormula extends Formula> extends PropositionalLogicF
 	toLatex(): string {
 		return this.phi.toLatexWithBracket(this.operatorPriority()) + " \\to " + this.psi.toLatexWithBracket(this.operatorPriority() - 1);
 	}
-	toDescription(): string {
-		return "if " + this.phi.toDescriptionWithBracket(this.operatorPriority()) + " then " + this.psi.toDescriptionWithBracket(this.operatorPriority());
+	toDescription(localizer: (key: string, content: {}) => string): string {
+		return localizer("Formula.Implies.Description", {
+			phi: this.phi.toDescriptionWithBracket(localizer, this.operatorPriority()),
+			psi: this.psi.toDescriptionWithBracket(localizer, this.operatorPriority())
+		});
 	}
 	getFormulaDescription(): string {
-		return "This formula is constructed by connecting the following formulas using $\\to$.";
+		return "Formula.Implies.FormulaDescription";
 	}
 	getSubformulas(): Formula[] {
 		return [this.phi, this.psi];
@@ -137,11 +140,13 @@ export class Not<TAtomicFormula extends Formula> extends PropositionalLogicFormu
 	toLatex(): string {
 		return "\\lnot " + this.phi.toLatexWithBracket(this.operatorPriority() - 1);
 	}
-	toDescription(): string {
-		return "not " + this.phi.toDescriptionWithBracket(this.operatorPriority());
+	toDescription(localizer: (key: string, content: {}) => string): string {
+		return localizer("Formula.Not.Description", {
+			phi: this.phi.toDescriptionWithBracket(localizer, this.operatorPriority())
+		});
 	}
 	getFormulaDescription(): string {
-		return "This formula is constructed by negating the following formula using $\\lnot$.";
+		return "Formula.Not.FormulaDescription";
 	}
 	getSubformulas(): Formula[] {
 		return [this.phi];
@@ -179,11 +184,11 @@ export class AtomicFormula implements Formula {
 	toDescription(): string {
 		return this.variableName;
 	}
-	toDescriptionWithBracket(_: number): string {
+	toDescriptionWithBracket(_localizer: (key: string, content: {}) => string, _: number): string {
 		return this.variableName;
 	}
 	getFormulaDescription(): string {
-		return "This is an atomic formula with variable $" + this.variableName + "$.";
+		return "Formula.Atomic.FormulaDescription";
 	}
 	getSubformulas(): Formula[] {
 		return [];
@@ -202,6 +207,6 @@ const PropositionalLogicWithAtomicFormula: LogicSystem = new PropositionalLogic<
 	const token: string = parser.currentToken();
 	parser.consume(token);
 	return new AtomicFormula(token.replaceAll("'", ""));
-}, "Propositional Logic");
+}, "Language.PropositionalLogic.Name");
 
 export default PropositionalLogicWithAtomicFormula;

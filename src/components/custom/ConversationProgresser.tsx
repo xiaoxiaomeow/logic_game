@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import Speak from "./Speak";
 import ResumeUntil, { type ResumeUntilInput } from "./ResumeUntil";
 import type Proof from "@/logic/Proof";
+import { useTranslation } from "react-i18next";
 
 function ConversationProgresser(props: { children: ReactNode }) {
 	const resetConversationProgress: () => void = useUIStore(state => state.resetConversationProgress);
@@ -15,6 +16,7 @@ function ConversationProgresser(props: { children: ReactNode }) {
 	const handler: MouseEventHandler = _ => {
 		increaseConversationProgress();
 	};
+	const t = useTranslation().t;
 	useEffect(() => { resetConversationProgress(); }, []);
 	useEffect(() => {
 		let maxIndex = -1;
@@ -42,7 +44,7 @@ function ConversationProgresser(props: { children: ReactNode }) {
 									if (index <= conversationProgress) return (<Box key={index} width="100%">{child}</Box>);
 									else if (index == conversationProgress + 1) {
 										display = false;
-										return (<Text key="continue">Click to continue ...</Text>);
+										return (<Text key="continue">{t("ConversationProgresser.ClickToContinue")}</Text>);
 									}
 									else {
 										display = false;
@@ -53,7 +55,7 @@ function ConversationProgresser(props: { children: ReactNode }) {
 									const condition: ((proof: Proof | null) => boolean) = (child.props as ResumeUntilInput).condition;
 									if (condition != null && !condition(proof)) {
 										display = false;
-										return (<Text key="continue">{(child.props as ResumeUntilInput).text}</Text>);
+										return (<Text key="continue">{t((child.props as ResumeUntilInput).text)}</Text>);
 									}
 									return null;
 								}
