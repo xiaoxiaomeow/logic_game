@@ -28,7 +28,7 @@ function LineInspector() {
 								<FormulaLatex formula={proofLine.formula} />
 							</HStack>
 							<Box width="100%">
-								<MarkdownWithLatex>{t(proofLine.getLineDescription())}</MarkdownWithLatex>
+								<MarkdownWithLatex>{t(proofLine.getLineDescription((key: string, content: {}) => t(key, content), proof))}</MarkdownWithLatex>
 							</Box>
 						</>);
 					}
@@ -43,7 +43,7 @@ function LineInspector() {
 								<FormulaLatex formula={proofLine.formula} />
 							</HStack>
 							<Box width="100%">
-								<MarkdownWithLatex>{t(proofLine.getLineDescription())}</MarkdownWithLatex>
+								<MarkdownWithLatex>{t(proofLine.getLineDescription((key: string, content: {}) => t(key, content), proof))}</MarkdownWithLatex>
 							</Box>
 						</>);
 					}

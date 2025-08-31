@@ -21,6 +21,7 @@ i18n
 
 					"Inventory.Title": "Inventory",
 					"Inventory.Axioms": "Axioms",
+					"Inventory.Proofs": "Proofs",
 
 					"ProofBoard.Statement": "Statement",
 					"ProofBoard.Language": "Language",
@@ -47,6 +48,12 @@ i18n
 
 					"DeductionMethod.ByAxiom.ShortDescription": "by axiom",
 					"DeductionMethod.ByAxiom.LongDescription": "The formula on this line is an axiom.",
+					"DeductionMethod.ByDeduction.ShortDescription": "by deduction using ({{impliesIndex}}) ({{phiIndex}})",
+					"DeductionMethod.ByDeduction.LongDescription": "The formula on this line is obtained by ({{impliesIndex}}) and ({{phiIndex}}) using deduction.",
+
+					"ProofMethod.Axiom.Name": "Axiom",
+					"ProofMethod.Deduction.Name": "Deduction",
+
 
 					"LineInspector.Title": "Line Inspector",
 					"LineInspector.LineNumber": "Line Number",
@@ -78,6 +85,7 @@ i18n
 
 					"Inventory.Title": "物品栏",
 					"Inventory.Axioms": "公理",
+					"Inventory.Proofs": "证明",
 
 					"ProofBoard.Statement": "陈述",
 					"ProofBoard.Language": "语言",
@@ -104,6 +112,11 @@ i18n
 
 					"DeductionMethod.ByAxiom.ShortDescription": "由公理",
 					"DeductionMethod.ByAxiom.LongDescription": "这一行上的公式是公理。",
+					"DeductionMethod.ByDeduction.ShortDescription": "由 ({{impliesIndex}}) ({{phiIndex}}) 推理",
+					"DeductionMethod.ByDeduction.LongDescription": "这一行上的公式是由 ({{impliesIndex}}) 和 ({{phiIndex}}) 推理得到的。",
+
+					"ProofMethod.Axiom.Name": "公理",
+					"ProofMethod.Deduction.Name": "推理",
 
 					"LineInspector.Title": "行信息",
 					"LineInspector.LineNumber": "行标",

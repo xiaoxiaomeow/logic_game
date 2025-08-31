@@ -1,4 +1,5 @@
 import type { Formula, LogicSystem } from "./LogicSystem";
+import { Implies } from "./PropositionalLogic";
 import { TokenizeCommand } from "./Token";
 
 export interface ExcecutionResult {
@@ -40,7 +41,7 @@ class Proof {
 		}
 	}
 	validate(): boolean {
-		return this.lines.every(line => line.validate(this)) && this.lines.some(line => {
+		return this.lines.every((line, index) => line.validate(this, index)) && this.lines.some(line => {
 			const formula: Formula | null = line.getProvedFormula();
 			return formula != null && formula.equals(this.target);
 		});
@@ -48,52 +49,49 @@ class Proof {
 	proofComplete(): boolean {
 		return this.validate() && this.lines.every(line => !(line instanceof UnprovedFormulaLine));
 	}
+	provideProvedLine(provedLine: ProvedFormulaLine, lineIndex: number): number {
+		const currentLine: UnprovedFormulaLine = this.lines[lineIndex] as UnprovedFormulaLine;
+		if (currentLine.formula.equals(provedLine.formula)) {
+			this.lines[lineIndex] = provedLine;
+			return lineIndex;
+		}
+		else {
+			this.lines.splice(lineIndex, 0, provedLine);
+			return lineIndex + 1;
+		}
+
+	}
 	excecute(command: string, lineIndex: number): ExcecutionResult {
 		try {
-			const currentLine: UnprovedFormulaLine = this.lines[lineIndex] as UnprovedFormulaLine;
 			const segments: string[] = TokenizeCommand(command);
 			const commandWord = segments[0];
 			if (commandWord === "axiom") {
 				const formula: Formula = this.logicSystem.parseFormula(segments[1]);
 				if (this.axioms.some(axiom => axiom.equals(formula))) {
 					const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula, new ByAxiom());
-					if (currentLine.formula.equals(formula)) {
-						this.lines[lineIndex] = newLine;
-						return {
-							success: true,
-							errorMessage: null,
-							newLineIndex: lineIndex
-						};
-					}
-					else {
-						this.lines.splice(lineIndex, 0, new ProvedFormulaLine(formula, new ByAxiom()));
-						return {
-							success: true,
-							errorMessage: null,
-							newLineIndex: lineIndex + 1
-						};
-					}
-				} else return {
-					success: false,
-					errorMessage: segments[1] + " is not an axiom.",
-					newLineIndex: null
-				};
-			} else return {
-				success: false,
-				errorMessage: "unknown command " + commandWord + ".",
-				newLineIndex: null
-			};
+					return { success: true, errorMessage: null, newLineIndex: this.provideProvedLine(newLine, lineIndex) }
+				} else return { success: false, errorMessage: segments[1] + " is not an axiom.", newLineIndex: null };
+			} else if (commandWord === "deduction") {
+				const targetLineNumber: number = parseInt(segments[1]);
+				if (targetLineNumber >= lineIndex) return { success: false, errorMessage: "cannot refer to a future line.", newLineIndex: null };
+				const targetLine: ProofLine = this.lines[targetLineNumber];
+				const formula: Formula | null = targetLine.getProvedFormula();
+				if (formula instanceof Implies) {
+					const phi = formula.phi;
+					const psi = formula.psi;
+					if (this.lines.slice(0, lineIndex).some(line => {
+						const lineFormula: Formula | null = line.getProvedFormula();
+						return lineFormula != null && lineFormula.equals(phi);
+					})) {
+						const newLine: ProvedFormulaLine = new ProvedFormulaLine(psi, new ByDeduction(formula));
+						return { success: true, errorMessage: null, newLineIndex: this.provideProvedLine(newLine, lineIndex) }
+					} else return { success: false, errorMessage: "Cannot find formula $\\varphi = " + phi.toLatex() + "$", newLineIndex: null }
+				} else if (formula == null) return { success: false, errorMessage: "The indicated line does not prove any formula.", newLineIndex: null }
+				else return { success: false, errorMessage: "The formula " + formula.toLatex() + " is not of the form $\\varphi\\implies\\psi$.", newLineIndex: null }
+			} else return { success: false, errorMessage: "unknown command " + commandWord + ".", newLineIndex: null };
 		} catch (error) {
-			if (error instanceof Error) return {
-				success: false,
-				errorMessage: error.toString(),
-				newLineIndex: null
-			};
-			else return {
-				success: false,
-				errorMessage: "unknown error happened.",
-				newLineIndex: null
-			};
+			if (error instanceof Error) return { success: false, errorMessage: error.toString(), newLineIndex: null };
+			else return { success: false, errorMessage: "unknown error happened.", newLineIndex: null };
 		}
 	}
 	remove(lineIndex: number) {
@@ -148,8 +146,9 @@ class Proof {
 	deductionMethodFromJsonObject(jsonObject: { type: string }): DeductionMethod | null {
 		if (jsonObject.type === "ByAxiom") {
 			return new ByAxiom();
-		}
-		else return null;
+		} else if (jsonObject.type === "ByDeduction") {
+			return new ByDeduction(this.logicSystem.parseFormula((jsonObject as any).formula));
+		} else return null;
 	}
 	copy(): Proof {
 		return new Proof(this.logicSystem, this.axioms, this.target, this.lines, null);
@@ -157,9 +156,9 @@ class Proof {
 }
 
 export abstract class ProofLine {
-	abstract validate(proof: Proof): boolean;
+	abstract validate(proof: Proof, index: number): boolean;
 	abstract key(): string;
-	abstract getLineDescription(): string;
+	abstract getLineDescription(localizer: (key: string, content: {}) => string, proof: Proof): string;
 	abstract getProvedFormula(): Formula | null;
 	abstract getRequiredFormulas(): Formula[];
 	abstract toJsonObject(): {};
@@ -171,14 +170,14 @@ export class UnprovedFormulaLine extends ProofLine {
 		super();
 		this.formula = formula;
 	}
-	validate(_: Proof): boolean {
+	validate(_: Proof, _index: number): boolean {
 		return true;
 	}
 	key(): string {
 		return "UnprovedFormulaLine/" + this.formula.toCode();
 	}
-	getLineDescription(): string {
-		return "ProofLine.FormulaLine.Description";
+	getLineDescription(localizer: (key: string, content: {}) => string, _: Proof): string {
+		return localizer("ProofLine.FormulaLine.Description", {});
 	}
 	getProvedFormula(): Formula | null {
 		return this.formula;
@@ -201,14 +200,14 @@ export class ProvedFormulaLine {
 		this.formula = formula;
 		this.deductionMethod = deductionMethod;
 	}
-	validate(proof: Proof): boolean {
-		return this.deductionMethod.validate(proof, this);
+	validate(proof: Proof, index: number): boolean {
+		return this.deductionMethod.validate(proof, index);
 	}
 	key(): string {
 		return "ProvedFormulaLine/" + this.formula.toCode() + "/" + this.deductionMethod.key();
 	}
-	getLineDescription(): string {
-		return this.deductionMethod.getLongDescription();
+	getLineDescription(localizer: (key: string, content: {}) => string, proof: Proof): string {
+		return this.deductionMethod.getLongDescription(localizer, proof);
 	}
 	getProvedFormula(): Formula | null {
 		return this.formula;
@@ -226,26 +225,27 @@ export class ProvedFormulaLine {
 }
 
 export abstract class DeductionMethod {
-	abstract validate(proof: Proof, formulaLine: ProvedFormulaLine): boolean;
+	abstract validate(proof: Proof, index: number): boolean;
 	abstract key(): string;
-	abstract getShortDescription(): string;
-	abstract getLongDescription(): string;
+	abstract getShortDescription(localizer: (key: string, content: {}) => string, proof: Proof): string;
+	abstract getLongDescription(localizer: (key: string, content: {}) => string, proof: Proof): string;
 	abstract getRequiredFormulas(): Formula[];
 	abstract toJsonObject(): {};
 }
 
 export class ByAxiom extends DeductionMethod {
-	validate(proof: Proof, formulaLine: ProvedFormulaLine): boolean {
+	validate(proof: Proof, index: number): boolean {
+		const formulaLine: ProvedFormulaLine = proof.lines[index] as ProvedFormulaLine;
 		return proof.axioms.some(axiom => axiom.equals(formulaLine.formula));
 	}
 	key(): string {
 		return "ByAxiom";
 	}
-	getShortDescription(): string {
-		return "DeductionMethod.ByAxiom.ShortDescription";
+	getShortDescription(localizer: (key: string, content: {}) => string, _: Proof): string {
+		return localizer("DeductionMethod.ByAxiom.ShortDescription", {});
 	}
-	getLongDescription(): string {
-		return "DeductionMethod.ByAxiom.LongDescription";
+	getLongDescription(localizer: (key: string, content: {}) => string, _: Proof): string {
+		return localizer("DeductionMethod.ByAxiom.LongDescription", {});
 	}
 	getRequiredFormulas(): Formula[] {
 		return [];
@@ -253,6 +253,64 @@ export class ByAxiom extends DeductionMethod {
 	toJsonObject(): {} {
 		return {
 			type: "ByAxiom"
+		};
+	}
+}
+
+export class ByDeduction extends DeductionMethod {
+	implies: Formula;
+	constructor(implies: Formula) {
+		super();
+		this.implies = implies;
+	}
+	impliesIndex(proof: Proof): number {
+		return proof.lines.findIndex(line => {
+			const formula: Formula | null = line.getProvedFormula();
+			return formula != null && formula.equals(this.implies);
+		});
+	}
+	phiIndex(proof: Proof): number {
+		if (this.implies instanceof Implies) {
+			const phi: Formula = this.implies.phi;
+			return proof.lines.findIndex(line => {
+				const formula: Formula | null = line.getProvedFormula();
+				return formula != null && formula.equals(phi);
+			});
+		}
+		else return -1;
+	}
+	validate(proof: Proof, index: number): boolean {
+		if (this.implies instanceof Implies) {
+			const formulaLine: ProvedFormulaLine = proof.lines[index] as ProvedFormulaLine;
+			const impliesIndex = this.impliesIndex(proof);
+			const phiIndex = this.phiIndex(proof);
+			return impliesIndex >= 0 && impliesIndex < index && phiIndex >= 0 && phiIndex < index && formulaLine.formula.equals(this.implies.psi);
+		} else return false;
+	}
+	key(): string {
+		return "ByDeduction/" + this.implies.toCode();
+	}
+	getShortDescription(localizer: (key: string, content: {}) => string, proof: Proof): string {
+		const impliesIndex = this.impliesIndex(proof);
+		const phiIndex = this.phiIndex(proof);
+		return localizer("DeductionMethod.ByDeduction.ShortDescription", { impliesIndex: impliesIndex, phiIndex: phiIndex });
+	}
+	getLongDescription(localizer: (key: string, content: {}) => string, proof: Proof): string {
+		const impliesIndex = this.impliesIndex(proof);
+		const phiIndex = this.phiIndex(proof);
+		return localizer("DeductionMethod.ByDeduction.LongDescription", { impliesIndex: impliesIndex, phiIndex: phiIndex });
+	}
+	getRequiredFormulas(): Formula[] {
+		if (this.implies instanceof Implies) {
+			const phi: Formula = this.implies.phi;
+			return [this.implies, phi];
+		}
+		else return [this.implies];
+	}
+	toJsonObject(): {} {
+		return {
+			type: "ByDeduction",
+			formula: this.implies.toCode()
 		};
 	}
 }
