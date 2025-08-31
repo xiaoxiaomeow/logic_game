@@ -45,7 +45,7 @@ class PropositionalLogicFormulaParser<TAtomicFormula extends Formula> {
 		}
 		return left;
 	}
-	private parseNot(): PropositionalLogicFormula<TAtomicFormula> {
+	parseNot(): PropositionalLogicFormula<TAtomicFormula> {
 		if (this.currentToken() === '!') {
 			this.consume('!');
 			const operand = this.parseNot();
@@ -53,7 +53,7 @@ class PropositionalLogicFormulaParser<TAtomicFormula extends Formula> {
 		}
 		return this.parseAtom();
 	}
-	private parseAtom(): PropositionalLogicFormula<TAtomicFormula> {
+	parseAtom(): PropositionalLogicFormula<TAtomicFormula> {
 		const token = this.currentToken();
 		if (token === '(') {
 			this.consume('(');

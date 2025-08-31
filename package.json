@@ -16,6 +16,7 @@
 		"@emotion/react": "^11.14.0",
 		"@mdx-js/react": "^3.1.0",
 		"@mdx-js/rollup": "^3.1.0",
+		"chevrotain": "^11.0.3",
 		"i18next": "^25.4.2",
 		"i18next-browser-languagedetector": "^8.2.0",
 		"next-themes": "^0.4.6",

@@ -71,5 +71,40 @@ To use Deduction, navigate to the Proof tab of your Inventory, and click `Deduct
 
 <ResumeUntil condition={proof => proof != null && proof.proofComplete()} text="ConversationProgresser.CompleteLevelToContinue"/>
 
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+So $\varphi\to\psi$ means that if I can produce $\varphi$ then I can also produce $\psi$. That quite explains the arrow symbol. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+所以 $\varphi\to\psi$ 的意思是只要我能制造出 $\varphi$ 我就能制造出 $\psi$。怪不得它写作一个箭头。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+You can think so, but you're talking about the **semantics** of a string. While it is good to know the **semantics** of every string if you're not  a robot construct, the **semantics** cannot be used at all when doing formal proofs. Only **syntactics** can be used, which are the formal structure of the string and the deduction rules. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+你可以这么想，但你正在讨论的是字符串的**语义**。虽然如果你不是机器人构装体的话，知道字符串的**语义**会很有帮助，但在做形式化证明的时候**语义**完全没法使用。你只能用**语法**，也就是形式化的字符串结构和推理规则。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+Okay. How should I read $\varphi\to\psi$? I suppose I can read it as "if $\varphi$ then $\psi$". 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+好吧。$\varphi\to\psi$ 怎么读？我觉得它可以读作“如果 $\varphi$ 则 $\psi$”。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+You can also read it as "$\varphi$ implies $\psi$". But again, reading a string does not matter since this does not have to do with **syntactics**, so you can read it no matter what. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+也可以读作“$\varphi$ 推出 $\psi$”。但话说回来，怎么读一个字符串和**语法**无关，所以你想怎么读都可以。
+</LocalizedMarkdown>
+</Speak>
 
 </ConversationProgresser>
