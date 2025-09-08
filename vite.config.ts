@@ -7,6 +7,9 @@ import rehypeKatex from 'rehype-katex';
 
 // https://vite.dev/config/
 export default defineConfig({
+	optimizeDeps: {
+		include: ['**/*.js']
+	},
 	plugins: [mdx({
 		rehypePlugins: [rehypeKatex],
 		remarkPlugins: [remarkMath],

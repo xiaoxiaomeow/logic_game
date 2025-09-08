@@ -1,11 +1,11 @@
 import { useUIStore } from "@/contexts/UIStore";
-import type { Formula } from "@/logic/LogicSystem";
 import { Box, Flex, HStack, ListItem, ListRoot, Text, VStack } from "@chakra-ui/react";
 import { FaAngleLeft, FaAngleRight, FaRegCopy, FaRegCircleCheck } from "react-icons/fa6";
 import FormulaLatex from "./FormulaLatex";
 import { useState } from "react";
 import MarkdownWithLatex from "./MarkdownWithLatex";
 import { useTranslation } from "react-i18next";
+import type { Formula } from "@/logic/Formula";
 
 function FormulaInspector() {
 	const formulas: Formula[] = useUIStore(state => state.formulas);

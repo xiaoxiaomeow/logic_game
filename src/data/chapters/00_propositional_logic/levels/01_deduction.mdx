@@ -1,15 +1,16 @@
-import PropositionalLogicWithAtomicFormula from "/src/logic/PropositionalLogic";
+import { parseFormula } from "/src/logic/Parser";
+import { PropositionalLogic } from "/src/logic/LogicSystem";
 
-export const axiom1 = PropositionalLogicWithAtomicFormula.parseFormula('p->!q');
-export const axiom2 = PropositionalLogicWithAtomicFormula.parseFormula('p');
-export const target = PropositionalLogicWithAtomicFormula.parseFormula('!q');
+export const axiom1 = parseFormula('p->!q');
+export const axiom2 = parseFormula('p');
+export const target = parseFormula('!q');
 
 export const meta = {
 	chapterId: "00_propositional_logic",
 	id: "01_deduction",
 	name: "Level.PropositionalLogic.Deduction.Name",
 	statement: "$\\{p\\to\\lnot q,p\\}\\vdash \\lnot q$",
-	logicSystem: PropositionalLogicWithAtomicFormula,
+	logicSystem: PropositionalLogic,
 	axioms: [axiom1, axiom2],
 	target: target,
 	type: "main"

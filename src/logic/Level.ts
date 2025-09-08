@@ -1,5 +1,6 @@
 import type { ElementType } from "react";
-import type { Formula, LogicSystem } from "./LogicSystem";
+import type { LogicSystem } from "./LogicSystem";
+import type { Formula } from "./Formula";
 
 export interface LevelMeta {
 	id: string;

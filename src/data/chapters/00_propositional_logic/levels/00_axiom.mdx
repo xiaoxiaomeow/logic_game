@@ -1,6 +1,7 @@
-import PropositionalLogicWithAtomicFormula from "/src/logic/PropositionalLogic";
+import { parseFormula } from "/src/logic/Parser";
+import { PropositionalLogic } from "/src/logic/LogicSystem";
 
-export const axiom = PropositionalLogicWithAtomicFormula.parseFormula('p->!q');
+export const axiom = parseFormula('p->!q');
 export const target = axiom;
 
 export const meta = {
@@ -8,7 +9,7 @@ export const meta = {
 	id: "00_axiom",
 	name: "Level.PropositionalLogic.Axiom.Name",
 	statement: "$\\{p\\to\\lnot q\\}\\vdash p\\to\\lnot q$",
-	logicSystem: PropositionalLogicWithAtomicFormula,
+	logicSystem: PropositionalLogic,
 	axioms: [axiom],
 	target: target,
 	type: "main"

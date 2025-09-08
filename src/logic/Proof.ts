@@ -1,5 +1,6 @@
-import type { Formula, LogicSystem } from "./LogicSystem";
-import { Implies } from "./PropositionalLogic";
+import { Implies, type Formula } from "./Formula";
+import type { LogicSystem } from "./LogicSystem";
+import { parseFormula } from "./Parser";
 import { TokenizeCommand } from "./Token";
 
 export interface ExcecutionResult {
@@ -66,7 +67,7 @@ class Proof {
 			const segments: string[] = TokenizeCommand(command);
 			const commandWord = segments[0];
 			if (commandWord === "axiom") {
-				const formula: Formula = this.logicSystem.parseFormula(segments[1]);
+				const formula: Formula = parseFormula(segments[1]);
 				if (this.axioms.some(axiom => axiom.equals(formula))) {
 					const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula, new ByAxiom());
 					return { success: true, errorMessage: null, newLineIndex: this.provideProvedLine(newLine, lineIndex) }
@@ -135,11 +136,11 @@ class Proof {
 	}
 	proofLineFromJsonObject(jsonObject: { type: string }): ProofLine | null {
 		if (jsonObject.type === "UnprovedFormulaLine") {
-			return new UnprovedFormulaLine(this.logicSystem.parseFormula((jsonObject as any).formula));
+			return new UnprovedFormulaLine(parseFormula((jsonObject as any).formula));
 		}
 		else if (jsonObject.type === "ProvedFormulaLine") {
 			const deductionMethod: DeductionMethod | null = this.deductionMethodFromJsonObject((jsonObject as any).deductionMethod);
-			if (deductionMethod != null) return new ProvedFormulaLine(this.logicSystem.parseFormula((jsonObject as any).formula), deductionMethod);
+			if (deductionMethod != null) return new ProvedFormulaLine(parseFormula((jsonObject as any).formula), deductionMethod);
 		}
 		return null;
 	}
@@ -147,7 +148,7 @@ class Proof {
 		if (jsonObject.type === "ByAxiom") {
 			return new ByAxiom();
 		} else if (jsonObject.type === "ByDeduction") {
-			return new ByDeduction(this.logicSystem.parseFormula((jsonObject as any).formula));
+			return new ByDeduction(parseFormula((jsonObject as any).formula));
 		} else return null;
 	}
 	copy(): Proof {

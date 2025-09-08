@@ -1,4 +1,4 @@
-import type { Formula } from "@/logic/LogicSystem";
+import type { Formula } from "@/logic/Formula";
 import { InlineMath, BlockMath } from 'react-katex';
 import { Box } from "@chakra-ui/react";
 import type { MouseEventHandler } from "react";

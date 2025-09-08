@@ -1,4 +1,4 @@
-import type { Formula } from '@/logic/LogicSystem';
+import type { Formula } from '@/logic/Formula';
 import type Proof from '@/logic/Proof';
 import { create, type StoreApi, type UseBoundStore } from 'zustand';
 
