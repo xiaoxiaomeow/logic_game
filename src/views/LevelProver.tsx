@@ -10,6 +10,7 @@ import type { ChapterModule } from "@/logic/Chapter";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import type Proof from "@/logic/Proof";
 
 function LevelProverPage() {
 	const [loading, setLoading] = useState(false);
@@ -20,9 +21,13 @@ function LevelProverPage() {
 	const setChapterName: (chapterName: string) => void = useUIStore(state => state.setChapterName);
 	const setLevelName: (levelName: string) => void = useUIStore(state => state.setLevelName);
 	const clearFormulas: () => void = useUIStore(state => state.clearFormulas);
+	const resetConversationProgress: () => void = useUIStore(state => state.resetConversationProgress);
+	const setProof: (proof: Proof | null) => void = useUIStore(state => state.setProof);
 	const t = useTranslation().t;
 	useEffect(() => {
 		clearFormulas();
+		resetConversationProgress();
+		setProof(null);
 		setLoading(true);
 		const load = async () => {
 			try {

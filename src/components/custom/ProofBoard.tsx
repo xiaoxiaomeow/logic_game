@@ -23,7 +23,7 @@ function ProofBoard(props: ProofBoardInput) {
 	const chapterModule: ChapterModule = props.chapterModule;
 	const key: string = chapterModule.meta.id + "/" + levelModule.meta.id;
 	const proof: Proof | null = useUIStore(state => state.proof);
-	const setProof: (proof: Proof) => void = useUIStore(state => state.setProof);
+	const setProof: (proof: Proof | null) => void = useUIStore(state => state.setProof);
 	const navigate = useNavigate();
 	useEffect(() => {
 		const jsonString = localStorage.getItem(key);
@@ -107,7 +107,7 @@ function LevelInfo(props: ProofBoardInput) {
 
 function ProofEditor() {
 	const proof: Proof | null = useUIStore(state => state.proof);
-	const setProof: (proof: Proof) => void = useUIStore(state => state.setProof);
+	const setProof: (proof: Proof | null) => void = useUIStore(state => state.setProof);
 	const lineIndex = useUIStore(state => state.lineIndex);
 	const setLineIndex = useUIStore(state => state.setLineIndex);
 	const t = useTranslation().t;
@@ -160,7 +160,7 @@ function ProofEditor() {
 								if (line instanceof ProvedFormulaLine) return (
 									<Flex justifyContent="space-between">
 										<FormulaLatex formula={line.formula}></FormulaLatex>
-										<Text>{t(line.deductionMethod.getShortDescription((key: string, content: {}) => t(key, content), proof))}</Text>
+										<Text>{line.deductionMethod.getShortDescription((key: string, content: {}) => t(key, content), proof)}</Text>
 									</Flex>
 								);
 								else if (line instanceof UnprovedFormulaLine) return (

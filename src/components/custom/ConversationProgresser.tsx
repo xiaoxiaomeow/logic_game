@@ -8,30 +8,40 @@ import type Proof from "@/logic/Proof";
 import { useTranslation } from "react-i18next";
 
 function ConversationProgresser(props: { children: ReactNode }) {
-	const resetConversationProgress: () => void = useUIStore(state => state.resetConversationProgress);
-	const increaseConversationProgress: () => void = useUIStore(state => state.increaseConversationProgress);
 	const setConversationProgress: (progress: number) => void = useUIStore(state => state.setConversationProgress);
 	const conversationProgress: number = useUIStore(state => state.conversationProgress);
 	const proof: Proof | null = useUIStore(state => state.proof);
-	const handler: MouseEventHandler = _ => {
-		increaseConversationProgress();
-	};
-	const t = useTranslation().t;
-	useEffect(() => { resetConversationProgress(); }, []);
+	const children: ReactNode[] = React.Children.toArray(props.children);
 	useEffect(() => {
-		let maxIndex = -1;
-		let display = true;
-		React.Children.toArray(props.children).forEach((child: ReactNode, index) => {
-			if (React.isValidElement(child) && display) {
-				if (child.type === ResumeUntil) {
-					const condition: ((proof: Proof | null) => boolean) = (child.props as ResumeUntilInput).condition;
-					if (condition != null && !condition(proof)) display = false;
-					else maxIndex = Math.max(maxIndex, index);
-				}
-			}
-		});
-		if (conversationProgress <= maxIndex) setConversationProgress(maxIndex + 1);
+		let progress: number = conversationProgress;
+		let child = children[progress];
+		while (React.isValidElement(child) && child.type === ResumeUntil) {
+			const condition: ((proof: Proof | null) => boolean) = (child.props as ResumeUntilInput).condition;
+			if (condition != null && !condition(proof)) break;
+			progress++;
+			child = children[progress];
+		}
+		setConversationProgress(progress);
 	}, [proof]);
+	const handler: MouseEventHandler = _ => {
+		let progress: number = conversationProgress;
+		let child = children[progress];
+		if (React.isValidElement(child) && child.type === ResumeUntil) {
+			const condition: ((proof: Proof | null) => boolean) = (child.props as ResumeUntilInput).condition;
+			if (condition != null && !condition(proof)) return;
+		}
+		progress += 2;
+		child = children[progress];
+		while (React.isValidElement(child) && child.type === ResumeUntil) {
+			const condition: ((proof: Proof | null) => boolean) = (child.props as ResumeUntilInput).condition;
+			if (condition != null && !condition(proof)) break;
+			progress++;
+			child = children[progress];
+		}
+		progress -= 1;
+		setConversationProgress(progress);
+	}
+	const t = useTranslation().t;
 	return (
 		<VStack onClick={handler} height="100%">
 			{
