@@ -2,7 +2,7 @@ import type { LevelModule } from "@/logic/Level";
 import { Box, Button, Flex, HStack, IconButton, Input, InputGroup, ScrollArea, Table, Text, VStack } from "@chakra-ui/react";
 import FormulaLatex from "./FormulaLatex";
 import MarkdownWithLatex from "./MarkdownWithLatex";
-import Proof, { UnprovedFormulaLine, ProofLine, ProvedFormulaLine, type ExcecutionResult } from "@/logic/Proof";
+import Proof, { UnprovedFormulaLine, ProofLine, ProvedFormulaLine } from "@/logic/Proof";
 import { useUIStore } from "@/contexts/UIStore";
 import { useCallback, useEffect, useRef } from "react";
 import { FaChevronRight, FaRegTrashAlt } from "react-icons/fa";
@@ -12,6 +12,7 @@ import { t } from "i18next";
 import type { ChapterModule } from "@/logic/Chapter";
 import { setLevelState } from "@/logic/LevelState";
 import { useNavigate } from "react-router-dom";
+import type { ExcecutionResult } from "@/logic/ProofCommand";
 
 export interface ProofBoardInput {
 	levelModule: LevelModule,
@@ -145,7 +146,7 @@ function ProofEditor() {
 				<Table.Body>
 					{proof.lines.map((line: ProofLine, index: number) => (
 						<Table.Row
-							key={line.key()}
+							key={index + "/" + line.key()}
 							borderBottom={index === proof.lines.length - 1 ? "2px double" : "1px solid"}
 							borderTop={index === 0 ? "2px double" : ""}
 							borderColor="logic.emphasized"
@@ -174,17 +175,21 @@ function ProofEditor() {
 							})()}</Table.Cell>
 							<Table.Cell borderBottomWidth={0} padding="4px">{(() => {
 								if (line instanceof ProvedFormulaLine) return (
-									<IconButton size="2xs" variant="ghost" onClick={() => {
-										proof.remove(index);
+									<IconButton size="2xs" variant="ghost" onClick={event => {
+										const newIndex = proof.remove(index);
+										setLineIndex(newIndex);
 										setProof(proof.copy());
+										event.stopPropagation();
 									}}>
 										<FaRegTrashAlt />
 									</IconButton>
 								);
 								if (line instanceof UnprovedFormulaLine) return (
-									<IconButton size="2xs" variant="ghost" disabled={proof.isFormulaRequired(line.formula, index)} onClick={() => {
-										proof.remove(index);
+									<IconButton size="2xs" variant="ghost" disabled={proof.isFormulaRequired(line.formula, index)} onClick={event => {
+										const newIndex = proof.remove(index);
+										setLineIndex(newIndex);
 										setProof(proof.copy());
+										event.stopPropagation();
 									}}>
 										<FaRegTrashAlt />
 									</IconButton>
@@ -215,8 +220,8 @@ function CommandEditor() {
 	const endElement = inputCommand ? (
 		<IconButton size="2xs" variant="ghost" onClick={() => { setInputCommand(""); inputRef.current?.focus() }} marginEnd="-2" ><IoMdClose /></IconButton>
 	) : undefined;
-	const canExcecute: boolean = proof != null && lineIndex >= 0 && lineIndex < proof.lines.length && proof.lines[lineIndex] instanceof UnprovedFormulaLine && !(proof.lines[lineIndex] instanceof ProvedFormulaLine);
-	const excecuteCommand: () => void = () => {
+	const canExcecute: boolean = proof != null && lineIndex >= 0 && lineIndex < proof.lines.length;
+	const excecute: () => void = () => {
 		if (proof != null && canExcecute) {
 			const result: ExcecutionResult = proof.excecute(inputCommand, lineIndex);
 			if (result.success) {
@@ -226,10 +231,8 @@ function CommandEditor() {
 				setProof(proof.copy());
 			}
 			else if (result.errorMessage != null) {
+				console.log(result.errorMessage);
 				setErrorMessage(result.errorMessage);
-			}
-			else {
-				setErrorMessage("");
 			}
 		}
 	};
@@ -237,11 +240,11 @@ function CommandEditor() {
 		<HStack width="100%">
 			<InputGroup endElement={endElement}>
 				<Input size="sm" ref={inputRef} value={inputCommand} fontFamily="monospace" onChange={e => { setInputCommand(e.currentTarget.value); }} onKeyUp={event => {
-					if (event.key === "Enter") excecuteCommand();
+					if (event.key === "Enter") excecute();
 				}}>
 				</Input>
 			</InputGroup>
-			<Button size="sm" disabled={!canExcecute} onClick={excecuteCommand}>{t("ProofBoard.Excecute")}</Button>
+			<Button size="sm" disabled={!canExcecute} onClick={excecute}>{t("ProofBoard.Excecute")}</Button>
 		</HStack>
 	);
 }

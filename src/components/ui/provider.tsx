@@ -6,41 +6,13 @@ import {
 	type ColorModeProviderProps,
 } from "./color-mode"
 import i18n from './i18n';
-
-import { ChakraProvider, createSystem, defaultConfig, defineConfig } from '@chakra-ui/react';
+import { ChakraProvider, Code, createSystem, defaultConfig, defineConfig, Heading, ListItem, ListRoot, Text } from '@chakra-ui/react';
 
 const config = defineConfig({
 	globalCss: {
 		html: {
-			colorPalette: "logic"
+			colorPalette: "logic",
 		},
-		h1: {
-			fontSize: "xl",
-			fontWeight: 'bold'
-		},
-		h2: {
-			fontSize: "lg",
-			fontWeight: 'semibold'
-		},
-		h3: {
-			fontSize: "md",
-			fontWeight: 'medium'
-		},
-		ul: {
-			listStyleType: "initial",
-			paddingInlineStart: "20px",
-		},
-		em: { fontStyle: "italic" },
-		code: {
-			fontFamily: "monospace",
-			backgroundColor: "logic.emphasized",
-			padding: '6px 4px 4px 4px',
-			borderRadius: '4px',
-			fontSize: '100%'
-		},
-		p: {
-			alignContent: "center"
-		}
 	},
 	theme: {
 		tokens: {
@@ -171,6 +143,24 @@ const config = defineConfig({
 });
 
 const system = createSystem(defaultConfig, config);
+
+export const MDXComponents = {
+	p: (props: {}) => <Text {...props} />,
+
+	h1: (props: {}) => <Heading as="h1" {...props} />,
+	h2: (props: {}) => <Heading as="h2" {...props} />,
+	h3: (props: {}) => <Heading as="h3" {...props} />,
+	h4: (props: {}) => <Heading as="h4" {...props} />,
+	h5: (props: {}) => <Heading as="h5" {...props} />,
+	h6: (props: {}) => <Heading as="h6" {...props} />,
+
+	code: (props: {}) => <Code variant="solid" fontSize="md" {...props} />,
+	inlineCode: (props: {}) => <Code variant="solid" fontSize="md" {...props} />,
+
+	ul: (props: {}) => <ListRoot listStylePosition="inside" {...props} />,
+	ol: (props: {}) => <ListRoot listStylePosition="inside" as="ol" {...props} />,
+	li: (props: {}) => <ListItem {...props} _marker={{ color: "inherit" }} />,
+};
 
 export function Provider(props: ColorModeProviderProps) {
 	return (

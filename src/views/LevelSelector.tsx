@@ -11,6 +11,7 @@ import Inventory from "@/components/custom/Inventory";
 import type Proof from "@/logic/Proof";
 import { useTranslation } from "react-i18next";
 import { getLevelState } from "@/logic/LevelState";
+import { MDXComponents } from "@/components/ui/provider";
 
 function LevelSelectorPage() {
 	const setChapterName: (chapterName: string) => void = useUIStore(state => state.setChapterName);
@@ -28,7 +29,7 @@ function LevelSelectorPage() {
 		<LayoutStackMain>
 			<LayoutStackLeft>
 				<ConversationBox>
-					<Welcome />
+					<Welcome components={MDXComponents} />
 				</ConversationBox>
 			</LayoutStackLeft>
 			<LayoutStackMiddle>

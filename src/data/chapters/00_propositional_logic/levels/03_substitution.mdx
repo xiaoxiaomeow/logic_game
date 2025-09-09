@@ -1,0 +1,65 @@
+import { parseFormula } from "/src/logic/Parser";
+import { PropositionalLogic } from "/src/logic/LogicSystem";
+
+export const axiom = parseFormula('p->p');
+export const target = parseFormula('(p->q)->p->q');
+
+export const meta = {
+	chapterId: "00_propositional_logic",
+	id: "03_substitution",
+	name: "Level.PropositionalLogic.Substitution.Name",
+	statement: "$\\{p\\to p\\}\\vdash (p\\to q)\\to p\\to q$",
+	logicSystem: PropositionalLogic,
+	axioms: [axiom],
+	target: target,
+	type: "main"
+}
+
+import Speak from "/src/components/custom/Speak";
+import ConversationProgresser from "/src/components/custom/ConversationProgresser";
+import LocalizedMarkdown from "/src/components/custom/LocalizedMarkdown";
+import Star from "/src/components/custom/Star";
+import Sapphire from "/src/components/custom/Sapphire";
+import FormulaLatex from "/src/components/custom/FormulaLatex";
+import ResumeUntil from "/src/components/custom/ResumeUntil";
+
+<ConversationProgresser>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+This is the last rule: 
+
+- (Substitution) If $\varphi$ is any formula you have produced, $p$ is an atomic formula and $\psi$ is any formula, then you can also produce the formula obtained by replacing every $p$ in $\varphi$ with $\psi$. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+这是最后一条规则：
+
+- （替换）如果 $\varphi$ 是任意你制造好的公式，$p$ 是任意原子公式，$\psi$ 是任意公式，那么你可以制造通过把 $\varphi$ 中的 $p$ 全部替换为 $\psi$ 得到的公式。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+Although I already feel like these strings should be called formulas, but you finally admitted it! But what exactly is a formula, just any string? And what is this atomic formula? 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+虽然我早就感觉这些字符串应该被叫做公式，但你终于承认了！不过具体什么是公式，任何字符串都可以吗？还有这个原子公式是什么？
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+Generally, a formula cannot be every string, it needs to be a string that makes sense: as a counterexample, $\to p\to\to$ is not a formula. That said, every string you'll deal with (recently) in the game will be a formula. 
+
+More precisely, an atomic formula is just some letter or word that you like. We often use atomic formulas $p,q,r$, but you can certainly use $apple$ as an atomic formula if you want. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+这是最后一条规则：
+
+- （替换）如果 $\varphi$ 是任意你制造好的公式，$p$ 是任意原子公式，$\psi$ 是任意公式，那么你可以制造通过把 $\varphi$ 中的 $p$ 全部替换为 $\psi$ 得到的公式。
+</LocalizedMarkdown>
+</Speak>
+
+<ResumeUntil condition={proof => proof != null && proof.proofComplete()} text="ConversationProgresser.CompleteLevelToContinue"/>
+
+</ConversationProgresser>

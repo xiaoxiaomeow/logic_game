@@ -1,5 +1,5 @@
 import { createToken, CstParser, Lexer, type CstNode, type IToken } from "chevrotain"
-import { AxiomCommand, DeductionCommand, type ProofCommand } from "./ProofCommand";
+import { AxiomCommand, DeductionCommand, SubstitutionCommand, type ProofCommand } from "./ProofCommand";
 import { AtomicFormula, Implies, Not, type Formula } from "./Formula";
 
 // general
@@ -7,8 +7,9 @@ export const WhiteSpaceToken = createToken({ name: "WhiteSpace", pattern: /\s+/,
 export const LeftParenthesisToken = createToken({ name: "LeftParen", pattern: /\(/ });
 export const RightParenthesisToken = createToken({ name: "RightParen", pattern: /\)/ });
 // commands
-export const AxiomToken = createToken({ name: "Axiom", pattern: /axiom/ });
-export const DeductionToken = createToken({ name: "Deduction", pattern: /deduction/ });
+export const AxiomToken = createToken({ name: "Axiom", pattern: /(axiom|axi)/ });
+export const DeductionToken = createToken({ name: "Deduction", pattern: /(deduction|ded)/ });
+export const SubstitutionToken = createToken({ name: "Substitution", pattern: /(substitution|sub)/ });
 // logic operators
 export const ImpliesToken = createToken({ name: "Implies", pattern: /->/ });
 export const NotToken = createToken({ name: "Not", pattern: /!/ });
@@ -57,7 +58,8 @@ class Parser extends CstParser {
 	command = this.RULE("command", () => {
 		this.OR([
 			{ ALT: () => this.SUBRULE(this.axiom) },
-			{ ALT: () => this.SUBRULE(this.deduction) }
+			{ ALT: () => this.SUBRULE(this.deduction) },
+			{ ALT: () => this.SUBRULE(this.substitution) }
 		]);
 	});
 	private axiom = this.RULE("axiom", () => {
@@ -73,6 +75,15 @@ class Parser extends CstParser {
 			{ ALT: () => this.CONSUME(LineToken) },
 			{ ALT: () => this.SUBRULE(this.formula) }
 		]);
+	});
+	private substitution = this.RULE("substitution", () => {
+		this.CONSUME(SubstitutionToken);
+		this.OR([
+			{ ALT: () => this.CONSUME(LineToken) },
+			{ ALT: () => this.SUBRULE1(this.formula) }
+		]);
+		this.SUBRULE2(this.formula, { LABEL: "atomicFormula" });
+		this.SUBRULE3(this.formula, { LABEL: "replacement" });
 	});
 }
 
@@ -96,12 +107,26 @@ export interface AtomicFormulaNode {
 export interface NotNode {
 	formula: CstNode[];
 }
+export interface ParenthesizedFormulaNode {
+	formula: CstNode[];
+}
+export interface CommandNode {
+	axiom?: CstNode[];
+	deduction?: CstNode[];
+	substitution?: CstNode[];
+}
 export interface AxiomNode {
-	LineToken?: IToken[];
+	Line?: IToken[];
 	formula?: CstNode[];
 }
+export interface SubstitutionNode {
+	Line?: IToken[];
+	formula?: CstNode[];
+	atomicFormula: CstNode[];
+	replacement: CstNode[];
+}
 export interface DeductionNode {
-	LineToken?: IToken[];
+	Line?: IToken[];
 	formula?: CstNode[];
 }
 
@@ -134,9 +159,18 @@ class Visitor extends parser.getBaseCstVisitorConstructorWithDefaults() {
 		const formula = this.visit(ctx.formula[0]) as Formula;
 		return new Not(formula);
 	}
+	parenthesizedFormula(ctx: ParenthesizedFormulaNode): Formula {
+		const formula = this.visit(ctx.formula[0]) as Formula;
+		return formula;
+	}
+	command(ctx: CommandNode): ProofCommand {
+		if (ctx.axiom != null) return this.visit(ctx.axiom[0]);
+		else if (ctx.deduction != null) return this.visit(ctx.deduction[0]);
+		else return this.visit(ctx.substitution!![0]);
+	}
 	axiom(ctx: AxiomNode): ProofCommand {
-		if (ctx.LineToken != null) {
-			const lineNumber = parseInt(ctx.LineToken[0].image.substring(1));
+		if (ctx.Line != null) {
+			const lineNumber = parseInt(ctx.Line[0].image.substring(1));
 			return new AxiomCommand(lineNumber);
 		}
 		else {
@@ -145,13 +179,25 @@ class Visitor extends parser.getBaseCstVisitorConstructorWithDefaults() {
 		}
 	}
 	deduction(ctx: AxiomNode): ProofCommand {
-		if (ctx.LineToken != null) {
-			const lineNumber = parseInt(ctx.LineToken[0].image.substring(1));
+		if (ctx.Line != null) {
+			const lineNumber = parseInt(ctx.Line[0].image.substring(1));
 			return new DeductionCommand(lineNumber);
 		}
 		else {
 			const formula = this.visit(ctx.formula!![0]) as Formula;
 			return new DeductionCommand(formula);
+		}
+	}
+	substitution(ctx: SubstitutionNode): ProofCommand {
+		const atomicFormula: Formula = this.visit(ctx.atomicFormula[0]) as Formula;
+		const replacement: Formula = this.visit(ctx.replacement[0]) as Formula;
+		if (ctx.Line != null) {
+			const lineNumber = parseInt(ctx.Line[0].image.substring(1));
+			return new SubstitutionCommand(lineNumber, atomicFormula, replacement);
+		}
+		else {
+			const formula = this.visit(ctx.formula!![0]) as Formula;
+			return new SubstitutionCommand(formula, atomicFormula, replacement);
 		}
 	}
 }

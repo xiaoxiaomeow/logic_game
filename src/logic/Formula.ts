@@ -1,8 +1,9 @@
 export abstract class Formula {
 	abstract operatorPriority(): number;
+	abstract replaceAtomicFormula(atomicFormula: AtomicFormula, replacement: Formula): Formula;
 	abstract toCode(): string;
 	toCodeWithBracket(parentOperatorPriority: number): string {
-		if (this.operatorPriority() >= parentOperatorPriority) return this.toCode();
+		if (this.operatorPriority() > parentOperatorPriority) return this.toCode();
 		else return "(" + this.toCode() + ")";
 	};
 	abstract toLatex(): string;
@@ -26,6 +27,9 @@ export class Implies extends Formula {
 		super();
 		this.phi = phi;
 		this.psi = psi;
+	}
+	replaceAtomicFormula(atomicFormula: AtomicFormula, replacement: Formula): Formula {
+		return new Implies(this.phi.replaceAtomicFormula(atomicFormula, replacement), this.psi.replaceAtomicFormula(atomicFormula, replacement));
 	}
 	operatorPriority(): number {
 		return 10;
@@ -63,6 +67,9 @@ export class Not extends Formula {
 		super();
 		this.phi = phi;
 	}
+	replaceAtomicFormula(atomicFormula: AtomicFormula, replacement: Formula): Formula {
+		return new Not(this.phi.replaceAtomicFormula(atomicFormula, replacement));
+	}
 	operatorPriority(): number {
 		return 20;
 	}
@@ -96,6 +103,10 @@ export class AtomicFormula implements Formula {
 	variableName: string;
 	constructor(variableName: string) {
 		this.variableName = variableName;
+	}
+	replaceAtomicFormula(atomicFormula: AtomicFormula, replacement: Formula): Formula {
+		if (atomicFormula.equals(this)) return replacement;
+		else return this;
 	}
 	operatorPriority(): number {
 		return 30;

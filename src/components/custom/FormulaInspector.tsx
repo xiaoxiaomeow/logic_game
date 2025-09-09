@@ -1,5 +1,5 @@
 import { useUIStore } from "@/contexts/UIStore";
-import { Box, Flex, HStack, ListItem, ListRoot, Text, VStack } from "@chakra-ui/react";
+import { Box, Code, Flex, HStack, ListItem, ListRoot, Text, VStack } from "@chakra-ui/react";
 import { FaAngleLeft, FaAngleRight, FaRegCopy, FaRegCircleCheck } from "react-icons/fa6";
 import FormulaLatex from "./FormulaLatex";
 import { useState } from "react";
@@ -43,7 +43,7 @@ function FormulaInspector() {
 						<HStack width="100%" alignItems="center">
 							<Text fontWeight="bold">{t("FormulaInspector.Code")}</Text>
 							{copied ? <FaRegCircleCheck /> : <FaRegCopy onClick={event => { onCopyClick(); event.stopPropagation(); }} />}
-							<code>{displayingFormula.toCode()}</code>
+							<Code variant="solid" size="md">{displayingFormula.toCode()}</Code>
 						</HStack>
 						<Box width="100%">
 							<MarkdownWithLatex>{t(displayingFormula.getFormulaDescription())}</MarkdownWithLatex>

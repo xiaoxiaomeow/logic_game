@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import type Proof from "@/logic/Proof";
+import { MDXComponents } from "@/components/ui/provider";
 
 function LevelProverPage() {
 	const [loading, setLoading] = useState(false);
@@ -50,7 +51,7 @@ function LevelProverPage() {
 		<LayoutStackMain>
 			<LayoutStackLeft>
 				<ConversationBox>
-					<levelModule.default />
+					<levelModule.default components={MDXComponents} />
 				</ConversationBox>
 			</LayoutStackLeft>
 			<LayoutStackMiddle>

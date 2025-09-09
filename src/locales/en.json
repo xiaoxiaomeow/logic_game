@@ -27,10 +27,12 @@
     "Formula.Not.FormulaDescription": "This formula is constructed by connecting the following formulas using $\\lnot$.",
     "Formula.Not.Description": "not {{phi}}",
     "Formula.Atomic.FormulaDescription": "This is an atomic formula.",
-    "DeductionMethod.ByAxiom.ShortDescription": "by axiom",
+    "DeductionMethod.ByAxiom.ShortDescription": "axiom",
     "DeductionMethod.ByAxiom.LongDescription": "The formula on this line is an axiom.",
     "DeductionMethod.ByDeduction.ShortDescription": "by deduction using ({{impliesIndex}}) ({{phiIndex}})",
     "DeductionMethod.ByDeduction.LongDescription": "The formula on this line is obtained by ({{impliesIndex}}) and ({{phiIndex}}) using deduction.",
+    "DeductionMethod.BySubstitution.ShortDescription": "by substituting {{atomicFormula}} in ({{formulaIndex}})",
+    "DeductionMethod.BySubstitution.LongDescription": "The formula on this line is obtained by substituting {{atomicFormula}} with ${{replacement}}$ in ({{formulaIndex}})",
     "ProofMethod.Axiom.Name": "Axiom",
     "ProofMethod.Deduction.Name": "Deduction",
     "LineInspector.Title": "Line Inspector",
@@ -44,5 +46,7 @@
     "Language.PropositionalLogic.Name": "Propositional Logic",
     "Chapter.PropositionalLogic.Name": "Propositional Logic",
     "Level.PropositionalLogic.Axiom.Name": "Axiom",
-    "Level.PropositionalLogic.Deduction.Name": "Deduction"
+    "Level.PropositionalLogic.Deduction.Name": "Deduction",
+    "Level.PropositionalLogic.Association.Name": "Association",
+    "Level.PropositionalLogic.Substitution.Name": "Substitution"
 }

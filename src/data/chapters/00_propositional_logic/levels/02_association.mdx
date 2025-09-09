@@ -1,0 +1,114 @@
+import { parseFormula } from "/src/logic/Parser";
+import { PropositionalLogic } from "/src/logic/LogicSystem";
+
+export const axiom1a = parseFormula('p->q->r');
+export const axiom1b = parseFormula('(p->q)->r');
+export const axiom2 = parseFormula('p');
+export const axiom3 = parseFormula('q');
+export const target = parseFormula('r');
+
+export const meta = {
+	chapterId: "00_propositional_logic",
+	id: "02_association",
+	name: "Level.PropositionalLogic.Association.Name",
+	statement: "$\\{p\\to q\\to r,(p\\to q)\\to r,p,q\\}\\vdash r$",
+	logicSystem: PropositionalLogic,
+	axioms: [axiom1a, axiom1b, axiom2, axiom3],
+	target: target,
+	type: "main"
+}
+
+import Speak from "/src/components/custom/Speak";
+import ConversationProgresser from "/src/components/custom/ConversationProgresser";
+import LocalizedMarkdown from "/src/components/custom/LocalizedMarkdown";
+import Star from "/src/components/custom/Star";
+import Sapphire from "/src/components/custom/Sapphire";
+import FormulaLatex from "/src/components/custom/FormulaLatex";
+import ResumeUntil from "/src/components/custom/ResumeUntil";
+
+<ConversationProgresser>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+Sometimes you'll see a sequence of arrows in a string, like $p\to q\to r$. When you try to apply the deduction rule, there is a disambiguity whether it means "if "$p\to q$ then $r$" or "if $p$ then $q\to r$". 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+有时候你会在一个字符串里看到一长串箭头，比如 $p\to q\to r$。当你使用推理规则的时候，你没法区分它的意思是“如果 $p\to q$ 则 $r$”还是“如果 $p$ 则 $q\to r$”。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+So I can use it either way? 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+那我是不是两种都可以用？
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+You wish. We need to distinguish these two cases by adding brackets: $(p\to q)\to r$ means "if "$p\to q$ then $r$", and $p\to(q\to r)$ means "if $p$ then $q\to r$". So that a single string only have a single meaning. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+想得美。我们得通过加括号来区分这两种情况：$(p\to q)\to r$ 的意思是“如果 $p\to q$ 则 $r$”，$p\to(q\to r)$ 的意思是“如果 $p$ 则 $q\to r$”。这样一个字符串只有唯一的一个意思。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+Uh, so what does the $p\to q\to r$ mean after all? 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+呃，所以 $p\to q\to r$ 到底是什么意思？
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+If no bracket is written, by default we add brackets from the **right**. So $p\to q\to r$ means $p\to(q\to r)$, $p\to q\to r\to s$ means $p\to(q\to(r\to s))$, and so on. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+如果没写括号，我们自动从**右侧**开始加括号。所以 $p\to q\to r$ 的意思是 $p\to(q\to r)$，$p\to q\to r\to s$ 的意思是 $p\to(q\to(r\to s))$，等等。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+Since you wished to use the string $p\to q\to r$ both ways, I'll give you the other interpretation as an axiom for free this time. Thank me since now you need to distinguish which string you actually need. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+既然你想要 $p\to q\to r$ 的两种用法，这次我就把另一种用法也作为公理送你。现在你得自己区分你实际上要用哪一个字符串了，快感谢我。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="author">
+<LocalizedMarkdown locale="en">
+If you ever get confused about a string, you can click on that string and inspect it in the Formula Inspector tab. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+如果你对某个字符串有疑惑，你可以点击那个字符串来在公式信息面板里查看它。
+</LocalizedMarkdown>
+</Speak>
+
+<ResumeUntil condition={proof => proof != null && proof.proofComplete()} text="ConversationProgresser.CompleteLevelToContinue"/>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+Well, I suppose $p\to q\to r$ then means that if I can produce $p$ and $q$ then I can produce $r$. It reads "if $p$ and $q$ then $r$"? 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+嘛，我看 $p\to q\to r$ 的意思是如果我能制造出 $p$ 和 $q$ 我就能制造出 $r$。它读作“如果 $p$ 且 $q$ 则 $r$”？
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+You could, if you want, but later we will define the actual "if $p$ and $q$ then $r$" written as $(p\land q)\to r$, and prove that they are equivalent. So, we might just read $p\to q\to r$ as it is. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+你愿意的话也行，但我们之后会定义正版的“如果 $p$ 且 $q$ 则 $r$”，写作 $(p\land q)\to r$，并证明它们是等价的。所以，$p\to q\to r$ 还是该怎么读怎么读比较好。
+</LocalizedMarkdown>
+</Speak>
+
+</ConversationProgresser>
