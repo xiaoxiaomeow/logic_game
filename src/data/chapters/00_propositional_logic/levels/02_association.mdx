@@ -33,7 +33,7 @@ import ResumeUntil from "/src/components/custom/ResumeUntil";
 Sometimes you'll see a sequence of arrows in a string, like $p\to q\to r$. When you try to apply the deduction rule, there is a disambiguity whether it means "if "$p\to q$ then $r$" or "if $p$ then $q\to r$". 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-有时候你会在一个字符串里看到一长串箭头，比如 $p\to q\to r$。当你使用推理规则的时候，你没法区分它的意思是“如果 $p\to q$ 则 $r$”还是“如果 $p$ 则 $q\to r$”。
+有时候你会在一个字符串里看到一长串箭头，比如 $p\to q\to r$。当你使用推理规则的时候，你没法区分它的语义是“如果你能制造出 $p\to q$ 你就能制造出 $r$”还是“如果你能制造出 $p$ 你就能制造出 $q\to r$”。
 </LocalizedMarkdown>
 </Speak>
 
@@ -48,10 +48,10 @@ So I can use it either way?
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-You wish. We need to distinguish these two cases by adding brackets: $(p\to q)\to r$ means "if "$p\to q$ then $r$", and $p\to(q\to r)$ means "if $p$ then $q\to r$". So that a single string only have a single meaning. 
+You wish. We don't allow multiple different semantics for a single string, so we need to distinguish these two cases by adding brackets: $(p\to q)\to r$ means "if "$p\to q$ then $r$", and $p\to(q\to r)$ means "if $p$ then $q\to r$". 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-想得美。我们得通过加括号来区分这两种情况：$(p\to q)\to r$ 的意思是“如果 $p\to q$ 则 $r$”，$p\to(q\to r)$ 的意思是“如果 $p$ 则 $q\to r$”。这样一个字符串只有唯一的一个意思。
+想得美。我们不允许一个字符串有多种不一样的语义，所以我们得通过加括号来区分这两种情况：$(p\to q)\to r$ 的意思是“如果 $p\to q$ 则 $r$”，$p\to(q\to r)$ 的意思是“如果 $p$ 则 $q\to r$”。
 </LocalizedMarkdown>
 </Speak>
 

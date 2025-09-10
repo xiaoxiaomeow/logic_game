@@ -1,6 +1,6 @@
 import { AtomicFormula, Formula, Implies } from "./Formula";
 import type Proof from "./Proof";
-import { ByAxiom, ByDeduction, ProofLine, ProvedFormulaLine } from "./Proof";
+import { ByAxiom, ByDeduction, BySubstitution, ProofLine, ProvedFormulaLine } from "./Proof";
 
 export interface ExcecutionResult {
 	success: boolean;
@@ -98,7 +98,7 @@ export class SubstitutionCommand extends ProofCommand {
 				const lineFormula: Formula | null = line.getProvedFormula();
 				return lineFormula != null && lineFormula.equals(formula);
 			})) {
-				const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula.replaceAtomicFormula(this.atomicFormula, this.replacement), new ByDeduction(formula));
+				const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula.replaceAtomicFormula(this.atomicFormula, this.replacement), new BySubstitution(formula, this.atomicFormula, this.replacement));
 				return { success: true, errorMessage: null, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
 			} else return { success: false, errorMessage: `Formula $${formula.toLatex()}$ is not proved before the current line.`, newLineIndex: null }
 		} else return { success: false, errorMessage: `The formula $${this.atomicFormula.toLatex()}$ is not an atomic formula.`, newLineIndex: null }

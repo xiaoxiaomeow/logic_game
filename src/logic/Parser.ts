@@ -17,7 +17,7 @@ export const NotToken = createToken({ name: "Not", pattern: /!/ });
 export const IdentifierToken = createToken({ name: "Identifier", pattern: /[a-zA-Z0-9_^{}]+/ });
 export const LineToken = createToken({ name: "Line", pattern: /\$[0-9]+/ });
 // collection
-export const Tokens = [WhiteSpaceToken, LeftParenthesisToken, RightParenthesisToken, AxiomToken, DeductionToken, ImpliesToken, NotToken, IdentifierToken, LineToken];
+export const Tokens = [WhiteSpaceToken, LeftParenthesisToken, RightParenthesisToken, AxiomToken, DeductionToken, SubstitutionToken, ImpliesToken, NotToken, IdentifierToken, LineToken];
 
 export const lexer = new Lexer(Tokens);
 

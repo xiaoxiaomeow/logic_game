@@ -72,9 +72,7 @@ function ProofBoard(props: ProofBoardInput) {
 						})()}
 					</ScrollArea.Content>
 				</ScrollArea.Viewport>
-				<ScrollArea.Scrollbar orientation="horizontal" />
 				<ScrollArea.Scrollbar orientation="vertical" />
-				<ScrollArea.Corner />
 			</ScrollArea.Root>
 			<CommandEditor />
 		</Flex>

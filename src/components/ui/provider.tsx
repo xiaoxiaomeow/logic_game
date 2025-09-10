@@ -145,7 +145,7 @@ const config = defineConfig({
 const system = createSystem(defaultConfig, config);
 
 export const MDXComponents = {
-	p: (props: {}) => <Text {...props} />,
+	p: (props: {}) => <Text lineHeight="tall" {...props} />,
 
 	h1: (props: {}) => <Heading as="h1" {...props} />,
 	h2: (props: {}) => <Heading as="h2" {...props} />,
