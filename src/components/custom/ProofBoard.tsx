@@ -159,7 +159,7 @@ function ProofEditor() {
 								if (line instanceof ProvedFormulaLine) return (
 									<Flex justifyContent="space-between">
 										<FormulaLatex formula={line.formula}></FormulaLatex>
-										<Text>{line.deductionMethod.getShortDescription((key: string, content: {}) => t(key, content), proof)}</Text>
+										<MarkdownWithLatex>{line.deductionMethod.getShortDescription((key: string, content: {}) => t(key, content), proof)}</MarkdownWithLatex>
 									</Flex>
 								);
 								else if (line instanceof UnprovedFormulaLine) return (

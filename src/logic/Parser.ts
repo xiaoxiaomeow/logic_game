@@ -14,7 +14,7 @@ export const SubstitutionToken = createToken({ name: "Substitution", pattern: /(
 export const ImpliesToken = createToken({ name: "Implies", pattern: /->/ });
 export const NotToken = createToken({ name: "Not", pattern: /!/ });
 // vars
-export const IdentifierToken = createToken({ name: "Identifier", pattern: /[a-zA-Z0-9_^{}]+/ });
+export const IdentifierToken = createToken({ name: "Identifier", pattern: /[a-zA-Z0-9_^{}\\]+/ });
 export const LineToken = createToken({ name: "Line", pattern: /\$[0-9]+/ });
 // collection
 export const Tokens = [WhiteSpaceToken, LeftParenthesisToken, RightParenthesisToken, AxiomToken, DeductionToken, SubstitutionToken, ImpliesToken, NotToken, IdentifierToken, LineToken];

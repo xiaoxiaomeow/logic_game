@@ -15,6 +15,7 @@ export class ProofMethod {
 const proofMethods = [
 	new ProofMethod("ProofMethod.Axiom.Name", _ => "axiom ", ["00_propositional_logic/00_axiom"]),
 	new ProofMethod("ProofMethod.Deduction.Name", _ => "deduction ", ["00_propositional_logic/00_axiom"]),
+	new ProofMethod("ProofMethod.Substitution.Name", _ => "substitution ", ["00_propositional_logic/02_association"]),
 ];
 
 function getUnlockedProofMethods() {

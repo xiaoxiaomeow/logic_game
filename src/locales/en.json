@@ -35,6 +35,7 @@
     "DeductionMethod.BySubstitution.LongDescription": "The formula on this line is obtained by substituting {{atomicFormula}} with ${{replacement}}$ in ({{formulaIndex}})",
     "ProofMethod.Axiom.Name": "Axiom",
     "ProofMethod.Deduction.Name": "Deduction",
+    "ProofMethod.Substitution.Name": "Substitution",
     "LineInspector.Title": "Line Inspector",
     "LineInspector.LineNumber": "Line Number",
     "LineInspector.Formula": "Formula",

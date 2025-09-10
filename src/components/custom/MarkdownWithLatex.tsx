@@ -14,9 +14,9 @@ interface MarkdownWithLatexProps {
 }
 
 const MarkdownWithLatex: React.FC<MarkdownWithLatexProps> = (props) => {
-	const components: MathComponents = {
+	const mathComponents: MathComponents = {
 		math: ({ value }) => <BlockMath math={value} />,
-		inlineMath: ({ value }) => <InlineMath math={value} />,
+		inlineMath: ({ value }) => <InlineMath math={value} />
 	};
 
 	return (
@@ -24,7 +24,7 @@ const MarkdownWithLatex: React.FC<MarkdownWithLatexProps> = (props) => {
 			{...props}
 			remarkPlugins={[remarkMath]}
 			rehypePlugins={[rehypeKatex]}
-			components={components}
+			components={mathComponents}
 		/>
 	);
 };

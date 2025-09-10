@@ -48,9 +48,9 @@ function FormulaInspector() {
 						<Box width="100%">
 							<MarkdownWithLatex>{t(displayingFormula.getFormulaDescription())}</MarkdownWithLatex>
 						</Box>
-						<ListRoot width="100%">
+						<ListRoot width="100%" listStyle="inside">
 							{subFormulas.map(formula => (
-								<ListItem key={formula.toCode()}>
+								<ListItem key={formula.toCode()} _marker={{ color: "inherit" }}>
 									<FormulaLatex formula={formula} />
 								</ListItem>
 							))}

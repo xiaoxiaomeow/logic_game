@@ -49,14 +49,85 @@ Although I already feel like these strings should be called formulas, but you fi
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-Generally, a formula cannot be every string, it needs to be a string that makes sense: as a counterexample, $\to p\to\to$ is not a formula. That said, every string you'll deal with (recently) in the game will be a formula. 
+Generally, a formula cannot be every string, it needs to be a string that makes sense: as a counterexample, $\to p\to\to$ is not a formula. That said, every string you'll encounter and deal with (recently) in the game will be a formula. 
 
-More precisely, an atomic formula is just some letter or word that you like. We often use atomic formulas $p,q,r$, but you can certainly use $apple$ as an atomic formula if you want. 
+More precisely, an **atomic formula** is just some letter or word that you like. <Sapphire /> often use atomic formulas $p,q,r$, but you can certainly use $t^5_7$ or $apple$ as an atomic formula if you want. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-这是最后一条规则：
+一般来说，不是每个字符串都是公式，公式需要是个有意义的字符串：作为反例，$\to p\to\to$ 就不是公式。虽然这么说，你（最近）在游戏里遇到和处理的所有字符串都会是公式。
 
-- （替换）如果 $\varphi$ 是任意你制造好的公式，$p$ 是任意原子公式，$\psi$ 是任意公式，那么你可以制造通过把 $\varphi$ 中的 $p$ 全部替换为 $\psi$ 得到的公式。
+具体来说，一个**原子公式**就是任何你喜欢的字母或者单次。<Sapphire />平常用的原子公式是 $p,q,r$，但你想的话当然可以用 $t^5_7$ 或者 $apple$ 作为原子公式。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="author">
+<LocalizedMarkdown locale="en">
+You can name your own atomic formula with any string consisting of the following characters: 
+
+- 0-9, a-z, A-Z, _, ^, \{\}, \
+
+The atomic formula will be automatically complied to latex when displaying. If you don't know latex, please just use numbers and letters to prevent latex error. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+你可以用以下字符构成的字符串来命名自己的原子公式：
+
+- 0-9, a-z, A-Z, _, ^, \{\}, \
+
+原子公式在显示时会自动编译成 latex。如果你不会使用 latex，请仅使用数字和字母来避免 latex 错误。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+So firstly, every atomic formula is a formula. In addition, if $\varphi$ and $\psi$ are both formulas, then $\varphi\to\psi$ is also a formula. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+那么首先，每个原子公式都是公式。此外，如果 $\varphi$ 和 $\psi$ 都是公式，那么 $\varphi\to\psi$ 也是公式。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+That's it? I was expecting more strings to be formulas. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+就这些？我还以为还有更多的字符串会是公式呢。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+That's it, well, for now. Later there will be some more. Back to the new rule, you can replace all occurances of some atomic formula $p$ in a formula $\varphi$ by some other formula $\psi$. You need to have produced $\varphi$, but you don't need to have produced $\psi$. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+就这些，呃，现在就这些。之后还有些别的。回到新规则，你可以把某个公式 $\varphi$ 里出现的原子公式 $p$ 全换成 $\psi$。你需要已经制造好了 $\varphi$，但你并不需要制造 $\psi$。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+Let's see... I can produce $p\to p$ as an axiom. So I can replace all $p$ in it with, well, say, $q\to\text{luck}$. I have produced $(q\to\text{luck})\to q\to\text{luck}$? 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+我看看……我可以制造公理 $p\to p$。所以我可以把里面的所有 $p$ 都换成，呃，比如，$q\to\text{luck}$。我制造出了 $(q\to\text{luck})\to q\to\text{luck}$？
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+Correct. In some cases the replacement formula $\psi$ can also contain the atomic formula $p$ you're replacing. These $p$ do not get replaced recursively and remain $p$. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+对的。有时候替换进来的公式 $\psi$ 里面也有你正在替换的原子公式 $p$。这些 $p$ 不会被递归地换掉，它们还是 $p$。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="author">
+<LocalizedMarkdown locale="en">
+To use Substitution, navigate to the Proof tab of your Inventory, and click `Substitution` (or directly type `substitution` or `sub` in the input bar). You need to provide $\varphi$, $p$ and $\psi$ in the exact order separated by space. You can type these formulas directly, or copy the code of a formula in the Formula Inspector tab. You can use a line number `$n` to replace $\varphi$, as before. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+要使用代入，打开物品栏的证明面板，然后点击 `代入`（或者直接在输入框里输入 `substitution` 或 `sub`）。你还需要按顺序提供 $\varphi$, $p$ 和 $\psi$，中间用空格隔开。你可以直接输入这些公式，或者在公式信息面板复制一个公式的代码。像之前一样，你可以用一个行标 `$n` 来替换 $\varphi$。
 </LocalizedMarkdown>
 </Speak>
 

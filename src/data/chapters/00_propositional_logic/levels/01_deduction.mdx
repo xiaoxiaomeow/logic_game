@@ -1,15 +1,15 @@
 import { parseFormula } from "/src/logic/Parser";
 import { PropositionalLogic } from "/src/logic/LogicSystem";
 
-export const axiom1 = parseFormula('p->!q');
+export const axiom1 = parseFormula('p->q');
 export const axiom2 = parseFormula('p');
-export const target = parseFormula('!q');
+export const target = parseFormula('q');
 
 export const meta = {
 	chapterId: "00_propositional_logic",
 	id: "01_deduction",
 	name: "Level.PropositionalLogic.Deduction.Name",
-	statement: "$\\{p\\to\\lnot q,p\\}\\vdash \\lnot q$",
+	statement: "$\\{p\\to q,p\\}\\vdash q$",
 	logicSystem: PropositionalLogic,
 	axioms: [axiom1, axiom2],
 	target: target,
@@ -50,14 +50,14 @@ What are $\varphi$ and $\psi$?
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-They represents any string you like. For example, if you choose $\varphi$ to represent $p$, and $\psi$ to represent $\lnot q$, then the rule becomes: 
+They represents any string you like. For example, if you choose $\varphi$ to represent $p$, and $\psi$ to represent $q$, then the rule becomes: 
 
-- If you have produced the string $p\to\lnot q$ and the string $p$, then you can produce $\lnot q$. 
+- If you have produced the string $p\to q$ and the string $p$, then you can produce $q$. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-它们代表你喜欢的任何字符串。比如说，如果你选择让 $\varphi$ 代表 $p$，并且让 $\psi$ 代表 $\lnot q$，那么这条规则就是：
+它们代表你喜欢的任何字符串。比如说，如果你选择让 $\varphi$ 代表 $p$，并且让 $\psi$ 代表 $q$，那么这条规则就是：
 
-- 如果你已经制造了字符串 $p\to\lnot q$ 的和字符串 $p$，你就可以制造 $\lnot q$。
+- 如果你已经制造了字符串 $p\to q$ 的和字符串 $p$，你就可以制造 $q$。
 </LocalizedMarkdown>
 </Speak>
 
@@ -65,14 +65,14 @@ They represents any string you like. For example, if you choose $\varphi$ to rep
 <LocalizedMarkdown locale="en">
 To use Deduction, navigate to the Proof tab of your Inventory, and click `Deduction` (or directly type `deduction` in the input bar). You also need to type a `$` symbol and then provide the line number where you produced $\varphi\to\psi$. 
 
-The game can automatically detect whether and where you have produced $\varphi$. For instance, if you have produced $p\to\lnot q$ on the first line (with line number 0), you can excecuting `deduction $0` to use Deduction for $\varphi=p$ and $\psi=\lnot q$. 
+The game can automatically detect whether and where you have produced $\varphi$. For instance, if you have produced $p\to q$ on the first line (with line number 0), you can excecuting `deduction $0` to use Deduction for $\varphi=p$ and $\psi=q$. 
 
 When you excecute some rule, the produced string will be put before the line you're inspecting. Therefore, ensure that you have already produced  $\varphi\to\psi$ and $\varphi$ before this line, instead of after. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-要使用推理，打开物品栏的证明面板，然后点击 `推理`（或者直接在输入框里输入 `deduction`）。你还需要输入一个`$`符号，后面提供你制造出 $\varphi\to\psi$ 的行标。游戏可以自动检查你是否制造出了、在哪里制造出了 $\varphi$。
+要使用推理，打开物品栏的证明面板，然后点击 `推理`（或者直接在输入框里输入 `deduction`）。你还需要输入一个 `$` 符号，后面提供你制造出 $\varphi\to\psi$ 的行标。游戏可以自动检查你是否制造出了、在哪里制造出了 $\varphi$。
 
-比如，你在第一行（行标 0）制造出了 $p\to\lnot q$ ，执行 `deduction $0` 就可以以 $\varphi=p$ 和 $\psi=\lnot q$ 使用推理。
+比如，你在第一行（行标 0）制造出了 $p\to q$ ，执行 `deduction $0` 就能以 $\varphi=p$ 和 $\psi=q$ 使用推理。
 
 当你执行一个规则时，新制造的字符串会被放在正在检查的行之前，因此确保你在此之前就制造好了 $\varphi\to\psi$ 和 $\varphi$，而不是之后。
 </LocalizedMarkdown>
@@ -91,10 +91,10 @@ So $\varphi\to\psi$ means that if I can produce $\varphi$ then I can also produc
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-Sure, that is exactly the intended meaning for $\varphi\to\psi$ in the game, which is called the **semantics** of a string. As long as you're not a construct robot, it is very benificial to know the semantics of strings to help you consider which strings you need to produce to reach the target. But semantics itselft does not work at all when producing strings: a string has convincing semantics does not mean you can produce that string. For instance, the semantics of $p\to p$, "if you can produce $p$ then you can also produce $p$", is clearly correct, but currently there is no way of producing $p\to p$ from scratch. 
+Sure, that is exactly the intended meaning for $\varphi\to\psi$ in the game, which is called the **semantics** of a string. As long as you're not a construct robot, it is very benificial to know the semantics of strings to help you consider which strings you need to produce to get to the target. But semantics itselft does not work at all when producing strings: a string has convincing semantics does not mean you can produce that string. For instance, the semantics of $p\to p$, "if you can produce $p$ then you can also produce $p$", is clearly correct, but currently there is no way of producing $p\to p$ from scratch. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-确实，游戏给 $\varphi\to\psi$ 预想的意思就是这个，它被称作字符串的**语义**。只要你不是个构装体机器人，知道字符串的语义对思考该制造哪些字符串来达到最终目标会非常有帮助。但语义本身对制造字符串是毫无用处的：一个字符串的语义看起来是对的不代表你能制造出它。比如说，$p\to p$ 的语义“如果你能制造出 $p$ 你就能制造出 $p$”明显是正确的，但现在还没有办法从零开始制造出 $p\to p$。
+确实，游戏给 $\varphi\to\psi$ 预想的意思就是这个，它被称作字符串的**语义**。只要你不是个构装体机器人，知道字符串的语义对思考该制造哪些字符串来获得最终目标会非常有帮助。但语义本身对制造字符串是毫无用处的：一个字符串的语义看起来是对的不代表你能制造出它。比如说，$p\to p$ 的语义“如果你能制造出 $p$ 你就能制造出 $p$”明显是正确的，但现在还没有办法从零开始制造出 $p\to p$。
 </LocalizedMarkdown>
 </Speak>
 
@@ -103,7 +103,7 @@ Sure, that is exactly the intended meaning for $\varphi\to\psi$ in the game, whi
 O...Okay. How should I read $\varphi\to\psi$? I suppose I can read it as "if $\varphi$ then $\psi$". 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-呃……好。$\varphi\to\psi$ 怎么读？我觉得它可以读作“如果 $\varphi$ 则 $\psi$”。
+唔……好。$\varphi\to\psi$ 怎么读？我觉得它可以读作“如果 $\varphi$ 则 $\psi$”。
 </LocalizedMarkdown>
 </Speak>
 
@@ -113,6 +113,28 @@ You can also read it as "$\varphi$ implies $\psi$".
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
 也可以读作“$\varphi$ 推出 $\psi$”。
+</LocalizedMarkdown>
+</Speak>
+
+
+<Speak speaker="author">
+<LocalizedMarkdown locale="en">
+Instead of clicking buttons in your inventory, you can just type commands in the input bar: clicking buttons simply help you type the corresponding text. These simplifications might save time: 
+
+- The short for most commands is the first 3 letters. So, you can type `axi <some_axiom>` to produce an axiom, or type `ded $0` to use deduction. 
+- When using deduction, instead of typing the line index, you can type a full string of the form $\varphi\to\psi$. This can be used even if the string (or the $\varphi$ inside) have not been produced: the game will still ask you to produce them. 
+- Similarly when producing axioms, instead of typing the axiom, you can type `$n` to refer to the string on line n (remember to make sure it is indeed an axiom). Even strings not yet produced can be referred to this way. 
+
+To try these tricks, you can delete the current proof, excecute `ded p->q`, and then navigate to the top line and excecute `axi $0`, `axi $1`. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+取代按各种物品栏里的按钮，你也可以直接在输入框里输入指令：按按钮只是帮你把对应的文本打进了输入框里。以下简化也许能节省你的时间：
+
+- 基本每个命令的简写都是它的前三个字母。所以，你也可以输入 `axi <some_axiom>` 来制造公理，或者输入 `ded $0` 来进行推理。
+- 进行推理时，取代输入行标，你也可以直接输入一个形如 $\varphi\to\psi$ 的完整字符串。即使这个字符串（或者其中的 $\varphi$）没被制造出来也没有关系，游戏会要求你补齐它们。
+- 类似地，在制造公理时，取代输入公理，你可以输入 `$n` 来代表行n上的字符串（记得检查它确实是公理）。即使是还未被制造的字符串也可以如此被指代。
+
+要尝试这些技巧，你可以删掉现在的证明，执行 `ded p->q`，然后定位到最上面一行并依次执行 `axi $0` 和 `axi $1`。
 </LocalizedMarkdown>
 </Speak>
 

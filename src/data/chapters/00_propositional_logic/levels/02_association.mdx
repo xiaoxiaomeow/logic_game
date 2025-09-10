@@ -48,10 +48,10 @@ So I can use it either way?
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-You wish. We don't allow multiple different semantics for a single string, so we need to distinguish these two cases by adding brackets: $(p\to q)\to r$ means "if "$p\to q$ then $r$", and $p\to(q\to r)$ means "if $p$ then $q\to r$". 
+You wish. <Sapphire /> don't allow multiple different semantics for a single string, so we need to distinguish these two cases by adding brackets: $(p\to q)\to r$ means "if "$p\to q$ then $r$", and $p\to(q\to r)$ means "if $p$ then $q\to r$". 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-想得美。我们不允许一个字符串有多种不一样的语义，所以我们得通过加括号来区分这两种情况：$(p\to q)\to r$ 的意思是“如果 $p\to q$ 则 $r$”，$p\to(q\to r)$ 的意思是“如果 $p$ 则 $q\to r$”。
+想得美。<Sapphire />不允许一个字符串有多种不一样的语义，所以我们得通过加括号来区分这两种情况：$(p\to q)\to r$ 的意思是“如果 $p\to q$ 则 $r$”，$p\to(q\to r)$ 的意思是“如果 $p$ 则 $q\to r$”。
 </LocalizedMarkdown>
 </Speak>
 
@@ -75,10 +75,10 @@ If no bracket is written, by default we add brackets from the **right**. So $p\t
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-Since you wished to use the string $p\to q\to r$ both ways, I'll give you the other interpretation as an axiom for free this time. Thank me since now you need to distinguish which string you actually need. 
+But since you wished to use the string $p\to q\to r$ both ways, I'll give you the other interpretation as an axiom for free this time. Thank me since now you need to distinguish which string you actually need. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-既然你想要 $p\to q\to r$ 的两种用法，这次我就把另一种用法也作为公理送你。现在你得自己区分你实际上要用哪一个字符串了，快感谢我。
+不过既然你想要 $p\to q\to r$ 的两种用法，这次我就把另一种用法也作为公理送你。现在你得自己区分实际上你要用哪一个字符串了，快感谢我。
 </LocalizedMarkdown>
 </Speak>
 
@@ -104,10 +104,10 @@ Well, I suppose $p\to q\to r$ then means that if I can produce $p$ and $q$ then 
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-You could, if you want, but later we will define the actual "if $p$ and $q$ then $r$" written as $(p\land q)\to r$, and prove that they are equivalent. So, we might just read $p\to q\to r$ as it is. 
+You could, if you want, but later we will define the actual "$p$ and $q$" written as $p\land q$, giving it semantics "you can produce $p$ and you can produce $q$". Later we can even prove that not only $p\to q\to r$ and $(p\land q)\to r$ agree on semantics, they also agree on **syntactics**: you can produce $p\to q\to r$ if and only if you can produce $(p\land q)\to r$. However, prior to that I suggest reading $p\to q\to r$ as it is. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-你愿意的话也行，但我们之后会定义正版的“如果 $p$ 且 $q$ 则 $r$”，写作 $(p\land q)\to r$，并证明它们是等价的。所以，$p\to q\to r$ 还是该怎么读怎么读比较好。
+你愿意的话也行，但我们之后会定义真正的“$p$ 且 $q$”，写作 $p\land q$，并让它的语义就是“你能制造出 $p$ 也能制造出 $q$”。之后我们还能证明 $p\to q\to r$ 和 $(p\land q)\to r$ 不仅在语义上一致，在**语法**上也是一致的：你能制造出 $p\to q\to r$ 当且仅当你能制造出 $(p\land q)\to r$。不过在此之前，我建议 $p\to q\to r$ 还是该怎么读怎么读比较好。
 </LocalizedMarkdown>
 </Speak>
 

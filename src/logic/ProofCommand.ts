@@ -1,6 +1,6 @@
 import { AtomicFormula, Formula, Implies } from "./Formula";
 import type Proof from "./Proof";
-import { ByAxiom, ByDeduction, BySubstitution, ProofLine, ProvedFormulaLine } from "./Proof";
+import { ByAxiom, ByDeduction, BySubstitution, ProofLine, ProvedFormulaLine, UnprovedFormulaLine } from "./Proof";
 
 export interface ExcecutionResult {
 	success: boolean;
@@ -58,16 +58,24 @@ export class DeductionCommand extends ProofCommand {
 		if (formula instanceof Implies) {
 			const phi = formula.phi;
 			const psi = formula.psi;
-			if (proof.lines.slice(0, lineIndex).some(line => {
+
+			if (!proof.lines.slice(0, lineIndex).some(line => {
 				const lineFormula: Formula | null = line.getProvedFormula();
 				return lineFormula != null && lineFormula.equals(phi);
-			}) && proof.lines.slice(0, lineIndex).some(line => {
+			})) {
+				proof.lines.splice(lineIndex, 0, new UnprovedFormulaLine(phi));
+				lineIndex++;
+			}
+			if (!proof.lines.slice(0, lineIndex).some(line => {
 				const lineFormula: Formula | null = line.getProvedFormula();
 				return lineFormula != null && lineFormula.equals(formula);
 			})) {
-				const newLine: ProvedFormulaLine = new ProvedFormulaLine(psi, new ByDeduction(formula));
-				return { success: true, errorMessage: null, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
-			} else return { success: false, errorMessage: `Either $${formula.toLatex()}$ or $${phi.toLatex()}$ is not proved before the current line.`, newLineIndex: null }
+				proof.lines.splice(lineIndex, 0, new UnprovedFormulaLine(formula));
+				lineIndex++;
+			}
+
+			const newLine: ProvedFormulaLine = new ProvedFormulaLine(psi, new ByDeduction(formula));
+			return { success: true, errorMessage: null, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
 		} else return { success: false, errorMessage: `The formula $${formula.toLatex()}$ is not of the form $\\varphi\\implies\\psi$.`, newLineIndex: null }
 	}
 }
@@ -94,13 +102,16 @@ export class SubstitutionCommand extends ProofCommand {
 		else return { success: false, errorMessage: `Line ${this.formula} does not exist in the proof.`, newLineIndex: null };
 
 		if (this.atomicFormula instanceof AtomicFormula) {
-			if (proof.lines.slice(0, lineIndex).some(line => {
+			if (!proof.lines.slice(0, lineIndex).some(line => {
 				const lineFormula: Formula | null = line.getProvedFormula();
 				return lineFormula != null && lineFormula.equals(formula);
 			})) {
-				const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula.replaceAtomicFormula(this.atomicFormula, this.replacement), new BySubstitution(formula, this.atomicFormula, this.replacement));
-				return { success: true, errorMessage: null, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
-			} else return { success: false, errorMessage: `Formula $${formula.toLatex()}$ is not proved before the current line.`, newLineIndex: null }
+				proof.lines.splice(lineIndex, 0, new UnprovedFormulaLine(formula));
+				lineIndex++;
+			}
+			
+			const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula.replaceAtomicFormula(this.atomicFormula, this.replacement), new BySubstitution(formula, this.atomicFormula, this.replacement));
+			return { success: true, errorMessage: null, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
 		} else return { success: false, errorMessage: `The formula $${this.atomicFormula.toLatex()}$ is not an atomic formula.`, newLineIndex: null }
 	}
 }
