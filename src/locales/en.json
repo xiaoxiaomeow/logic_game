@@ -5,6 +5,7 @@
     "LevelSelector.LevelName": "Level Selection",
     "LevelSelector.Chapter": "Chapter: ",
     "LevelSelector.Level": "Level: ",
+    "ErrorMessage.Title": "Error Message",
     "Inventory.Title": "Inventory",
     "Inventory.Axioms": "Axioms",
     "Inventory.Proofs": "Proofs",

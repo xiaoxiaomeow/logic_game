@@ -1,17 +1,18 @@
 import { AtomicFormula, Implies, type Formula } from "./Formula";
-import type { LogicSystem } from "./LogicSystem";
+import type { Level } from "./Level";
 import { parseCommand, parseFormula } from "./Parser";
 import type { ExcecutionResult, ProofCommand } from "./ProofCommand";
+import { isHardUnlocked } from "./Unlockables";
 
 class Proof {
-	logicSystem: LogicSystem;
+	level: Level;
 	axioms: Formula[];
 	target: Formula;
 
 	lines: ProofLine[];
 
-	constructor(logicSystem: LogicSystem, axioms: Formula[], target: Formula, lines: ProofLine[] | null, json: { type: string }[] | null) {
-		this.logicSystem = logicSystem;
+	constructor(level: Level, axioms: Formula[], target: Formula, lines: ProofLine[] | null, json: { type: string }[] | null) {
+		this.level = level;
 		this.axioms = axioms;
 		this.target = target;
 		if (lines != null) {
@@ -49,16 +50,17 @@ class Proof {
 		this.lines = this.lines.filter((formulaLine, index) => !(index > lineIndex && formulaLine instanceof UnprovedFormulaLine && formulaLine.formula.equals(provedLine.formula)))
 		return Math.min(lineIndex + 1, this.lines.length - 1);
 	}
-	excecute(input: string, lineIndex: number): ExcecutionResult {
+	excecute(input: string, lineIndex: number): Partial<ExcecutionResult> {
 		try {
 			const command: ProofCommand = parseCommand(input);
-			return command.excecute(this, lineIndex);
+			if (isHardUnlocked(command, this.level)) return command.excecute(this, lineIndex);
+			else return { success: false, errorMessage: "The command is not unlocked. "}
 		} catch (error) {
 			if (error instanceof Error) {
 				console.log(error);
-				return { success: false, errorMessage: error.toString(), newLineIndex: null };
+				return { success: false, errorMessage: error.toString() };
 			}
-			else return { success: false, errorMessage: "unknown error happened.", newLineIndex: null };
+			else return { success: false, errorMessage: "unknown error happened." };
 		}
 	}
 	remove(lineIndex: number): number {
@@ -122,7 +124,7 @@ class Proof {
 		} else return null;
 	}
 	copy(): Proof {
-		return new Proof(this.logicSystem, this.axioms, this.target, this.lines, null);
+		return new Proof(this.level, this.axioms, this.target, this.lines, null);
 	}
 }
 

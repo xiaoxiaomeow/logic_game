@@ -5,6 +5,7 @@
     "LevelSelector.LevelName": "关卡选择",
     "LevelSelector.Chapter": "章节：",
     "LevelSelector.Level": "关卡：",
+    "ErrorMessage.Title": "错误信息",
     "Inventory.Title": "物品栏",
     "Inventory.Axioms": "公理",
     "Inventory.Proofs": "证明",

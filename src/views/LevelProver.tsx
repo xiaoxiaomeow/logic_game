@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import type Proof from "@/logic/Proof";
 import { MDXComponents } from "@/components/ui/provider";
 import { levelFromId } from "./DataLoader";
+import ErrorMessage from "@/components/custom/ErrorMessage";
 
 function LevelProverPage() {
 	const [loading, setLoading] = useState(false);
@@ -21,17 +22,19 @@ function LevelProverPage() {
 	const { chapterId, levelId } = params as { chapterId: string; levelId: string };
 	const level = useUIStore(state => state.level);
 	const setLevel = useUIStore(state => state.setLevel);
+	const setProof: (proof: Proof | null) => void = useUIStore(state => state.setProof);
+	const setErrorMessage: (message: string) => void = useUIStore(state => state.setErrorMessage);
 	const setChapterName: (chapterName: string) => void = useUIStore(state => state.setChapterName);
 	const setLevelName: (levelName: string) => void = useUIStore(state => state.setLevelName);
 	const clearFormulas: () => void = useUIStore(state => state.clearFormulas);
 	const resetConversationProgress: () => void = useUIStore(state => state.resetConversationProgress);
-	const setProof: (proof: Proof | null) => void = useUIStore(state => state.setProof);
 	const t = useTranslation().t;
 	useEffect(() => {
 		clearFormulas();
 		resetConversationProgress();
 		setProof(null);
 		setLevel(null);
+		setErrorMessage("");
 		setLoading(true);
 		const load = async () => {
 			try {
@@ -64,6 +67,7 @@ function LevelProverPage() {
 				<ProofBoard level={level} />
 			</LayoutStackMiddle>
 			<LayoutStackRight>
+				<ErrorMessage></ErrorMessage>
 				<LineInspector></LineInspector>
 				<FormulaInspector></FormulaInspector>
 				<Inventory></Inventory>

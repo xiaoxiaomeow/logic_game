@@ -29,7 +29,7 @@ function ProofBoard(props: ProofBoardInput) {
 		if (jsonString != null) {
 			json = JSON.parse(jsonString) as { type: string }[];
 		}
-		const proof: Proof = new Proof(level.meta.logicSystem, level.meta.axioms, level.meta.target, null, json);
+		const proof: Proof = new Proof(level, level.meta.axioms, level.meta.target, null, json);
 		setProof(proof);
 	}, []);
 	useEffect(() => {
@@ -222,7 +222,7 @@ function CommandEditor() {
 	const canExcecute: boolean = proof != null && lineIndex >= 0 && lineIndex < proof.lines.length;
 	const excecute: () => void = () => {
 		if (proof != null && canExcecute) {
-			const result: ExcecutionResult = proof.excecute(inputCommand, lineIndex);
+			const result: Partial<ExcecutionResult> = proof.excecute(inputCommand, lineIndex);
 			if (result.success) {
 				setErrorMessage("");
 				setInputCommand("");

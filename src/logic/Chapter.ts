@@ -1,5 +1,5 @@
 import { Level, type LevelModule } from "./Level";
-import type { UnlockableItem, UnlockTreeItem, PrereqInfo } from "./Unlockables";
+import type { UnlockTreeItem, PrereqInfo } from "./Unlockables";
 
 export interface ChapterMeta {
 	id: string;
@@ -13,7 +13,7 @@ export interface ChapterModule {
 	meta: ChapterMeta;
 }
 
-export class Chapter implements UnlockableItem, UnlockTreeItem {
+export class Chapter implements UnlockTreeItem {
 	meta: ChapterMeta;
 	levels: Level[];
 	constructor(chapterMeta: ChapterMeta) {
@@ -22,6 +22,9 @@ export class Chapter implements UnlockableItem, UnlockTreeItem {
 	}
 	isMet(): Boolean {
 		return this.levels.every(level => level.isMet() || level.meta.type !== "main");
+	}
+	isHardMet(): Boolean {
+		return this.levels.every(level => level.isHardMet() || level.meta.type !== "main");
 	}
 	getPrereqs(): PrereqInfo[] {
 		return this.meta.prereqs;
