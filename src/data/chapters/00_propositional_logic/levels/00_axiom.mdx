@@ -1,5 +1,6 @@
 import { parseFormula } from "/src/logic/Parser";
 import { PropositionalLogic } from "/src/logic/LogicSystem";
+import { getLevelState } from "/src/logic/LevelState";
 
 export const axiom = parseFormula('p->!q');
 export const target = axiom;
@@ -12,7 +13,8 @@ export const meta = {
 	logicSystem: PropositionalLogic,
 	axioms: [axiom],
 	target: target,
-	type: "main"
+	type: "main",
+	prereqs: []
 }
 
 import Speak from "/src/components/custom/Speak";
@@ -69,7 +71,7 @@ To produce an axiom, navigate to the Axioms tab of your Inventory, and click tha
 </LocalizedMarkdown>
 </Speak>
 
-<ResumeUntil condition={proof => proof != null && proof.proofComplete()} text="ConversationProgresser.CompleteLevelToContinue"/>
+<ResumeUntil condition={ (level, _) => level.isCompleteOrModified() } text="ConversationProgresser.CompleteLevelToContinue"/>
 
 <Speak speaker="star">
 <LocalizedMarkdown locale="en">

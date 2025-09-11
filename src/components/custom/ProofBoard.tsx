@@ -1,4 +1,4 @@
-import type { LevelModule } from "@/logic/Level";
+import type { Level } from "@/logic/Level";
 import { Box, Button, Flex, HStack, IconButton, Input, InputGroup, ScrollArea, Table, Text, VStack } from "@chakra-ui/react";
 import FormulaLatex from "./FormulaLatex";
 import MarkdownWithLatex from "./MarkdownWithLatex";
@@ -9,20 +9,17 @@ import { FaChevronRight, FaRegTrashAlt } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
-import type { ChapterModule } from "@/logic/Chapter";
-import { setLevelState } from "@/logic/LevelState";
+import { getLevelState, setLevelState } from "@/logic/LevelState";
 import { useNavigate } from "react-router-dom";
 import type { ExcecutionResult } from "@/logic/ProofCommand";
 
 export interface ProofBoardInput {
-	levelModule: LevelModule,
-	chapterModule: ChapterModule
+	level: Level
 }
 
 function ProofBoard(props: ProofBoardInput) {
-	const levelModule: LevelModule = props.levelModule;
-	const chapterModule: ChapterModule = props.chapterModule;
-	const key: string = chapterModule.meta.id + "/" + levelModule.meta.id;
+	const level: Level = props.level;
+	const key: string = level.chapter.meta.id + "/" + level.meta.id;
 	const proof: Proof | null = useUIStore(state => state.proof);
 	const setProof: (proof: Proof | null) => void = useUIStore(state => state.setProof);
 	const navigate = useNavigate();
@@ -32,7 +29,7 @@ function ProofBoard(props: ProofBoardInput) {
 		if (jsonString != null) {
 			json = JSON.parse(jsonString) as { type: string }[];
 		}
-		const proof: Proof = new Proof(levelModule.meta.logicSystem, levelModule.meta.axioms, levelModule.meta.target, null, json);
+		const proof: Proof = new Proof(level.meta.logicSystem, level.meta.axioms, level.meta.target, null, json);
 		setProof(proof);
 	}, []);
 	useEffect(() => {
@@ -40,26 +37,30 @@ function ProofBoard(props: ProofBoardInput) {
 			const jsonString = JSON.stringify(proof.toJsonArray());
 			localStorage.setItem(key, jsonString);
 
+			const oldState: string = getLevelState(level);
 			const newState: string = proof.proofComplete() ? "complete" : (proof.lines.length > 1 ? "partial" : "empty");
-			setLevelState(chapterModule.meta.id, levelModule.meta.id, newState);
+			if (oldState === newState) return;
+			if (oldState === "modified" && newState !== "complete") return;
+			if (oldState === "complete") setLevelState(level, "modified");
+			else setLevelState(level, newState);
 		}
 	}, [proof]);
 	return (
 		<Flex direction="column" width="100%" height="100%" justifyContent="space-between" padding="8px 0" gap="8px">
-			<LevelInfo levelModule={levelModule} chapterModule={chapterModule}></LevelInfo>
+			<LevelInfo level={level}></LevelInfo>
 			<ScrollArea.Root height="100%">
 				<ScrollArea.Viewport height="100%">
 					<ScrollArea.Content height="100%">
 						<ProofEditor />
 						{(() => {
 							if (proof != null && proof.proofComplete()) {
-								const currentIndex = chapterModule.meta.levels.indexOf(levelModule);
+								const currentIndex = level.chapter.levels.indexOf(level);
 								return (
 									<HStack borderRadius="md" background="logic.author" width="100%" padding="8px">
 										<Text>{t("ProofBoard.LevelFinished")}</Text>
-										{currentIndex < chapterModule.meta.levels.length - 1 ? <Button size="sm" onClick={event => {
-											const nextLevelModule = chapterModule.meta.levels[currentIndex + 1];
-											navigate("/level/" + chapterModule.meta.id + "/" + nextLevelModule.meta.id);
+										{currentIndex < level.chapter.levels.length - 1 ? <Button size="sm" onClick={event => {
+											const nextLevel = level.chapter.levels[currentIndex + 1];
+											navigate("/level/" + nextLevel.chapter.meta.id + "/" + nextLevel.meta.id);
 											event.stopPropagation();
 										}}>{t("ProofBoard.NextLevel")}</Button> : null}
 										<Button size="sm" onClick={event => {
@@ -80,25 +81,25 @@ function ProofBoard(props: ProofBoardInput) {
 }
 
 function LevelInfo(props: ProofBoardInput) {
-	const levelModule: LevelModule = props.levelModule;
+	const level: Level = props.level;
 	const t = useTranslation().t;
 	return (
 		<VStack width="100%" borderRadius="md" background="logic.subtle" padding="8px 8px">
 			<HStack width="100%">
 				<Text fontWeight="bold">{t("ProofBoard.Statement")}</Text>
-				<MarkdownWithLatex>{levelModule.meta.statement}</MarkdownWithLatex>
+				<MarkdownWithLatex>{level.meta.statement}</MarkdownWithLatex>
 			</HStack>
 			<HStack width="100%">
 				<Text fontWeight="bold">{t("ProofBoard.Language")}</Text>
-				<Text>{t(levelModule.meta.logicSystem.name)}</Text>
+				<Text>{t(level.meta.logicSystem.name)}</Text>
 			</HStack>
 			<HStack width="100%">
 				<Text fontWeight="bold">{t("ProofBoard.Axioms")}</Text>
-				{levelModule.meta.axioms.map((axiom, index) => (<Box key={axiom.toCode()}><FormulaLatex formula={axiom} />{index != levelModule.meta.axioms.length - 1 ? "," : ""}</Box>))}
+				{level.meta.axioms.map((axiom, index) => (<Box key={axiom.toCode()}><FormulaLatex formula={axiom} />{index != level.meta.axioms.length - 1 ? "," : ""}</Box>))}
 			</HStack>
 			<HStack width="100%">
 				<Text fontWeight="bold">{t("ProofBoard.Target")}</Text>
-				<FormulaLatex formula={levelModule.meta.target} />
+				<FormulaLatex formula={level.meta.target} />
 			</HStack>
 		</VStack>
 	);

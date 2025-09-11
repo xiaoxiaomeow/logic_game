@@ -5,5 +5,6 @@ export const meta = {
 	id: "00_propositional_logic",
 	name: "Chapter.PropositionalLogic.Name",
 	levels: levelModules.map(([_, module]) => module),
-	position: { x: 0, y: 0 }
+	position: { x: 0, y: 0 },
+	prereqs: []
 }

@@ -1,19 +1,22 @@
 import { parseFormula } from "/src/logic/Parser";
 import { PropositionalLogic } from "/src/logic/LogicSystem";
+import { getLevelState } from "/src/logic/LevelState";
 
 export const axiom1 = parseFormula('p->q');
 export const axiom2 = parseFormula('p');
 export const target = parseFormula('q');
+export const chapterId = "00_propositional_logic";
 
 export const meta = {
-	chapterId: "00_propositional_logic",
+	chapterId: chapterId,
 	id: "01_deduction",
 	name: "Level.PropositionalLogic.Deduction.Name",
 	statement: "$\\{p\\to q,p\\}\\vdash q$",
 	logicSystem: PropositionalLogic,
 	axioms: [axiom1, axiom2],
 	target: target,
-	type: "main"
+	type: "main",
+	prereqs: [{type: "level", chapterId: chapterId, levelId: "00_axiom"}]
 }
 
 import Speak from "/src/components/custom/Speak";
@@ -78,7 +81,7 @@ When you excecute some rule, the produced string will be put before the line you
 </LocalizedMarkdown>
 </Speak>
 
-<ResumeUntil condition={proof => proof != null && proof.proofComplete()} text="ConversationProgresser.CompleteLevelToContinue"/>
+<ResumeUntil condition={ (level, _) => level.isCompleteOrModified() } text="ConversationProgresser.CompleteLevelToContinue"/>
 
 <Speak speaker="star">
 <LocalizedMarkdown locale="en">

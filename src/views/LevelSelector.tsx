@@ -3,8 +3,8 @@ import { LayoutStackLeft, LayoutStackMain, LayoutStackMiddle, LayoutStackRight }
 import { useUIStore } from "@/contexts/UIStore";
 import { Button, Collapsible, Heading, HStack, ScrollArea, VStack } from "@chakra-ui/react";
 import { useEffect, type MouseEventHandler } from "react";
-import type { ChapterModule } from "@/logic/Chapter";
-import type { LevelModule } from "@/logic/Level";
+import type { Chapter } from "@/logic/Chapter";
+import type { Level } from "@/logic/Level";
 import Welcome from "@/data/Welcome.mdx";
 import { useNavigate } from "react-router-dom";
 import Inventory from "@/components/custom/Inventory";
@@ -12,6 +12,8 @@ import type Proof from "@/logic/Proof";
 import { useTranslation } from "react-i18next";
 import { getLevelState } from "@/logic/LevelState";
 import { MDXComponents } from "@/components/ui/provider";
+import { chapters } from "./DataLoader";
+import { isUnlocked } from "@/logic/Unlockables";
 
 function LevelSelectorPage() {
 	const setChapterName: (chapterName: string) => void = useUIStore(state => state.setChapterName);
@@ -42,16 +44,13 @@ function LevelSelectorPage() {
 	);
 }
 
-const chapterModules: [string, ChapterModule][] = Object.entries<ChapterModule>(import.meta.glob('/src/data/chapters/*/index.tsx', { eager: true }));
 function LevelSelector() {
 	return (
 		<VStack width="100%" height="100%" padding="8px 0px">
 			<ScrollArea.Root height="100%">
 				<ScrollArea.Viewport height="100%">
 					<ScrollArea.Content height="100%">
-						{
-							chapterModules.map(([_, module]) => (<Chapter chapterModule={module} key={module.meta.id}></Chapter>))
-						}
+						{chapters.map(chapter => (<ChapterNode chapter={chapter} key={chapter.meta.id}></ChapterNode>))}
 					</ScrollArea.Content>
 				</ScrollArea.Viewport>
 				<ScrollArea.Scrollbar />
@@ -60,36 +59,36 @@ function LevelSelector() {
 	);
 }
 
-function Chapter(props: { chapterModule: ChapterModule }) {
+function ChapterNode(props: { chapter: Chapter }) {
 	const t = useTranslation().t;
 	return (
 		<Collapsible.Root defaultOpen={true}>
 			<Collapsible.Trigger width="100%">
-				<Heading as="h1">{t("LevelSelector.Chapter") + t(props.chapterModule.meta.name)}</Heading>
+				<Heading as="h1">{t("LevelSelector.Chapter") + t(props.chapter.meta.name)}</Heading>
 			</Collapsible.Trigger>
 			<Collapsible.Content>
 				<HStack width="100%">
-					{props.chapterModule.meta.levels.map((module, index) => (<Level chapterModule={props.chapterModule} levelModule={module} index={index} key={module.meta.id}></Level>))}
+					{props.chapter.levels.map(level => (<LevelNode level={level} key={level.meta.id}></LevelNode>))}
 				</HStack>
 			</Collapsible.Content>
 		</Collapsible.Root>
 	);
 }
 
-function Level(props: { chapterModule: ChapterModule, levelModule: LevelModule, index: number }) {
+function LevelNode(props: { level: Level }) {
 	const navigate = useNavigate();
 	const t = useTranslation().t;
+	const chapterId: string = props.level.chapter.meta.id;
+	const levelId: string = props.level.meta.id;
 	const onClick: MouseEventHandler = _ => {
-		navigate("/level/" + props.chapterModule.meta.id + "/" + props.levelModule.meta.id);
+		navigate("/level/" + chapterId + "/" + levelId);
 	};
-	const state = getLevelState(props.chapterModule.meta.id, props.levelModule.meta.id);
-	const unlocked = props.chapterModule.meta.levels.every(
-		(otherLevel, otherIndex) => getLevelState(props.chapterModule.meta.id, otherLevel.meta.id) === "complete" || otherIndex >= props.index || otherLevel.meta.type !== "main"
-	);
+	const state = getLevelState(props.level);
+	const unlocked = isUnlocked(props.level);
 	return (
 		<Button onClick={onClick} size="sm" disabled={!unlocked}
-			colorPalette={unlocked ? { "empty": "yellow", "partial": "blue", "complete": "green" }[state] : "gray"}
-		>{t(props.levelModule.meta.name)}</Button>
+			colorPalette={unlocked ? { "empty": "yellow", "partial": "orange", "modified": "blue", "complete": "green" }[state] : "gray"}
+		>{t(props.level.meta.name)}</Button>
 	);
 }
 export default LevelSelectorPage;

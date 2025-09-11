@@ -1,21 +1,24 @@
 import { parseFormula } from "/src/logic/Parser";
 import { PropositionalLogic } from "/src/logic/LogicSystem";
+import { getLevelState } from "/src/logic/LevelState";
 
 export const axiom1a = parseFormula('p->q->r');
 export const axiom1b = parseFormula('(p->q)->r');
 export const axiom2 = parseFormula('p');
 export const axiom3 = parseFormula('q');
 export const target = parseFormula('r');
+export const chapterId = "00_propositional_logic";
 
 export const meta = {
-	chapterId: "00_propositional_logic",
+	chapterId: chapterId,
 	id: "02_association",
 	name: "Level.PropositionalLogic.Association.Name",
 	statement: "$\\{p\\to q\\to r,(p\\to q)\\to r,p,q\\}\\vdash r$",
 	logicSystem: PropositionalLogic,
 	axioms: [axiom1a, axiom1b, axiom2, axiom3],
 	target: target,
-	type: "main"
+	type: "main",
+	prereqs: [{type: "level", chapterId: chapterId, levelId: "01_deduction"}]
 }
 
 import Speak from "/src/components/custom/Speak";
@@ -91,7 +94,7 @@ If you ever get confused about a string, you can click on that string and inspec
 </LocalizedMarkdown>
 </Speak>
 
-<ResumeUntil condition={proof => proof != null && proof.proofComplete()} text="ConversationProgresser.CompleteLevelToContinue"/>
+<ResumeUntil condition={ (level, _) => level.isCompleteOrModified() } text="ConversationProgresser.CompleteLevelToContinue"/>
 
 <Speak speaker="star">
 <LocalizedMarkdown locale="en">
