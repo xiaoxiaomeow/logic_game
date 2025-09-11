@@ -3,7 +3,7 @@ import type { LogicSystem } from "./LogicSystem";
 import type { Formula } from "./Formula";
 import { getLevelState } from "./LevelState";
 import type { Chapter } from "./Chapter";
-import type { PrerequisiteItem, UnlockableItem, PrereqInfo } from "./Unlockables";
+import type { UnlockTreeItem, PrereqInfo } from "./Unlockables";
 
 export interface LevelMeta {
 	id: string;
@@ -14,6 +14,7 @@ export interface LevelMeta {
 	target: Formula;
 	type: "main" | "side" | "joke";
 	prereqs: PrereqInfo[];
+	hardPrereqs: PrereqInfo[];
 }
 
 export interface LevelModule {
@@ -26,7 +27,7 @@ export interface LevelState {
 	completed: boolean;
 }
 
-export class Level implements UnlockableItem, PrerequisiteItem {
+export class Level implements UnlockTreeItem {
 	chapter: Chapter;
 	meta: LevelMeta;
 	constructor(chapter: Chapter, LevelMeta: LevelMeta) {
@@ -34,10 +35,19 @@ export class Level implements UnlockableItem, PrerequisiteItem {
 		this.meta = LevelMeta;
 	}
 	isMet(): Boolean {
-		return getLevelState(this) === "complete";
+		return this.isCompleteOrModified();
+	}
+	isHardMet(): Boolean {
+		return this.isComplete();
 	}
 	getPrereqs(): PrereqInfo[] {
 		return this.meta.prereqs;
+	}
+	getHardPrereqs(): PrereqInfo[] {
+		throw this.meta.hardPrereqs;
+	}
+	isComplete(): Boolean {
+		return getLevelState(this) === "complete";
 	}
 	isCompleteOrModified(): Boolean {
 		return getLevelState(this) === "complete" || getLevelState(this) === "modified";

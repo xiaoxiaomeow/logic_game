@@ -17,9 +17,10 @@ import { levelFromId } from "./DataLoader";
 function LevelProverPage() {
 	const [loading, setLoading] = useState(false);
 	const [levelModule, setLevelModule] = useState<LevelModule | null>(null);
-	const [level, setLevel] = useState<Level | null>(null);
 	const params = useParams();
 	const { chapterId, levelId } = params as { chapterId: string; levelId: string };
+	const level = useUIStore(state => state.level);
+	const setLevel = useUIStore(state => state.setLevel);
 	const setChapterName: (chapterName: string) => void = useUIStore(state => state.setChapterName);
 	const setLevelName: (levelName: string) => void = useUIStore(state => state.setLevelName);
 	const clearFormulas: () => void = useUIStore(state => state.clearFormulas);
@@ -30,6 +31,7 @@ function LevelProverPage() {
 		clearFormulas();
 		resetConversationProgress();
 		setProof(null);
+		setLevel(null);
 		setLoading(true);
 		const load = async () => {
 			try {

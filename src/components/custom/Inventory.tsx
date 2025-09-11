@@ -1,14 +1,17 @@
 import { useUIStore } from "@/contexts/UIStore";
 import type Proof from "@/logic/Proof";
-import getUnlockedProofMethods from "@/logic/ProofMethod";
+import getUnlockedProofMethods, { ProofMethod } from "@/logic/ProofMethod";
+import { isHardUnlocked } from "@/logic/Unlockables";
 import { Button, Flex, Tabs, Text, VStack, Wrap } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { InlineMath } from 'react-katex';
 
 function Inventory() {
 	const proof: Proof | null = useUIStore(state => state.proof);
+	const level = useUIStore(state => state.level);
 	const setInputCommand: (command: string) => void = useUIStore(state => state.setInputCommand);
 	const t = useTranslation().t;
+	const proofMethods: ProofMethod[] = getUnlockedProofMethods();
 	return (
 		<VStack width="100%" background="logic.subtle" gap="0">
 			<Flex width="100%" justifyContent="center" padding="4px 4px" background="logic.emphasized">
@@ -18,7 +21,7 @@ function Inventory() {
 				<Tabs.Root width="100%" size="sm" defaultValue="axioms" deselectable={false}>
 					<Tabs.List width="100%">
 						{proof != null ? <Tabs.Trigger value="axioms">{t("Inventory.Axioms")}</Tabs.Trigger> : null}
-						{proof != null && getUnlockedProofMethods().length > 0 ? <Tabs.Trigger value="proofs">{t("Inventory.Proofs")}</Tabs.Trigger> : null}
+						{proof != null && proofMethods.length > 0 ? <Tabs.Trigger value="proofs">{t("Inventory.Proofs")}</Tabs.Trigger> : null}
 					</Tabs.List>
 					{proof != null ? <Tabs.Content value="axioms" padding="8px 8px">
 						<Wrap>
@@ -32,10 +35,10 @@ function Inventory() {
 							))}
 						</Wrap>
 					</Tabs.Content> : null}
-					{proof != null && getUnlockedProofMethods().length > 0 ? <Tabs.Content value="proofs" padding="8px 8px">
+					{proof != null && proofMethods.length > 0 ? <Tabs.Content value="proofs" padding="8px 8px">
 						<Wrap>
-							{getUnlockedProofMethods().map(method => (
-								<Button key={method.name} size="sm" onClick={event => {
+							{proofMethods.map(method => (
+								<Button key={method.name} disabled={!isHardUnlocked(method, level)} size="sm" onClick={event => {
 									setInputCommand(method.getCommand(proof));
 									event.stopPropagation();
 								}}>

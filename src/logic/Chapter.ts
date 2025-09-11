@@ -1,5 +1,5 @@
 import { Level, type LevelModule } from "./Level";
-import type { UnlockableItem, PrerequisiteItem, PrereqInfo } from "./Unlockables";
+import type { UnlockableItem, UnlockTreeItem, PrereqInfo } from "./Unlockables";
 
 export interface ChapterMeta {
 	id: string;
@@ -13,7 +13,7 @@ export interface ChapterModule {
 	meta: ChapterMeta;
 }
 
-export class Chapter implements UnlockableItem, PrerequisiteItem {
+export class Chapter implements UnlockableItem, UnlockTreeItem {
 	meta: ChapterMeta;
 	levels: Level[];
 	constructor(chapterMeta: ChapterMeta) {

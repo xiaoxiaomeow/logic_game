@@ -29,7 +29,7 @@
     "Formula.Atomic.FormulaDescription": "这是一个原子公式。",
     "DeductionMethod.ByAxiom.ShortDescription": "公理",
     "DeductionMethod.ByAxiom.LongDescription": "这一行上的公式是公理。",
-    "DeductionMethod.ByDeduction.ShortDescription": "由 ({{impliesIndex}}) ({{phiIndex}}) 推理",
+    "DeductionMethod.ByDeduction.ShortDescription": "({{impliesIndex}}) ({{phiIndex}}) 推理",
     "DeductionMethod.ByDeduction.LongDescription": "这一行上的公式是由 ({{impliesIndex}}) 和 ({{phiIndex}}) 推理得到的。",
     "DeductionMethod.BySubstitution.ShortDescription": "替换 ({{formulaIndex}}) 中的 ${{atomicFormula}}$",
     "DeductionMethod.BySubstitution.LongDescription": "这一行上的公式是通过用 ${{replacement}}$ 替换 ({{formulaIndex}}) 中的 ${{atomicFormula}}$ 得到的。",

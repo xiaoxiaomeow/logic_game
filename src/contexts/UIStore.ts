@@ -1,4 +1,5 @@
 import type { Formula } from '@/logic/Formula';
+import type { Level } from '@/logic/Level';
 import type Proof from '@/logic/Proof';
 import { create, type StoreApi, type UseBoundStore } from 'zustand';
 
@@ -11,6 +12,8 @@ export interface UIStore {
 	setChapterName: (chapterName: string) => void;
 	levelName: string;
 	setLevelName: (levelName: string) => void;
+	level: Level | null;
+	setLevel: (level: Level | null) => void;
 	formulas: Formula[];
 	inspectingIndex: number;
 	inspect: (formula: Formula) => void;
@@ -36,6 +39,8 @@ export const useUIStore: UseBoundStore<StoreApi<UIStore>> = create<UIStore>(set 
 	setChapterName: (chapterName: string) => set({ chapterName: chapterName }),
 	levelName: "",
 	setLevelName: (levelName: string) => set({ levelName: levelName }),
+	level: null,
+	setLevel: (level: Level | null) => set({ level: level }),
 	formulas: [],
 	inspectingIndex: -1,
 	inspect: (formula: Formula) => set((state: UIStore) => {

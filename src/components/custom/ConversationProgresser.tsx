@@ -6,18 +6,20 @@ import Speak from "./Speak";
 import ResumeUntil, { type ResumeUntilInput } from "./ResumeUntil";
 import type Proof from "@/logic/Proof";
 import { useTranslation } from "react-i18next";
+import type { Level } from "@/logic/Level";
 
 function ConversationProgresser(props: { children: ReactNode }) {
 	const setConversationProgress: (progress: number) => void = useUIStore(state => state.setConversationProgress);
 	const conversationProgress: number = useUIStore(state => state.conversationProgress);
 	const proof: Proof | null = useUIStore(state => state.proof);
+	const level: Level | null = useUIStore(state => state.level);
 	const children: ReactNode[] = React.Children.toArray(props.children);
 	useEffect(() => {
 		let progress: number = conversationProgress;
 		let child = children[progress];
 		while (React.isValidElement(child) && child.type === ResumeUntil) {
-			const condition: ((proof: Proof | null) => boolean) = (child.props as ResumeUntilInput).condition;
-			if (condition != null && !condition(proof)) break;
+			const condition: ((level: Level | null, proof: Proof | null) => boolean) = (child.props as ResumeUntilInput).condition;
+			if (condition != null && !condition(level, proof)) break;
 			progress++;
 			child = children[progress];
 		}
@@ -27,14 +29,14 @@ function ConversationProgresser(props: { children: ReactNode }) {
 		let progress: number = conversationProgress;
 		let child = children[progress];
 		if (React.isValidElement(child) && child.type === ResumeUntil) {
-			const condition: ((proof: Proof | null) => boolean) = (child.props as ResumeUntilInput).condition;
-			if (condition != null && !condition(proof)) return;
+			const condition: ((level: Level | null, proof: Proof | null) => boolean) = (child.props as ResumeUntilInput).condition;
+			if (condition != null && !condition(level, proof)) return;
 		}
 		progress += 2;
 		child = children[progress];
 		while (React.isValidElement(child) && child.type === ResumeUntil) {
-			const condition: ((proof: Proof | null) => boolean) = (child.props as ResumeUntilInput).condition;
-			if (condition != null && !condition(proof)) break;
+			const condition: ((level: Level | null, proof: Proof | null) => boolean) = (child.props as ResumeUntilInput).condition;
+			if (condition != null && !condition(level, proof)) break;
 			progress++;
 			child = children[progress];
 		}
@@ -62,8 +64,8 @@ function ConversationProgresser(props: { children: ReactNode }) {
 									}
 								}
 								else if (child.type === ResumeUntil) {
-									const condition: ((proof: Proof | null) => boolean) = (child.props as ResumeUntilInput).condition;
-									if (condition != null && !condition(proof)) {
+									const condition: ((level: Level | null, proof: Proof | null) => boolean) = (child.props as ResumeUntilInput).condition;
+									if (condition != null && !condition(level, proof)) {
 										display = false;
 										return (<Text key="continue">{t((child.props as ResumeUntilInput).text)}</Text>);
 									}
