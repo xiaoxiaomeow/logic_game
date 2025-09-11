@@ -8,7 +8,8 @@
     "ErrorMessage.Title": "Error Message",
     "Inventory.Title": "Inventory",
     "Inventory.Axioms": "Axioms",
-    "Inventory.Proofs": "Proofs",
+    "Inventory.LogicAxioms": "Logic Axioms",
+    "Inventory.ProofMethods": "Proofs",
     "ProofBoard.Statement": "Statement",
     "ProofBoard.Language": "Language",
     "ProofBoard.Axioms": "Axioms",
@@ -30,6 +31,8 @@
     "Formula.Atomic.FormulaDescription": "This is an atomic formula.",
     "DeductionMethod.ByAxiom.ShortDescription": "axiom",
     "DeductionMethod.ByAxiom.LongDescription": "The formula on this line is an axiom.",
+    "DeductionMethod.ByLogicAxiom.ShortDescription": "logic axiom",
+    "DeductionMethod.ByLogicAxiom.LongDescription": "The formula on this line is a logic axiom.",
     "DeductionMethod.ByDeduction.ShortDescription": "deduction using ({{impliesIndex}}) ({{phiIndex}})",
     "DeductionMethod.ByDeduction.LongDescription": "The formula on this line is obtained by ({{impliesIndex}}) and ({{phiIndex}}) using deduction.",
     "DeductionMethod.BySubstitution.ShortDescription": "substituting {{atomicFormula}} in ({{formulaIndex}})",
@@ -50,5 +53,6 @@
     "Level.PropositionalLogic.Axiom.Name": "Axiom",
     "Level.PropositionalLogic.Deduction.Name": "Deduction",
     "Level.PropositionalLogic.Association.Name": "Association",
-    "Level.PropositionalLogic.Substitution.Name": "Substitution"
+    "Level.PropositionalLogic.Substitution.Name": "Substitution",
+    "Level.PropositionalLogic.LogicAxiom.Name": "Logic Axiom"
 }

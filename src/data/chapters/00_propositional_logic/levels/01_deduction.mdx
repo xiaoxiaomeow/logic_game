@@ -1,6 +1,5 @@
 import { parseFormula } from "/src/logic/Parser";
 import { PropositionalLogic } from "/src/logic/LogicSystem";
-import { getLevelState } from "/src/logic/LevelState";
 
 export const axiom1 = parseFormula('p->q');
 export const axiom2 = parseFormula('p');
@@ -53,14 +52,14 @@ What are $\varphi$ and $\psi$?
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-They represents any string you like. For example, if you choose $\varphi$ to represent $p$, and $\psi$ to represent $q$, then the rule becomes: 
+They represents any string you like. For example, if you choose $\varphi$ to represent <FormulaLatex formula={axiom2} />, and $\psi$ to represent <FormulaLatex formula={target} />, then the rule becomes: 
 
-- If you have produced the string $p\to q$ and the string $p$, then you can produce $q$. 
+- If you have produced the string <FormulaLatex formula={axiom1} /> and the string <FormulaLatex formula={axiom2} />, then you can produce <FormulaLatex formula={target} />. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-它们代表你喜欢的任何字符串。比如说，如果你选择让 $\varphi$ 代表 $p$，并且让 $\psi$ 代表 $q$，那么这条规则就是：
+它们代表你喜欢的任何字符串。比如说，如果你选择让 $\varphi$ 代表 <FormulaLatex formula={axiom2} />，并且让 $\psi$ 代表 <FormulaLatex formula={target} />，那么这条规则就是：
 
-- 如果你已经制造了字符串 $p\to q$ 的和字符串 $p$，你就可以制造 $q$。
+- 如果你已经制造了字符串 <FormulaLatex formula={axiom1} /> 的和字符串 <FormulaLatex formula={axiom2} />，你就可以制造 <FormulaLatex formula={target} />。
 </LocalizedMarkdown>
 </Speak>
 
@@ -68,14 +67,14 @@ They represents any string you like. For example, if you choose $\varphi$ to rep
 <LocalizedMarkdown locale="en">
 To use Deduction, navigate to the Proof tab of your Inventory, and click `Deduction` (or directly type `deduction` in the input bar). You also need to type a `$` symbol and then provide the line number where you produced $\varphi\to\psi$. 
 
-The game can automatically detect whether and where you have produced $\varphi$. For instance, if you have produced $p\to q$ on the first line (with line number 0), you can excecuting `deduction $0` to use Deduction for $\varphi=p$ and $\psi=q$. 
+The game can automatically detect whether and where you have produced $\varphi$. For instance, if you have produced <FormulaLatex formula={axiom1} /> on the first line (with line number 0), you can excecuting `deduction $0` to use Deduction for $\varphi=p$ and $\psi=q$. 
 
 When you excecute some rule, the produced string will be put before the line you're inspecting. Therefore, ensure that you have already produced  $\varphi\to\psi$ and $\varphi$ before this line, instead of after. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
 要使用推理，打开物品栏的证明面板，然后点击 `推理`（或者直接在输入框里输入 `deduction`）。你还需要输入一个 `$` 符号，后面提供你制造出 $\varphi\to\psi$ 的行标。游戏可以自动检查你是否制造出了、在哪里制造出了 $\varphi$。
 
-比如，你在第一行（行标 0）制造出了 $p\to q$ ，执行 `deduction $0` 就能以 $\varphi=p$ 和 $\psi=q$ 使用推理。
+比如，你在第一行（行标 0）制造出了 <FormulaLatex formula={axiom1} />，执行 `deduction $0` 就能以 $\varphi=p$ 和 $\psi=q$ 使用推理。
 
 当你执行一个规则时，新制造的字符串会被放在正在检查的行之前，因此确保你在此之前就制造好了 $\varphi\to\psi$ 和 $\varphi$，而不是之后。
 </LocalizedMarkdown>
@@ -94,10 +93,10 @@ So $\varphi\to\psi$ means that if I can produce $\varphi$ then I can also produc
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-Sure, that is exactly the intended meaning for $\varphi\to\psi$ in the game, which is called the **semantics** of a string. As long as you're not a construct robot, it is very benificial to know the semantics of strings to help you consider which strings you need to produce to get to the target. But semantics itselft does not work at all when producing strings: a string has convincing semantics does not mean you can produce that string. For instance, the semantics of $p\to p$, "if you can produce $p$ then you can also produce $p$", is clearly correct, but currently there is no way of producing $p\to p$ from scratch. 
+Sure, that is exactly the intended meaning for $\varphi\to\psi$ in the game, which is called the **semantics** of a string. As long as you're not a construct robot, it is very benificial to know the semantics of strings to help you consider which strings you need to produce to get to the target. But semantics itselft does not work at all when producing strings: a string has convincing semantics does not mean you can produce that string. For instance, the semantics of <FormulaLatex formula={parseFormula('p->p')} />, "if you can produce <FormulaLatex formula={axiom2} /> then you can also produce <FormulaLatex formula={axiom2} />", is clearly correct, but currently there is no way of producing <FormulaLatex formula={parseFormula('p->p')} /> from scratch. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-确实，游戏给 $\varphi\to\psi$ 预想的意思就是这个，它被称作字符串的**语义**。只要你不是个构装体机器人，知道字符串的语义对思考该制造哪些字符串来获得最终目标会非常有帮助。但语义本身对制造字符串是毫无用处的：一个字符串的语义看起来是对的不代表你能制造出它。比如说，$p\to p$ 的语义“如果你能制造出 $p$ 你就能制造出 $p$”明显是正确的，但现在还没有办法从零开始制造出 $p\to p$。
+确实，游戏给 $\varphi\to\psi$ 预想的意思就是这个，它被称作字符串的**语义**。只要你不是个构装体机器人，知道字符串的语义对思考该制造哪些字符串来获得最终目标会非常有帮助。但语义本身对制造字符串是毫无用处的：一个字符串的语义看起来是对的不代表你能制造出它。比如说，<FormulaLatex formula={parseFormula('p->p')} /> 的语义“如果你能制造出 <FormulaLatex formula={axiom2} /> 你就能制造出 <FormulaLatex formula={axiom2} />”明显是正确的，但现在还没有办法从零开始制造出 <FormulaLatex formula={parseFormula('p->p')} />。
 </LocalizedMarkdown>
 </Speak>
 

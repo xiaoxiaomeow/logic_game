@@ -1,6 +1,6 @@
 import { AtomicFormula, Formula, Implies } from "./Formula";
 import type Proof from "./Proof";
-import { ByAxiom, ByDeduction, BySubstitution, ProofLine, ProvedFormulaLine, UnprovedFormulaLine } from "./Proof";
+import { ByAxiom, ByDeduction, ByLogicAxiom, BySubstitution, ProofLine, ProvedFormulaLine, UnprovedFormulaLine } from "./Proof";
 import type { PrereqInfo, UnlockTreeItem } from "./Unlockables";
 
 export interface ExcecutionResult {
@@ -47,6 +47,9 @@ export class AxiomCommand extends ProofCommand {
 
 		if (proof.axioms.some(axiom => axiom.equals(formula))) {
 			const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula, new ByAxiom());
+			return { success: true, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
+		} else if (proof.level.meta.logicSystem.getUnlockedLogicAxioms(proof.level).some(logicAxiom => logicAxiom.formula.equals(formula))) {
+			const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula, new ByLogicAxiom());
 			return { success: true, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
 		} else return { success: false, errorMessage: `Formula $${formula.toLatex()}$ is not an axiom.` };
 	}

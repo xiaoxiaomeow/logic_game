@@ -38,7 +38,9 @@ function FormulaInspector() {
 						</HStack>
 						<HStack width="100%">
 							<Text fontWeight="bold">{t("FormulaInspector.Description")}</Text>
-							<Text color="logic.fg">{displayingFormula.toDescription((key: string, content: {}) => t(key, content))}</Text>
+							<Box color="logic.fg">
+								<MarkdownWithLatex>{displayingFormula.toDescription((key: string, content: {}) => t(key, content))}</MarkdownWithLatex>
+							</Box>
 						</HStack>
 						<HStack width="100%" alignItems="center">
 							<Text fontWeight="bold">{t("FormulaInspector.Code")}</Text>

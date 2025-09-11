@@ -125,10 +125,10 @@ export class AtomicFormula implements Formula {
 		return this.variableName;
 	}
 	toDescription(): string {
-		return this.variableName;
+		return "$" + this.variableName + "$";
 	}
 	toDescriptionWithBracket(_localizer: (key: string, content: {}) => string, _: number): string {
-		return this.variableName;
+		return "$" + this.variableName + "$";
 	}
 	getFormulaDescription(): string {
 		return "Formula.Atomic.FormulaDescription";

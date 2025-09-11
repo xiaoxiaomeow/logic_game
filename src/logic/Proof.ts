@@ -117,6 +117,8 @@ class Proof {
 	deductionMethodFromJsonObject(jsonObject: { type: string }): DeductionMethod | null {
 		if (jsonObject.type === "ByAxiom") {
 			return new ByAxiom();
+		} else if (jsonObject.type === "ByLogicAxiom") {
+			return new ByLogicAxiom();
 		} else if (jsonObject.type === "ByDeduction") {
 			return new ByDeduction(parseFormula((jsonObject as any).formula));
 		} else if (jsonObject.type === "BySubstitution") {
@@ -226,6 +228,30 @@ export class ByAxiom extends DeductionMethod {
 	toJsonObject(): {} {
 		return {
 			type: "ByAxiom"
+		};
+	}
+}
+
+export class ByLogicAxiom extends DeductionMethod {
+	validate(proof: Proof, index: number): boolean {
+		const formulaLine: ProvedFormulaLine = proof.lines[index] as ProvedFormulaLine;
+		return proof.level.meta.logicSystem.getUnlockedLogicAxioms(proof.level).some(logicAxiom => logicAxiom.formula.equals(formulaLine.formula));
+	}
+	key(): string {
+		return "ByLogicAxiom";
+	}
+	getShortDescription(localizer: (key: string, content: {}) => string, _: Proof): string {
+		return localizer("DeductionMethod.ByLogicAxiom.ShortDescription", {});
+	}
+	getLongDescription(localizer: (key: string, content: {}) => string, _: Proof): string {
+		return localizer("DeductionMethod.ByLogicAxiom.LongDescription", {});
+	}
+	getRequiredFormulas(): Formula[] {
+		return [];
+	}
+	toJsonObject(): {} {
+		return {
+			type: "ByLogicAxiom"
 		};
 	}
 }

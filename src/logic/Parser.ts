@@ -19,7 +19,14 @@ export const LineToken = createToken({ name: "Line", pattern: /\$[0-9]+/ });
 // collection
 export const Tokens = [WhiteSpaceToken, LeftParenthesisToken, RightParenthesisToken, AxiomToken, DeductionToken, SubstitutionToken, ImpliesToken, NotToken, IdentifierToken, LineToken];
 
-export const lexer = new Lexer(Tokens);
+let lexer: Lexer | null = null;
+let parser: Parser | null = null;
+let visitor: Visitor | null = null;
+
+function getLexer() {
+	if (!lexer) lexer = new Lexer(Tokens);
+	return lexer;
+}
 
 class Parser extends CstParser {
 	constructor() {
@@ -87,7 +94,10 @@ class Parser extends CstParser {
 	});
 }
 
-export const parser = new Parser();
+function getParser() {
+	if (!parser) parser = new Parser();
+	return parser;
+}
 
 export interface FormulaNode {
 	implies: CstNode[];
@@ -130,7 +140,7 @@ export interface DeductionNode {
 	formula?: CstNode[];
 }
 
-class Visitor extends parser.getBaseCstVisitorConstructorWithDefaults() {
+class Visitor extends getParser().getBaseCstVisitorConstructorWithDefaults() {
 	constructor() {
 		super();
 		this.validateVisitor();
@@ -202,9 +212,15 @@ class Visitor extends parser.getBaseCstVisitorConstructorWithDefaults() {
 	}
 }
 
-const visitor = new Visitor();
+function getVisitor() {
+	if (!visitor) visitor = new Visitor();
+	return visitor;
+}
 
 export function parseCommand(input: string): ProofCommand {
+	const lexer = getLexer();
+	const parser = getParser();
+	const visitor = getVisitor();
 	const lexResult = lexer.tokenize(input);
 	if (lexResult.errors.length > 0) {
 		throw new Error(`Lexing errors: ${lexResult.errors.map(e => e.message).join(", ")}`);
@@ -218,6 +234,9 @@ export function parseCommand(input: string): ProofCommand {
 	return command;
 }
 export function parseFormula(input: string): Formula {
+	const lexer = getLexer();
+	const parser = getParser();
+	const visitor = getVisitor();
 	const lexResult = lexer.tokenize(input);
 	if (lexResult.errors.length > 0) {
 		throw new Error(`Lexing errors: ${lexResult.errors.map(e => e.message).join(", ")}`);

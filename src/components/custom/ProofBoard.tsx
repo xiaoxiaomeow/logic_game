@@ -93,10 +93,10 @@ function LevelInfo(props: ProofBoardInput) {
 				<Text fontWeight="bold">{t("ProofBoard.Language")}</Text>
 				<Text>{t(level.meta.logicSystem.name)}</Text>
 			</HStack>
-			<HStack width="100%">
+			{level.meta.axioms.length > 0 ? <HStack width="100%">
 				<Text fontWeight="bold">{t("ProofBoard.Axioms")}</Text>
 				{level.meta.axioms.map((axiom, index) => (<Box key={axiom.toCode()}><FormulaLatex formula={axiom} />{index != level.meta.axioms.length - 1 ? "," : ""}</Box>))}
-			</HStack>
+			</HStack> : null}
 			<HStack width="100%">
 				<Text fontWeight="bold">{t("ProofBoard.Target")}</Text>
 				<FormulaLatex formula={level.meta.target} />

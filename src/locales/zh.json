@@ -8,7 +8,8 @@
     "ErrorMessage.Title": "错误信息",
     "Inventory.Title": "物品栏",
     "Inventory.Axioms": "公理",
-    "Inventory.Proofs": "证明",
+    "Inventory.LogicAxioms": "逻辑公理",
+    "Inventory.ProofMethods": "证明",
     "ProofBoard.Statement": "陈述",
     "ProofBoard.Language": "语言",
     "ProofBoard.Axioms": "公理",
@@ -30,6 +31,8 @@
     "Formula.Atomic.FormulaDescription": "这是一个原子公式。",
     "DeductionMethod.ByAxiom.ShortDescription": "公理",
     "DeductionMethod.ByAxiom.LongDescription": "这一行上的公式是公理。",
+    "DeductionMethod.ByLogicAxiom.ShortDescription": "逻辑公理",
+    "DeductionMethod.ByLogicAxiom.LongDescription": "这一行上的公式是逻辑公理。",
     "DeductionMethod.ByDeduction.ShortDescription": "({{impliesIndex}}) ({{phiIndex}}) 推理",
     "DeductionMethod.ByDeduction.LongDescription": "这一行上的公式是由 ({{impliesIndex}}) 和 ({{phiIndex}}) 推理得到的。",
     "DeductionMethod.BySubstitution.ShortDescription": "替换 ({{formulaIndex}}) 中的 ${{atomicFormula}}$",
@@ -50,5 +53,6 @@
     "Level.PropositionalLogic.Axiom.Name": "公理",
     "Level.PropositionalLogic.Deduction.Name": "推理",
     "Level.PropositionalLogic.Association.Name": "结合",
-    "Level.PropositionalLogic.Substitution.Name": "替换"
+    "Level.PropositionalLogic.Substitution.Name": "替换",
+    "Level.PropositionalLogic.LogicAxiom.Name": "逻辑公理"
 }
