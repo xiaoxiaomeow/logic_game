@@ -1,18 +1,19 @@
 import { parseFormula } from "/src/logic/Parser";
 import { PropositionalLogic } from "/src/logic/LogicSystem";
+import { weakening } from "/src/logic/AxiomSchema";
 
 export const p = parseFormula('p');
 export const axiom = parseFormula('p->p');
-export const target = parseFormula('(p->q)->p->q');
+export const target = parseFormula('p->p->p->p');
 export const chapterId = "00_propositional_logic";
 
 export const meta = {
 	chapterId: chapterId,
-	id: "03_substitution",
-	name: "Level.PropositionalLogic.Substitution.Name",
-	statement: "$\\{p\\to p\\}\\vdash (p\\to q)\\to p\\to q$",
+	id: "03_axiom_schema",
+	name: "Level.PropositionalLogic.AxiomSchema.Name",
+	statement: "$\\{\\varphi\\to(\\psi\\to\\varphi)\\}\\vdash p\\to p\\to p\\to p$",
 	logicSystem: PropositionalLogic,
-	axioms: [axiom],
+	axioms: [weakening],
 	target: target,
 	type: "main",
 	prereqs: [{type: "level", chapterId: chapterId, levelId: "02_association"}]

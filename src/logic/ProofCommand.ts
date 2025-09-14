@@ -1,3 +1,4 @@
+import type { AxiomSchema } from "./AxiomSchema";
 import { AtomicFormula, Formula, Implies } from "./Formula";
 import type Proof from "./Proof";
 import { ByAxiom, ByDeduction, ByLogicAxiom, BySubstitution, ProofLine, ProvedFormulaLine, UnprovedFormulaLine } from "./Proof";
@@ -45,13 +46,52 @@ export class AxiomCommand extends ProofCommand {
 		}
 		else formula = this.formula;
 
-		if (proof.axioms.some(axiom => axiom.equals(formula))) {
+		if (proof.axioms.some(axiom => axiom.getFormulasFromAxiom(formula) != null)) {
 			const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula, new ByAxiom());
 			return { success: true, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
-		} else if (proof.level.meta.logicSystem.getUnlockedLogicAxioms(proof.level).some(logicAxiom => logicAxiom.formula.equals(formula))) {
+		} else if (proof.level.meta.logicSystem.getUnlockedLogicAxioms(proof.level).some(logicAxiom => logicAxiom.axiom.getFormulasFromAxiom(formula) != null)) {
 			const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula, new ByLogicAxiom());
 			return { success: true, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
 		} else return { success: false, errorMessage: `Formula $${formula.toLatex()}$ is not an axiom.` };
+	}
+}
+
+export class AxiomSchemaCommand extends ProofCommand {
+	code: string;
+	formulas: Formula[];
+	constructor(code: string, formulas: Formula[]) {
+		super([{ type: "level", chapterId: "00_propositional_logic", levelId: "02_association" }]);
+		this.code = code;
+		this.formulas = formulas;
+	}
+	override excecute(proof: Proof, lineIndex: number): Partial<ExcecutionResult> {
+		let axiomSchema: AxiomSchema | null = null;
+		let logicAxiomSchema: AxiomSchema | null = null;
+		for (const axiom of proof.axioms) {
+			if (axiom.codes.some(code => code === this.code)) {
+				axiomSchema = axiom;
+				break;
+			}
+		}
+		for (const axiom of proof.level.meta.logicSystem.getUnlockedLogicAxioms(proof.level).map(logicAxiom => logicAxiom.axiom)) {
+			if (axiom.codes.some(code => code === this.code)) {
+				logicAxiomSchema = axiom;
+				break;
+			}
+		}
+		if (axiomSchema != null) {
+			if (!axiomSchema.verifyFormulas(this.formulas)) return { success: false, errorMessage: `The formula cannot be substitute into the axiom schema.` };
+			const formula: Formula = axiomSchema.getAxiomFromFormulas(this.formulas);
+			const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula, new ByAxiom());
+			return { success: true, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
+		}
+		else if (logicAxiomSchema != null) {
+			if (!logicAxiomSchema.verifyFormulas(this.formulas)) return { success: false, errorMessage: `The formula cannot be substitute into the axiom schema.` };
+			const formula: Formula = logicAxiomSchema.getAxiomFromFormulas(this.formulas);
+			const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula, new ByLogicAxiom());
+			return { success: true, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
+		}
+		else return { success: false, errorMessage: `Axiom schema with code "${this.code}" not found.` };
 	}
 }
 

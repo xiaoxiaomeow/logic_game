@@ -53,6 +53,8 @@
     "Level.PropositionalLogic.Axiom.Name": "公理",
     "Level.PropositionalLogic.Deduction.Name": "推理",
     "Level.PropositionalLogic.Association.Name": "结合",
-    "Level.PropositionalLogic.Substitution.Name": "替换",
-    "Level.PropositionalLogic.LogicAxiom.Name": "逻辑公理"
+    "Level.PropositionalLogic.AxiomSchema.Name": "公理模式",
+    "Level.PropositionalLogic.LogicAxiom.Name": "逻辑公理",
+	"AxiomSchema.Weakening.Name": "$\\varphi\\to(\\psi\\to\\varphi)$",
+	"AxiomSchema.Chain.Name": "$(\\varphi\\to(\\psi\\to\\chi))\\to((\\varphi\\to\\psi)\\to(\\varphi\\to\\chi))$"
 }

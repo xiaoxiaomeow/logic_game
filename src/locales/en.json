@@ -53,6 +53,8 @@
     "Level.PropositionalLogic.Axiom.Name": "Axiom",
     "Level.PropositionalLogic.Deduction.Name": "Deduction",
     "Level.PropositionalLogic.Association.Name": "Association",
-    "Level.PropositionalLogic.Substitution.Name": "Substitution",
-    "Level.PropositionalLogic.LogicAxiom.Name": "Logic Axiom"
+    "Level.PropositionalLogic.AxiomSchema.Name": "Axiom Schema",
+    "Level.PropositionalLogic.LogicAxiom.Name": "Logic Axiom",
+	"AxiomSchema.Weakening.Name": "$\\varphi\\to(\\psi\\to\\varphi)$",
+	"AxiomSchema.Chain.Name": "$(\\varphi\\to(\\psi\\to\\chi))\\to((\\varphi\\to\\psi)\\to(\\varphi\\to\\chi))$"
 }

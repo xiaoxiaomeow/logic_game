@@ -1,6 +1,5 @@
-import type { Formula } from "./Formula";
+import { weakening, chain, type AxiomSchema } from "./AxiomSchema";
 import type { Level } from "./Level";
-import { parseFormula } from "./Parser";
 import { isUnlocked, type PrereqInfo, type UnlockTreeItem } from "./Unlockables";
 
 export class LogicSystem {
@@ -16,10 +15,10 @@ export class LogicSystem {
 }
 
 export class LogicAxiom implements UnlockTreeItem {
-	formula: Formula;
+	axiom: AxiomSchema;
 	prereq: Partial<PrereqInfo>[];
-	constructor(formula: Formula, prereq: Partial<PrereqInfo>[]) {
-		this.formula = formula;
+	constructor(axiom: AxiomSchema, prereq: Partial<PrereqInfo>[]) {
+		this.axiom = axiom;
 		this.prereq = prereq;
 	}
 	isMet(): Boolean {
@@ -34,6 +33,6 @@ export class LogicAxiom implements UnlockTreeItem {
 }
 
 export const PropositionalLogic = new LogicSystem("Language.PropositionalLogic.Name", [
-	new LogicAxiom(parseFormula('p->q->p'), [{ type: "level", chapterId: "00_propositional_logic", levelId: "03_substitution" }]),
-	new LogicAxiom(parseFormula('(p->q->r)->(p->q)->p->r'), [{ type: "level", chapterId: "00_propositional_logic", levelId: "03_substitution" }]),
+	new LogicAxiom(weakening, [{ type: "level", chapterId: "00_propositional_logic", levelId: "03_axiom_schema" }]),
+	new LogicAxiom(chain, [{ type: "level", chapterId: "00_propositional_logic", levelId: "03_axiom_schema" }]),
 ]);

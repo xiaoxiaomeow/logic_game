@@ -1,5 +1,6 @@
 import { parseFormula } from "/src/logic/Parser";
 import { PropositionalLogic } from "/src/logic/LogicSystem";
+import { SingleAxiom } from "/src/logic/AxiomSchema";
 
 export const axiom1 = parseFormula('p->q');
 export const axiom2 = parseFormula('p');
@@ -12,7 +13,7 @@ export const meta = {
 	name: "Level.PropositionalLogic.Deduction.Name",
 	statement: "$\\{p\\to q,p\\}\\vdash q$",
 	logicSystem: PropositionalLogic,
-	axioms: [axiom1, axiom2],
+	axioms: [new SingleAxiom(axiom1), new SingleAxiom(axiom2)],
 	target: target,
 	type: "main",
 	prereqs: [{type: "level", chapterId: chapterId, levelId: "00_axiom"}]
@@ -30,12 +31,12 @@ import ResumeUntil from "/src/components/custom/ResumeUntil";
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-Time to produce your own string! You will use the second rule: 
+Time to produce your own string! You will use the second and also the last rule: 
 
 - (Deduction) If you have produced any string of the form $\varphi\to\psi$ and the string $\varphi$, then you can produce $\psi$. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-该制造你自己的字符串了！你会用到第二条规则：
+该制造你自己的字符串了！你会用到第二条也是最后一条规则：
 
 - （推理）如果你已经制造了任何形如 $\varphi\to\psi$ 的字符串和字符串 $\varphi$，你就可以制造 $\psi$。
 </LocalizedMarkdown>

@@ -1,6 +1,6 @@
 import { createToken, CstParser, Lexer, type CstNode, type IToken } from "chevrotain"
-import { AxiomCommand, DeductionCommand, SubstitutionCommand, type ProofCommand } from "./ProofCommand";
-import { AtomicFormula, Implies, Not, type Formula } from "./Formula";
+import { AxiomCommand, AxiomSchemaCommand, DeductionCommand, SubstitutionCommand, type ProofCommand } from "./ProofCommand";
+import { AtomicFormula, Formula, Implies, Not } from "./Formula";
 
 // general
 export const WhiteSpaceToken = createToken({ name: "WhiteSpace", pattern: /\s+/, group: Lexer.SKIPPED });
@@ -9,6 +9,7 @@ export const RightParenthesisToken = createToken({ name: "RightParen", pattern: 
 // commands
 export const AxiomToken = createToken({ name: "Axiom", pattern: /(axiom|axi)/ });
 export const DeductionToken = createToken({ name: "Deduction", pattern: /(deduction|ded)/ });
+export const AxiomSchemaToken = createToken({ name: "AxiomSchema", pattern: /(schema|sch)/ });
 export const SubstitutionToken = createToken({ name: "Substitution", pattern: /(substitution|sub)/ });
 // logic operators
 export const ImpliesToken = createToken({ name: "Implies", pattern: /->/ });
@@ -17,7 +18,7 @@ export const NotToken = createToken({ name: "Not", pattern: /!/ });
 export const IdentifierToken = createToken({ name: "Identifier", pattern: /[a-zA-Z0-9_^{}\\]+/ });
 export const LineToken = createToken({ name: "Line", pattern: /\$[0-9]+/ });
 // collection
-export const Tokens = [WhiteSpaceToken, LeftParenthesisToken, RightParenthesisToken, AxiomToken, DeductionToken, SubstitutionToken, ImpliesToken, NotToken, IdentifierToken, LineToken];
+export const Tokens = [WhiteSpaceToken, LeftParenthesisToken, RightParenthesisToken, AxiomToken, DeductionToken, AxiomSchemaToken, SubstitutionToken, ImpliesToken, NotToken, IdentifierToken, LineToken];
 
 let lexer: Lexer | null = null;
 let parser: Parser | null = null;
@@ -66,6 +67,7 @@ class Parser extends CstParser {
 		this.OR([
 			{ ALT: () => this.SUBRULE(this.axiom) },
 			{ ALT: () => this.SUBRULE(this.deduction) },
+			{ ALT: () => this.SUBRULE(this.axiomSchema) },
 			{ ALT: () => this.SUBRULE(this.substitution) }
 		]);
 	});
@@ -82,6 +84,11 @@ class Parser extends CstParser {
 			{ ALT: () => this.CONSUME(LineToken) },
 			{ ALT: () => this.SUBRULE(this.formula) }
 		]);
+	});
+	private axiomSchema = this.RULE("axiomSchema", () => {
+		this.CONSUME(AxiomSchemaToken);
+		this.CONSUME(IdentifierToken);
+		this.AT_LEAST_ONE(() => this.SUBRULE(this.formula));
 	});
 	private substitution = this.RULE("substitution", () => {
 		this.CONSUME(SubstitutionToken);
@@ -123,21 +130,26 @@ export interface ParenthesizedFormulaNode {
 export interface CommandNode {
 	axiom?: CstNode[];
 	deduction?: CstNode[];
+	axiomSchema?: CstNode[];
 	substitution?: CstNode[];
 }
 export interface AxiomNode {
 	Line?: IToken[];
 	formula?: CstNode[];
 }
+export interface DeductionNode {
+	Line?: IToken[];
+	formula?: CstNode[];
+}
+export interface AxiomSchemaNode {
+	Identifier: IToken[];
+	formula: CstNode[];
+}
 export interface SubstitutionNode {
 	Line?: IToken[];
 	formula?: CstNode[];
 	atomicFormula: CstNode[];
 	replacement: CstNode[];
-}
-export interface DeductionNode {
-	Line?: IToken[];
-	formula?: CstNode[];
 }
 
 class Visitor extends getParser().getBaseCstVisitorConstructorWithDefaults() {
@@ -176,6 +188,7 @@ class Visitor extends getParser().getBaseCstVisitorConstructorWithDefaults() {
 	command(ctx: CommandNode): ProofCommand {
 		if (ctx.axiom != null) return this.visit(ctx.axiom[0]);
 		else if (ctx.deduction != null) return this.visit(ctx.deduction[0]);
+		else if (ctx.axiomSchema != null) return this.visit(ctx.axiomSchema[0]);
 		else return this.visit(ctx.substitution!![0]);
 	}
 	axiom(ctx: AxiomNode): ProofCommand {
@@ -197,6 +210,11 @@ class Visitor extends getParser().getBaseCstVisitorConstructorWithDefaults() {
 			const formula = this.visit(ctx.formula!![0]) as Formula;
 			return new DeductionCommand(formula);
 		}
+	}
+	axiomSchema(ctx: AxiomSchemaNode): ProofCommand {
+		const name = ctx.Identifier[0].image;
+		const formulas: Formula[] = ctx.formula.map(f => this.visit(f) as Formula);
+		return new AxiomSchemaCommand(name, formulas);
 	}
 	substitution(ctx: SubstitutionNode): ProofCommand {
 		const atomicFormula: Formula = this.visit(ctx.atomicFormula[0]) as Formula;

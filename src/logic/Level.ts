@@ -4,13 +4,14 @@ import type { Formula } from "./Formula";
 import { getLevelState } from "./LevelState";
 import type { Chapter } from "./Chapter";
 import type { UnlockTreeItem, PrereqInfo } from "./Unlockables";
+import type { AxiomSchema } from "./AxiomSchema";
 
 export interface LevelMeta {
 	id: string;
 	name: string;
 	statement: string;
 	logicSystem: LogicSystem;
-	axioms: Formula[];
+	axioms: AxiomSchema[];
 	target: Formula;
 	type: "main" | "side" | "joke";
 	prereqs: PrereqInfo[];

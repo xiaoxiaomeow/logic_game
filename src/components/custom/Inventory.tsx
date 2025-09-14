@@ -5,7 +5,8 @@ import getUnlockedProofMethods, { ProofMethod } from "@/logic/ProofMethod";
 import { isHardUnlocked } from "@/logic/Unlockables";
 import { Button, Flex, Tabs, Text, VStack, Wrap } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { InlineMath } from 'react-katex';
+import MarkdownWithLatex from "./MarkdownWithLatex";
+import { SingleAxiom } from "@/logic/AxiomSchema";
 
 function Inventory() {
 	const proof: Proof | null = useUIStore(state => state.proof);
@@ -29,23 +30,25 @@ function Inventory() {
 					{proof != null ? <Tabs.Content value="axioms" padding="8px 8px">
 						<Wrap>
 							{proof.axioms.map(axiom => (
-								<Button key={axiom.toCode()} size="sm" onClick={event => {
-									setInputCommand("axiom " + axiom.toCode());
+								<Button key={axiom.name} size="sm" onClick={event => {
+									if (axiom instanceof SingleAxiom) setInputCommand("axiom " + axiom.axiom.toCode());
+									else if (axiom.codes.length > 0) setInputCommand("schema " + axiom.codes[0] + " ");
 									event.stopPropagation();
 								}}>
-									<InlineMath math={axiom.toLatex()}></InlineMath>
+									<MarkdownWithLatex>{t(axiom.name)}</MarkdownWithLatex>
 								</Button>
 							))}
 						</Wrap>
 					</Tabs.Content> : null}
 					{proof != null && logicAxioms.length > 0 ? <Tabs.Content value="logicAxioms" padding="8px 8px">
 						<Wrap>
-							{logicAxioms.map(logicAxiom => (
-								<Button key={logicAxiom.formula.toCode()} size="sm" onClick={event => {
-									setInputCommand("axiom " + logicAxiom.formula.toCode());
+							{logicAxioms.map(logicAxiom => logicAxiom.axiom).map(axiom => (
+								<Button key={axiom.name} size="sm" onClick={event => {
+									if (axiom instanceof SingleAxiom) setInputCommand("axiom " + axiom.axiom.toCode());
+									else if (axiom.codes.length > 0) setInputCommand("schema " + axiom.codes[0] + " ");
 									event.stopPropagation();
 								}}>
-									<InlineMath math={logicAxiom.formula.toLatex()}></InlineMath>
+									<MarkdownWithLatex>{t(axiom.name)}</MarkdownWithLatex>
 								</Button>
 							))}
 						</Wrap>

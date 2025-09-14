@@ -1,5 +1,5 @@
 import type { Level } from "@/logic/Level";
-import { Box, Button, Flex, HStack, IconButton, Input, InputGroup, ScrollArea, Table, Text, VStack } from "@chakra-ui/react";
+import { Button, Flex, HStack, IconButton, Input, InputGroup, ScrollArea, Table, Text, VStack } from "@chakra-ui/react";
 import FormulaLatex from "./FormulaLatex";
 import MarkdownWithLatex from "./MarkdownWithLatex";
 import Proof, { UnprovedFormulaLine, ProofLine, ProvedFormulaLine } from "@/logic/Proof";
@@ -95,7 +95,7 @@ function LevelInfo(props: ProofBoardInput) {
 			</HStack>
 			{level.meta.axioms.length > 0 ? <HStack width="100%">
 				<Text fontWeight="bold">{t("ProofBoard.Axioms")}</Text>
-				{level.meta.axioms.map((axiom, index) => (<Box key={axiom.toCode()}><FormulaLatex formula={axiom} />{index != level.meta.axioms.length - 1 ? "," : ""}</Box>))}
+				<MarkdownWithLatex>{level.meta.axioms.map(axiom => t(axiom.name)).join(", ")}</MarkdownWithLatex>
 			</HStack> : null}
 			<HStack width="100%">
 				<Text fontWeight="bold">{t("ProofBoard.Target")}</Text>

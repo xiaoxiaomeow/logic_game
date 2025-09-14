@@ -1,3 +1,4 @@
+import type { AxiomSchema } from "./AxiomSchema";
 import { AtomicFormula, Implies, type Formula } from "./Formula";
 import type { Level } from "./Level";
 import { parseCommand, parseFormula } from "./Parser";
@@ -6,12 +7,12 @@ import { isHardUnlocked } from "./Unlockables";
 
 class Proof {
 	level: Level;
-	axioms: Formula[];
+	axioms: AxiomSchema[];
 	target: Formula;
 
 	lines: ProofLine[];
 
-	constructor(level: Level, axioms: Formula[], target: Formula, lines: ProofLine[] | null, json: { type: string }[] | null) {
+	constructor(level: Level, axioms: AxiomSchema[], target: Formula, lines: ProofLine[] | null, json: { type: string }[] | null) {
 		this.level = level;
 		this.axioms = axioms;
 		this.target = target;
@@ -211,7 +212,7 @@ export abstract class DeductionMethod {
 export class ByAxiom extends DeductionMethod {
 	validate(proof: Proof, index: number): boolean {
 		const formulaLine: ProvedFormulaLine = proof.lines[index] as ProvedFormulaLine;
-		return proof.axioms.some(axiom => axiom.equals(formulaLine.formula));
+		return proof.axioms.some(axiom => axiom.getFormulasFromAxiom(formulaLine.formula) != null);
 	}
 	key(): string {
 		return "ByAxiom";
@@ -235,7 +236,7 @@ export class ByAxiom extends DeductionMethod {
 export class ByLogicAxiom extends DeductionMethod {
 	validate(proof: Proof, index: number): boolean {
 		const formulaLine: ProvedFormulaLine = proof.lines[index] as ProvedFormulaLine;
-		return proof.level.meta.logicSystem.getUnlockedLogicAxioms(proof.level).some(logicAxiom => logicAxiom.formula.equals(formulaLine.formula));
+		return proof.level.meta.logicSystem.getUnlockedLogicAxioms(proof.level).some(logicAxiom => logicAxiom.axiom.getFormulasFromAxiom(formulaLine.formula) != null);
 	}
 	key(): string {
 		return "ByLogicAxiom";
