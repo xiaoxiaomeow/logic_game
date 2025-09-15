@@ -1,6 +1,7 @@
 {
     "Character.Star.Name": "Star",
     "Character.Sapphire.Name": "Sapphire",
+    "Character.Topaz.Name": "Topaz",
     "LevelSelector.ChapterName": "Mathematical Logic Game",
     "LevelSelector.LevelName": "Level Selection",
     "LevelSelector.Chapter": "Chapter: ",
@@ -55,6 +56,7 @@
     "Level.PropositionalLogic.Association.Name": "Association",
     "Level.PropositionalLogic.AxiomSchema.Name": "Axiom Schema",
     "Level.PropositionalLogic.LogicAxiom.Name": "Logic Axiom",
-	"AxiomSchema.Weakening.Name": "$\\varphi\\to(\\psi\\to\\varphi)$",
-	"AxiomSchema.Chain.Name": "$(\\varphi\\to(\\psi\\to\\chi))\\to((\\varphi\\to\\psi)\\to(\\varphi\\to\\chi))$"
+    "Level.PropositionalLogic.Theorem.Name": "Theorem",
+	"AxiomSchema.Weakening.Name": "$\\varphi\\to\\psi\\to\\varphi$",
+	"AxiomSchema.Chain.Name": "$(\\varphi\\to\\psi\\to\\chi)\\to(\\varphi\\to\\psi)\\to\\varphi\\to\\chi$"
 }

@@ -2,8 +2,7 @@ import { parseFormula } from "/src/logic/Parser";
 import { PropositionalLogic } from "/src/logic/LogicSystem";
 
 export const ptop = parseFormula('p->p');
-export const logicAxiom1 = parseFormula('p->q->p');
-export const logicAxiom2 = parseFormula('(p->q->r)->(p->q)->p->r');
+export const ptoq = parseFormula('p->q');
 export const target = parseFormula('p->p');
 export const chapterId = "00_propositional_logic";
 
@@ -26,67 +25,62 @@ import Star from "/src/components/custom/Star";
 import Sapphire from "/src/components/custom/Sapphire";
 import FormulaLatex from "/src/components/custom/FormulaLatex";
 import ResumeUntil from "/src/components/custom/ResumeUntil";
+import { Collapsible } from "@chakra-ui/react";
 
 <ConversationProgresser>
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-As you just pointed out, <Sapphire /> needs to be really careful when chosing which axioms to give you. <Sapphire /> wants that: 
-
-- One can always **syntactically** produce formulas that are **semantically** true. For instance, we would like to be able to produce <FormulaLatex formula={target} />, <FormulaLatex formula={logicAxiom1} />, etc.; 
-- One cannot produce every formula. For instance, one should not be able to produce <FormulaLatex formula={parseFormula("p")} />, as that makes the game non-interesting. 
+With the "weakening" axiom schema $\varphi\to\psi\to\varphi$, you still cannot prove <FormulaLatex formula={ptop} /> which looks certainly true. <Sapphire /> is aiming to give you enough axiom schemas that can prove all these semantically true formulas. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-就像你刚说的一样，<Sapphire />要在选择给你哪些公理的时候十分小心。<Sapphire />希望：
-
-- **语义**上正确的公式总是能在**语法**上被制造出来。比如我们希望能制造 <FormulaLatex formula={target} />，<FormulaLatex formula={logicAxiom1} />，等等。
-- 不是所有公式都能被制造出来。比如我们不希望制造出 <FormulaLatex formula={parseFormula("p")} />，那样游戏就没意思了。
+有“弱化”公理模式 $\varphi\to\psi\to\varphi$ 之后，你还是没法证明 <FormulaLatex formula={ptop} /> 这种看起来很正确的公式。<Sapphire />的目标是给你足够多的公理模式来证明全部这些语义上正确的公式。
 </LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="star">
 <LocalizedMarkdown locale="en">
-Sounds reasonable to keep the game intuitive and interesting. So this level is asking me to figure out what are the axioms we should add? 
-
-Let's see: to ensure the first goal we would want more axioms so we can produce more. To ensure the second goal we would want less axioms so we don't produce too much. Uh... anyway I presume adding <FormulaLatex formula={ptop} /> as an axiom won't hurt. 
+Just give me $\varphi$ as an axiom schema and I can prove every formula! 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-听起来很合理，这样这游戏才能符合直觉也有意思。所以这一关是要我研究我们应该加哪些公理？
-
-我想想：要达成第一个目标我们得多加一些公理才能制造出更多的公式。但要达成第二个目标我们希望少加一些公理来避免制造出的公式太多。呃……不管怎么说我觉得把 <FormulaLatex formula={ptop} /> 作为公理没什么坏处……
+给我 $\varphi$ 作为公理模式，我就能证明所有公式了！
 </LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-You're right, but figuring out what collection of axioms works is a hard task for a beginner. We'll just continue with a set of **logic axioms** and stick to it: all levels remaining in this chapter will be based on these axioms (until we add more notions and new axioms for the new notions). These are: 
+You wish. Also, <Sapphire /> do not want you to prove any formula that is not semantically true (or not true in general), for instance <FormulaLatex formula={ptoq} />. After considering <Sapphire /> decide to give you the "weakening" axiom along with the new "chain" axiom as **logic axioms**, which will be included as axiom schemas in every level from now on: 
 
-- <FormulaLatex formula={logicAxiom1} />
-- <FormulaLatex formula={logicAxiom2} />
+- (Weakening) $\varphi\to\psi\to\varphi$
+- (Chain) $(\varphi\to\psi\to\chi)\to(\varphi\to\psi)\to\varphi\to\chi$
+
+As before, here $\varphi,\psi,\chi$ stand for any formulas. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-你是对的，但研究出来应该选哪些公理对于一个新手来说太难了。我们就用一组已经有的**逻辑公理**继续，并维持这一组公理：这一章的后续所有关卡都会用这一组公理（直到我们有新的符号的时候再给新的符号添加新的公理）。它们是：
+又做梦了。而且<Sapphire />也不想让你证明任何语义上不正确（或者一般来说不正确）的公式，比如说 <FormulaLatex formula={ptoq} />。<Sapphire />思考之后决定给你“弱化”公理和新的“链”公理作为**逻辑公理**——之后每一关都会有它们作为公理模式：
 
-- <FormulaLatex formula={logicAxiom1} />
-- <FormulaLatex formula={logicAxiom2} />
+- （弱化）$\varphi\to\psi\to\varphi$
+- （链）$(\varphi\to\psi\to\chi)\to(\varphi\to\psi)\to\varphi\to\chi$
+
+和之前一样，这里 $\varphi,\psi,\chi$ 代表任意公式。
 </LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="star">
 <LocalizedMarkdown locale="en">
-Only two? So <FormulaLatex formula={ptop} /> is not an logic axiom? 
+The chain axiom looks complicated. Let's see... it means if I can prove $\varphi\to\psi\to\chi$, $\varphi\to\psi$ and $\varphi$, then I can prove $\chi$. To do this I just use deduction trice. Well, I'm convinced that this axiom is semantically true, but why picking this scary one? 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-就俩？<FormulaLatex formula={ptop} /> 不是逻辑公理吗？
+链公理看起来好复杂。我想想……它的意思是如果我能证明 $\varphi\to\psi\to\chi$、$\varphi\to\psi$ 和 $\varphi$，那么我就能证明 $\chi$。我只要用三次推理就行了。嗯，那这个公理是语义上确实是正确的，但为什么要选这么吓人的一个公理？
 </LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-You can actually produce it from the given ones, so there is no need to add it. There is also no harm to add it, as this will not break our goal to make the game interesting. But then you could ask the same for every formula that you can produce, "why not adding this as an axiom?". So <Sapphire /> was merely picking to some mininal collection of axioms that works. 
+Thats because surprisingly only these two axiom schemas are enough to justify the semantics of $\to$. You can actually now prove every that looks true, including the most basic <FormulaLatex formula={ptop} />. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-你可以从给出的逻辑公理开始制造它，所以没必要把它也添加成逻辑公理。加上也没有坏处就是了，因为即使加上它，我们让游戏保持有趣的目标也不会被违反。只是你可以对每个你能制造的公式问一遍“我们为什么不把这个添加到逻辑公理？”所以<Sapphire />就是选了极小的能工作的一组公理而已。
+这是因为很神奇地仅仅这两个公理模式就足以刻画 $\to$ 的语义了。你现在实际上可以证明所有看起来正确的东西，包括最基本的 <FormulaLatex formula={ptop} />。
 </LocalizedMarkdown>
 </Speak>
 
@@ -101,10 +95,24 @@ Since logic axioms are always available in every level from this one, they are n
 
 <Speak speaker="author">
 <LocalizedMarkdown locale="en">
-**Warning: this level is difficult.**
+<Collapsible.Root>
+<Collapsible.Trigger>
+**Warning: this level is difficult.** Click here for hints if you are stuck. 
+</Collapsible.Trigger>
+<Collapsible.Content>
+Consider using the chain axiom schema with $\varphi=p$, $\psi=p\to p$, $\chi=p$. 
+</Collapsible.Content>
+</Collapsible.Root>
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-**警告：这一关有一定难度。**
+<Collapsible.Root>
+<Collapsible.Trigger>
+**警告：这一关很难。** 如果没有什么进展，点击这里可以看到提示。
+</Collapsible.Trigger>
+<Collapsible.Content>
+考虑对 $\varphi=p$, $\psi=p\to p$, $\chi=p$ 使用链公理。
+</Collapsible.Content>
+</Collapsible.Root>
 </LocalizedMarkdown>
 </Speak>
 
@@ -121,38 +129,19 @@ Finally finished! I actually start to get into the game.
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-That's good to hear. Perhaps you have discovered the following principle, I state it anyway: Every formula you can produce is **semantically** true. This is since: 
-
-- Every axiom is semantically true. So the axiom rule can only produce semantically true formulas. 
-- Every time you use Deduction or Substitution, you produce a formula that is semantically true if the formulas you used are all semantically true. 
-
-Therefore you can never produce a formula that is semantically not true / not true in general. If you ever find yourself trying to produce something like <FormulaLatex formula={parseFormula("p->q")} />, you'd better look for another way. 
+That's good to hear. <Sapphire /> just give you a quick hint: later we will show that a formula is **syntactically true**, or **provable**, if and only if it is **semantically true**. Therefore you can never prove a formula that is semantically not true / not true in general. If you ever find yourself trying to prove something like <FormulaLatex formula={parseFormula("p->q")} />, you'd better look for another way. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-那很好了。也许你已经发现了下面的原则，但不管怎样我还是说一说：你能制造出来的每个公式都是**语义**上正确的。这是因为：
-
-- 每个公理都是语义上正确的。所以公理规则只能制造出语义上正确的公式。
-- 每次你使用推理或者代入，如果你用到的公式都是语义上正确的，那么你制造出来的公式也是语义上正确的。
-
-所以你永远不可能制造出一个语义上不正确 / 一般来说不正确的公式。如果你发现自己在试图制造 <FormulaLatex formula={parseFormula("p->q")} /> 之类的东西，你最好换个思路。
+那很好了。<Sapphire />给你一个小提示：之后我们会证明一个公式**语法**上正确，或者说**可证**，当且仅当它是**语义**上正确的。因此你永远没法证明一个语义上不正确 / 一般来说不正确的公式。如果你发现自己在试图证明像 <FormulaLatex formula={parseFormula("p->q")} /> 这样的东西，你最好换个思路。
 </LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="star">
 <LocalizedMarkdown locale="en">
-O... Okay. But since you're always talking about **semantically** true, <Star /> wonder if there is the corresponding notion of **syntactically** true? 
+Okay. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-好，好哦。但既然你总是在说**语义**上正确，<Star />想知道有没有对应的**语法**上正确的说法？
-</LocalizedMarkdown>
-</Speak>
-
-<Speak speaker="sapphire">
-<LocalizedMarkdown locale="en">
-Certainly, and that is even simpler: a formula is **syntactically** true if you can produce it from the axioms using the rules. Some times we just use "**true**" to refer to "**semantically** true", and "**provable**" to refer to "**syntactically** true". So you're actually proving theorems! And the above principle is simply that "all provable formulas are true". 
-</LocalizedMarkdown>
-<LocalizedMarkdown locale="zh">
-当然，而且还更简单：如果你能从公理出发用规则制造出来一个公式，它就是**语法**上正确的。有时候我们直接用“**真**”来指代“**语义**上正确”，用“**可证**”来指代“**语法**上正确”。所以你实际上是在证明定理！上面说的原则就是“可证公式都是真的”。
+好哦。
 </LocalizedMarkdown>
 </Speak>
 

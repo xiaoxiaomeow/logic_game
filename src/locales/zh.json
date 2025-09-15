@@ -1,6 +1,7 @@
 {
     "Character.Star.Name": "星",
     "Character.Sapphire.Name": "蓝宝石",
+    "Character.Topaz.Name": "黄宝石",
     "LevelSelector.ChapterName": "数理逻辑游戏",
     "LevelSelector.LevelName": "关卡选择",
     "LevelSelector.Chapter": "章节：",
@@ -55,6 +56,7 @@
     "Level.PropositionalLogic.Association.Name": "结合",
     "Level.PropositionalLogic.AxiomSchema.Name": "公理模式",
     "Level.PropositionalLogic.LogicAxiom.Name": "逻辑公理",
-	"AxiomSchema.Weakening.Name": "$\\varphi\\to(\\psi\\to\\varphi)$",
-	"AxiomSchema.Chain.Name": "$(\\varphi\\to(\\psi\\to\\chi))\\to((\\varphi\\to\\psi)\\to(\\varphi\\to\\chi))$"
+    "Level.PropositionalLogic.Theorem.Name": "定理",
+	"AxiomSchema.Weakening.Name": "$\\varphi\\to\\psi\\to\\varphi$",
+	"AxiomSchema.Chain.Name": "$(\\varphi\\to\\psi\\to\\chi)\\to(\\varphi\\to\\psi)\\to\\varphi\\to\\chi$"
 }

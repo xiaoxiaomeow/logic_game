@@ -44,8 +44,6 @@ function LevelProverPage() {
 				if (level != undefined) {
 					setLevelModule(levelModule);
 					setLevel(level);
-					setChapterName(t("LevelSelector.Chapter") + t(chapterModule.meta.name));
-					setLevelName(t("LevelSelector.Level") + t(levelModule.meta.name));
 				}
 			} catch (error) {
 				console.error(error);
@@ -54,6 +52,12 @@ function LevelProverPage() {
 		}
 		load();
 	}, [params]);
+	useEffect(() => {
+		if (level != undefined) {
+			setChapterName(t("LevelSelector.Chapter") + t(level.chapter.meta.name));
+			setLevelName(t("LevelSelector.Level") + t(level.meta.name));
+		}
+	}, [level, t]);
 	if (loading) return null;
 	else if (levelModule === null || level == null) return null;
 	else return (

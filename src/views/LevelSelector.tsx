@@ -23,12 +23,14 @@ function LevelSelectorPage() {
 	const setLevel = useUIStore(state => state.setLevel);
 	const t = useTranslation().t;
 	useEffect(() => {
-		setChapterName(t("LevelSelector.ChapterName"));
-		setLevelName(t("LevelSelector.LevelName"));
 		clearFormulas();
 		setProof(null);
 		setLevel(null);
 	}, []);
+	useEffect(() => {
+		setChapterName(t("LevelSelector.ChapterName"));
+		setLevelName(t("LevelSelector.LevelName"));
+	}, [t]);
 	return (
 		<LayoutStackMain>
 			<LayoutStackLeft>

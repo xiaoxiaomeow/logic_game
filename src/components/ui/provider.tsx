@@ -1,5 +1,3 @@
-"use client"
-
 import { I18nextProvider } from "react-i18next";
 import {
 	ColorModeProvider,
@@ -11,8 +9,8 @@ import { ChakraProvider, Code, createSystem, defaultConfig, defineConfig, Headin
 const config = defineConfig({
 	globalCss: {
 		html: {
-			colorPalette: "logic",
-		},
+			colorPalette: "logic"
+		}
 	},
 	theme: {
 		tokens: {
@@ -127,6 +125,9 @@ const config = defineConfig({
 					sapphire: {
 						value: { base: "{colors.blue.200}", _dark: "{colors.blue.800}" }
 					},
+					topaz: {
+						value: { base: "{colors.yellow.200}", _dark: "{colors.yellow.800}" }
+					},
 					author: {
 						value: { base: "{colors.logic.200}", _dark: "{colors.logic.800}" }
 					},
@@ -135,6 +136,9 @@ const config = defineConfig({
 					},
 					sapphire_text: {
 						value: { base: "{colors.blue.700}", _dark: "{colors.blue.100}" }
+					},
+					topaz_text: {
+						value: { base: "{colors.yellow.700}", _dark: "{colors.yellow.100}" }
 					}
 				}
 			}
@@ -146,6 +150,7 @@ const system = createSystem(defaultConfig, config);
 
 export const MDXComponents = {
 	p: (props: {}) => <Text lineHeight="tall" {...props} />,
+	em: (props: {}) => <Text lineHeight="tall" as="s" {...props} />,
 
 	h1: (props: {}) => <Heading as="h1" {...props} />,
 	h2: (props: {}) => <Heading as="h2" {...props} />,

@@ -2,8 +2,8 @@ import { parseFormula } from "/src/logic/Parser";
 import { PropositionalLogic } from "/src/logic/LogicSystem";
 import { SingleAxiom } from "/src/logic/AxiomSchema";
 
-export const axiom1a = parseFormula('p->q->r');
-export const axiom1b = parseFormula('(p->q)->r');
+export const axiom1 = parseFormula('p->q->r');
+export const axiom1a = parseFormula('(p->q)->r');
 export const axiom2 = parseFormula('p');
 export const axiom3 = parseFormula('q');
 export const target = parseFormula('r');
@@ -15,9 +15,9 @@ export const meta = {
 	chapterId: chapterId,
 	id: "02_association",
 	name: "Level.PropositionalLogic.Association.Name",
-	statement: "$\\{p\\to q\\to r,(p\\to q)\\to r,p,q\\}\\vdash r$",
+	statement: "$\\{p\\to q\\to r,p,q\\}\\vdash r$",
 	logicSystem: PropositionalLogic,
-	axioms: [new SingleAxiom(axiom1a), new SingleAxiom(axiom1b), new SingleAxiom(axiom2), new SingleAxiom(axiom3)],
+	axioms: [new SingleAxiom(axiom1), new SingleAxiom(axiom2), new SingleAxiom(axiom3)],
 	target: target,
 	type: "main",
 	prereqs: [{type: "level", chapterId: chapterId, levelId: "01_deduction"}]
@@ -35,10 +35,10 @@ import ResumeUntil from "/src/components/custom/ResumeUntil";
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-Sometimes you'll see a sequence of arrows in a string, like <FormulaLatex formula={axiom1a} />. When you try to apply the deduction rule, there is a disambiguity whether it means "if you can produce <FormulaLatex formula={ptoq} /> then you can produce <FormulaLatex formula={target} />" or "if you can produce <FormulaLatex formula={axiom2} /> then you can produce <FormulaLatex formula={qtor} />". 
+Sometimes you'll see a sequence of arrows in a string, like <FormulaLatex formula={axiom1} />. When you try to apply the deduction rule, there is a disambiguity whether it means "if you can prove <FormulaLatex formula={ptoq} /> then you can prove <FormulaLatex formula={target} />" or "if you can prove <FormulaLatex formula={axiom2} /> then you can prove <FormulaLatex formula={qtor} />". 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-有时候你会在一个字符串里看到一长串箭头，比如 <FormulaLatex formula={axiom1a} />。当你使用推理规则的时候，你没法区分它的语义是“如果你能制造出 <FormulaLatex formula={ptoq} /> 你就能制造出 <FormulaLatex formula={target} />”还是“如果你能制造出 <FormulaLatex formula={axiom2} /> 你就能制造出 <FormulaLatex formula={qtor} />”。
+有时候你会在一个字符串里看到一长串箭头，比如 <FormulaLatex formula={axiom1} />。当你使用推理规则的时候，你没法区分它的语义是“如果你能证明 <FormulaLatex formula={ptoq} /> 你就能证明 <FormulaLatex formula={target} />”还是“如果你能证明 <FormulaLatex formula={axiom2} /> 你就能证明 <FormulaLatex formula={qtor} />”。
 </LocalizedMarkdown>
 </Speak>
 
@@ -53,37 +53,28 @@ So I can use it either way?
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-You wish. <Sapphire /> don't allow multiple different semantics for a single string, so we need to distinguish these two cases by adding brackets: <FormulaLatex formula={axiom1b} /> means "if you can produce <FormulaLatex formula={ptoq} /> then you can produce <FormulaLatex formula={target} />", and $p\to(q\to r)$ means the other way. 
+You wish. <Sapphire /> don't allow multiple different semantics for a single string, so we need to distinguish these two cases by adding brackets: <FormulaLatex formula={axiom1a} /> means "if you can prove <FormulaLatex formula={ptoq} /> then you can prove <FormulaLatex formula={target} />", and $p\to(q\to r)$ means the other way. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-想得美。<Sapphire />不允许一个字符串有多种不一样的语义，所以我们得通过加括号来区分这两种情况：<FormulaLatex formula={axiom1b} /> 的意思是“如果你能制造出 <FormulaLatex formula={ptoq} /> 你就能制造出 <FormulaLatex formula={target} />”，$p\to(q\to r)$ 的意思是另一种。
+想得美。<Sapphire />不允许一个字符串有多种不一样的语义，所以我们得通过加括号来区分这两种情况：<FormulaLatex formula={axiom1a} /> 的意思是“如果你能证明 <FormulaLatex formula={ptoq} /> 你就能证明 <FormulaLatex formula={target} />”，$p\to(q\to r)$ 的意思是另一种。
 </LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="star">
 <LocalizedMarkdown locale="en">
-Uh, so what does the <FormulaLatex formula={axiom1a} /> mean after all? 
+Uh, so what does the <FormulaLatex formula={axiom1} /> mean after all? 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-呃，所以 <FormulaLatex formula={axiom1a} /> 到底是什么意思？
+呃，所以 <FormulaLatex formula={axiom1} /> 到底是什么意思？
 </LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-If no bracket is written, by default we add brackets from the **right**. So <FormulaLatex formula={axiom1a} /> represents $p\to(q\to r)$, <FormulaLatex formula={parseFormula("p->q->r->s")} /> represents $p\to(q\to(r\to s))$, and so on. 
+If no bracket is written, by default we add brackets from the **right**. So <FormulaLatex formula={axiom1} /> represents $p\to(q\to r)$, <FormulaLatex formula={parseFormula("p->q->r->s")} /> represents $p\to(q\to(r\to s))$, and so on. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-如果没写括号，我们自动从**右侧**开始加括号。所以 <FormulaLatex formula={axiom1a} /> 代表 $p\to(q\to r)$，<FormulaLatex formula={parseFormula("p->q->r->s")} /> 代表 $p\to(q\to(r\to s))$，等等。
-</LocalizedMarkdown>
-</Speak>
-
-<Speak speaker="sapphire">
-<LocalizedMarkdown locale="en">
-But since you wished to use the string<FormulaLatex formula={axiom1a} /> both ways, I'll give you the other interpretation as an axiom for free this time. Thank me since now you need to distinguish which string you actually need. 
-</LocalizedMarkdown>
-<LocalizedMarkdown locale="zh">
-不过既然你想要 <FormulaLatex formula={axiom1a} /> 的两种用法，这次我就把另一种用法也作为公理送你。现在你得自己区分实际上你要用哪一个字符串了，快感谢我。
+如果没写括号，我们自动从**右侧**开始加括号。所以 <FormulaLatex formula={axiom1} /> 代表 $p\to(q\to r)$，<FormulaLatex formula={parseFormula("p->q->r->s")} /> 代表 $p\to(q\to(r\to s))$，等等。
 </LocalizedMarkdown>
 </Speak>
 
@@ -100,19 +91,19 @@ If you ever get confused about a string, you can click on that string and inspec
 
 <Speak speaker="star">
 <LocalizedMarkdown locale="en">
-Well, I suppose <FormulaLatex formula={axiom1a} /> then means that if I can produce <FormulaLatex formula={axiom2} /> and <FormulaLatex formula={axiom3} /> then I can produce <FormulaLatex formula={target} />. It reads "if $p$ and $q$ then $r$"? 
+Well, I suppose <FormulaLatex formula={axiom1} /> then means that if I can prove <FormulaLatex formula={axiom2} /> and <FormulaLatex formula={axiom3} /> then I can prove <FormulaLatex formula={target} />. It reads "if $p$ and $q$ then $r$"? 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-嘛，我看 <FormulaLatex formula={axiom1a} /> 的意思是如果我能制造出 <FormulaLatex formula={axiom2} /> 和 <FormulaLatex formula={axiom3} /> 我就能制造出 <FormulaLatex formula={target} />。它读作“如果 $p$ 且 $q$ 则 $r$”？
+嘛，我看 <FormulaLatex formula={axiom1} /> 的意思是如果我能证明 <FormulaLatex formula={axiom2} /> 和 <FormulaLatex formula={axiom3} /> 我就能证明 <FormulaLatex formula={target} />。它读作“如果 $p$ 且 $q$ 则 $r$”？
 </LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-You could, if you want, but later we will define the actual "$p$ and $q$" written as $p\land q$, giving it semantics "you can produce $p$ and you can produce $q$". Later we can even prove that not only <FormulaLatex formula={axiom1a} /> and $(p\land q)\to r$ agree on **semantics**, they also agree on **syntactics**: you can produce <FormulaLatex formula={axiom1a} /> if and only if you can produce $(p\land q)\to r$. However, prior to that I suggest reading <FormulaLatex formula={axiom1a} /> as it is. 
+You could, if you want, but later we will define the actual "$p$ and $q$" written as $p\land q$, giving it semantics "you can prove $p$ and you can prove $q$". Later we can even show that not only <FormulaLatex formula={axiom1} /> and $(p\land q)\to r$ agree on **semantics**, they also agree on **syntactics**: you can prove <FormulaLatex formula={axiom1} /> if and only if you can prove $(p\land q)\to r$. However, prior to that I suggest reading <FormulaLatex formula={axiom1} /> as it is. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-你愿意的话也行，但我们之后会定义真正的“$p$ 且 $q$”，写作 $p\land q$，并让它的语义就是“你能制造出 $p$ 也能制造出 $q$”。之后我们还能证明 <FormulaLatex formula={axiom1a} /> 和 $(p\land q)\to r$ 不仅在**语义**上一致，在**语法**上也是一致的：你能制造出 <FormulaLatex formula={axiom1a} /> 当且仅当你能制造出 $(p\land q)\to r$。不过在此之前，我建议 <FormulaLatex formula={axiom1a} /> 还是该怎么读怎么读比较好。
+你愿意的话也行，但我们之后会定义真正的“$p$ 且 $q$”，写作 $p\land q$，并让它的语义就是“你能证明 $p$ 也能证明 $q$”。之后我们还能讨论 <FormulaLatex formula={axiom1} /> 和 $(p\land q)\to r$ 不仅在**语义**上一致，在**语法**上也是一致的：你能证明 <FormulaLatex formula={axiom1} /> 当且仅当你能证明 $(p\land q)\to r$。不过在此之前，我建议 <FormulaLatex formula={axiom1} /> 还是该怎么读怎么读比较好。
 </LocalizedMarkdown>
 </Speak>
 

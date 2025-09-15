@@ -3,6 +3,9 @@ import { PropositionalLogic } from "/src/logic/LogicSystem";
 import { weakening } from "/src/logic/AxiomSchema";
 
 export const p = parseFormula('p');
+export const ptoqtop = parseFormula('p->q->p');
+export const qtop = parseFormula('q->p');
+export const conclusion = weakening.getAxiomFromFormulas([qtop, p]);
 export const axiom = parseFormula('p->p');
 export const target = parseFormula('p->p->p->p');
 export const chapterId = "00_propositional_logic";
@@ -11,7 +14,7 @@ export const meta = {
 	chapterId: chapterId,
 	id: "03_axiom_schema",
 	name: "Level.PropositionalLogic.AxiomSchema.Name",
-	statement: "$\\{\\varphi\\to(\\psi\\to\\varphi)\\}\\vdash p\\to p\\to p\\to p$",
+	statement: "$\\{\\varphi\\to\\psi\\to\\varphi\\}\\vdash p\\to p\\to p\\to p$",
 	logicSystem: PropositionalLogic,
 	axioms: [weakening],
 	target: target,
@@ -31,23 +34,37 @@ import ResumeUntil from "/src/components/custom/ResumeUntil";
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-This is the last rule: 
-
-- (Substitution) If $\varphi$ is any formula you have produced, <FormulaLatex formula={p} /> is an atomic formula and $\psi$ is any formula, then you can also produce the formula obtained by replacing every <FormulaLatex formula={p} /> in $\varphi$ with $\psi$. 
+You may have noticed that the deduction rule can only prove strings shorter than the ones you have proved. That means, after I give you finitely many axioms, you can pretty much determine what are all the strings you are able to prove. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-这是最后一条规则：
-
-- （替换）如果 $\varphi$ 是任意你制造好的公式，<FormulaLatex formula={p} /> 是任意原子公式，$\psi$ 是任意公式，那么你可以制造通过把 $\varphi$ 中的 <FormulaLatex formula={p} /> 全部替换为 $\psi$ 得到的公式。
+你可能注意到了推理规则只能证明比已经有的字符串更短的字符串。这意味着，我给你有限多个公理之后，你基本上就能确定你总共能证明出哪些字符串了。
 </LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="star">
 <LocalizedMarkdown locale="en">
-Although I already feel like these strings should be called formulas, but you finally admitted it! But what exactly is a formula, just any string? And what is this atomic formula? 
+Indeed. I think in the last level I cannot prove any other string than those I have proved. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-虽然我早就感觉这些字符串应该被叫做公式，但你终于承认了！不过具体什么是公式，任何字符串都可以吗？还有这个原子公式是什么？
+确实。我觉得在上一关里我证明不出来除了我已经证明好的字符串以外的任何别的字符串了。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+That is why you will normally be given infinitely many axioms. In particular, you are given **axiom schemas**. An axiom schema is a rule that specify which strings are axioms: for instance, this time I will give you the axiom schema $\varphi\to\psi\to\varphi$, which says $\varphi\to\psi\to\varphi$ is an axiom for each formula $\varphi$ and $\psi$. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+这就是为什么之后一般来说我会给你无穷多个公理。具体来说，我会给你一些**公理模式**。一个公理模式是一条指定了哪些字符串是公理的规则：比如说，这次我会给你公理模式 $\varphi\to\psi\to\varphi$，它的意思是对任意**公式** $\varphi$ 和 $\psi$，$\varphi\to\psi\to\varphi$ 都是一个公理。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+Humm, the axiom says if I can prove $\varphi$ and $\psi$ then I can prove $\varphi$. Sounds correct. So I can prove <FormulaLatex formula={ptoqtop} /> as it is an axiom specified by the axiom schema. Uh, wait, formulas? Although I already feel like these strings should be called formulas, but you finally admitted it! But what exactly is a formula, just any string? 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+唔，这个公理的意思是如果我能证明 $\varphi$ 和 $\psi$ 那我就能证明 $\varphi$。听起来没错。所以我能证明 <FormulaLatex formula={ptoqtop} />，因为它是这个公理模式指定的一个公理。呃，等等，公式？虽然我已经觉得这些字符串应该叫公式了，但你终于承认了！不过公式到底是什么，是任意字符串吗？
 </LocalizedMarkdown>
 </Speak>
 
@@ -62,19 +79,19 @@ Generally, a formula cannot be every string, it needs to be a string that makes 
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-More precisely, an **atomic formula** is just some letter or word that you like. <Sapphire /> often use atomic formulas <FormulaLatex formula={p} />, <FormulaLatex formula={parseFormula("q")} />, <FormulaLatex formula={parseFormula("r")} />, but you can certainly use <FormulaLatex formula={parseFormula("t_5^7")} /> or <FormulaLatex formula={parseFormula("apple")} /> as an atomic formula if you want. Although recently the atomic formulas <Sapphire /> gives you are enough. 
+More precisely, an **atomic formula** is some letter or word that you like, and every atomic formula is a formula. In addition, if $\varphi$ and $\psi$ are both formulas, then $\varphi\to\psi$ is also a formula. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-具体来说，一个**原子公式**就是任何你喜欢的字母或者单词。<Sapphire />平常用的原子公式是 <FormulaLatex formula={p} />，<FormulaLatex formula={parseFormula("q")} />，<FormulaLatex formula={parseFormula("r")} />，但你想的话当然可以用 <FormulaLatex formula={parseFormula("t_5^7")} /> 或者 <FormulaLatex formula={parseFormula("apple")} /> 作为原子公式，不过短时间内你就用<Sapphire />给你的原子公式就够了。
+具体来说，一个**原子公式**是任何你喜欢的字母或者单词，每个原子公式都是公式。以及，如果 $\varphi$ 和 $\psi$ 都是公式，那么 $\varphi\to\psi$ 也是公式。
 </LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-And then **formulas**. Firstly, every atomic formula is a formula. In addition, if $\varphi$ and $\psi$ are both formulas, then $\varphi\to\psi$ is also a formula. 
+<Sapphire /> often use atomic formulas <FormulaLatex formula={p} />, <FormulaLatex formula={parseFormula("q")} />, <FormulaLatex formula={parseFormula("r")} />, but you can certainly use <FormulaLatex formula={parseFormula("t_5^7")} /> or <FormulaLatex formula={parseFormula("apple")} /> as an atomic formula if you want. Although recently the atomic formulas <Sapphire /> gives you are enough. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-接下来是**公式**。首先，每个原子公式都是公式。此外，如果 $\varphi$ 和 $\psi$ 都是公式，那么 $\varphi\to\psi$ 也是公式。
+<Sapphire />平常用的原子公式是 <FormulaLatex formula={p} />，<FormulaLatex formula={parseFormula("q")} />，<FormulaLatex formula={parseFormula("r")} />，但你想的话当然可以用 <FormulaLatex formula={parseFormula("t_5^7")} /> 或者 <FormulaLatex formula={parseFormula("apple")} /> 作为原子公式，不过短时间内你就用<Sapphire />给你的原子公式就够了。
 </LocalizedMarkdown>
 </Speak>
 
@@ -89,37 +106,29 @@ That's it? I was expecting more strings to be formulas.
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-That's it, well, for now. Later there will be some more. Back to the new rule, you can replace all occurances of some atomic formula <FormulaLatex formula={p} /> in a formula $\varphi$ by some other formula $\psi$. You need to have produced $\varphi$, but you don't need to have produced $\psi$. 
+That's it, well, for now. Later there will be some more. Back to the axiom schema, you can also set $\varphi$ to be <FormulaLatex formula={qtop} /> and $\psi$ to be <FormulaLatex formula={p} />, therefore you can prove <FormulaLatex formula={conclusion} />. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-就这些，呃，现在就这些。之后还有些别的。回到新规则，你可以把某个公式 $\varphi$ 里出现的原子公式 <FormulaLatex formula={p} /> 全换成 $\psi$。你需要已经制造好了 $\varphi$，但你并不需要制造 $\psi$。
-</LocalizedMarkdown>
-</Speak>
-
-<Speak speaker="star">
-<LocalizedMarkdown locale="en">
-Let's see... I can now produce <FormulaLatex formula={axiom} /> as an axiom. So I can replace all <FormulaLatex formula={p} /> in it with, well, say, <FormulaLatex formula={parseFormula("q->\\textcolor{blue}{Sapphire}")} />. I have produced <FormulaLatex formula={parseFormula("(q->\\textcolor{blue}{Sapphire})->q->\\textcolor{blue}{Sapphire}")} />? 
-</LocalizedMarkdown>
-<LocalizedMarkdown locale="zh">
-我看看……我现在可以制造公理 <FormulaLatex formula={axiom} />。所以我可以把里面的所有 <FormulaLatex formula={p} /> 都换成，呃，比如，<FormulaLatex formula={parseFormula("q->\\textcolor{blue}{Sapphire}")} />。我制造出了 <FormulaLatex formula={parseFormula("(q->\\textcolor{blue}{Sapphire})->q->\\textcolor{blue}{Sapphire}")} />？
-</LocalizedMarkdown>
-</Speak>
-
-<Speak speaker="sapphire">
-<LocalizedMarkdown locale="en">
-Correct. In some cases the replacement formula $\psi$ can also contain the atomic formula <FormulaLatex formula={p} /> you're replacing. These <FormulaLatex formula={p} /> do not get replaced recursively and remain <FormulaLatex formula={p} />. 
-</LocalizedMarkdown>
-<LocalizedMarkdown locale="zh">
-对的。有时候替换进来的公式 $\psi$ 里面也有你正在替换的原子公式 <FormulaLatex formula={p} />。这些 <FormulaLatex formula={p} /> 不会被递归地换掉，它们还是 <FormulaLatex formula={p} />。
+就这些，呃，现在就这些。之后还有些别的。回到这个公理模式，你也可以让 $\varphi$ 是 <FormulaLatex formula={qtop} />，$\psi$ 是 <FormulaLatex formula={p} />，这样就能证明 <FormulaLatex formula={conclusion} />。
 </LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="author">
 <LocalizedMarkdown locale="en">
-To use Substitution, navigate to the Proof tab of your Inventory, and click `Substitution` (or directly type `substitution` or `sub` in the input bar). You need to provide $\varphi$, <FormulaLatex formula={p} /> and $\psi$ in the exact order separated by space. You can type these formulas directly, or copy the code of a formula in the Formula Inspector tab. You can use a line number `$n` to replace $\varphi$, as before. 
+To use an axiom schema, you can type `axiom` or `axi`, and then either: 
+
+- as before, provide a formula that matches any of the axiom achema given, or provide a line number to refer to such a formula. For instance, you can simply type `axiom p->q->p` to prove <FormulaLatex formula={ptoqtop} />. 
+- or, type a `$` symbol followed by the name of the axiom schema, in which case `weakening` or `wea` for the axiom schema in this level. Then you also need to provide two formulas specifying $\varphi$ and $\psi$. For instance, you can also type `axiom $weakening p q` to prove <FormulaLatex formula={ptoqtop} />. 
+
+You can also click the axiom schema in the inventory to auto-fill `axiom $weakening `.
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-要使用代入，打开物品栏的证明面板，然后点击 `代入`（或者直接在输入框里输入 `substitution` 或 `sub`）。你还需要按顺序提供 $\varphi$, <FormulaLatex formula={p} /> 和 $\psi$，中间用空格隔开。你可以直接输入这些公式，或者在公式信息面板复制一个公式的代码。像之前一样，你可以用一个行标 `$n` 来替换 $\varphi$。
+要使用一个公理模式，你可以输入 `axiom` 或 `axi`，然后有两种方式：
+
+- 像之前一样，提供一个符合任意公理模式的公式，或者提供一个行号来引用这样的公式。比如说，你可以直接输入 `axiom p->q->p` 来证明 <FormulaLatex formula={ptoqtop} />。
+- 或者，输入一个 `$` 符号后跟公理模式的名字，对于这一关来说是 `weakening` 或 `wea`。然后你还需要提供两个公式来指定 $\varphi$ 和 $\psi$。比如说，你也可以输入 `axiom $weakening p q` 来证明 <FormulaLatex formula={ptoqtop} />。
+
+你也可以点击物品栏里的公理模式来自动填写 `axiom $weakening `。
 </LocalizedMarkdown>
 </Speak>
 
@@ -127,19 +136,19 @@ To use Substitution, navigate to the Proof tab of your Inventory, and click `Sub
 
 <Speak speaker="star">
 <LocalizedMarkdown locale="en">
-Substitution is so powerful! I can produce a lots of different formulas from that single rule. And if I'm not mistaking, I can produce then **any** formula using this rule as long as I have produced the formula <FormulaLatex formula={p} />. 
+Looks like I can prove a lot of formulas using this axiom schema. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-代入真有用！我可以用这一条规则制造各种各样自己的字符串了。以及如果我没搞错的话，只要我制造出来了 <FormulaLatex formula={p} />，我就可以制造出来**所有**公式了。
+看起来我能用这个公理模式证明好多公式。
 </LocalizedMarkdown>
 </Speak>
 
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
-Yes, and that is why you'll never be given <FormulaLatex formula={p} /> as an axiom again. 
+Yes, and that also means you'll need to think creatively to know which axioms you need to use to prove the target formula.
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
-是的，这也是为什么你之后再也不会获得 <FormulaLatex formula={p} /> 作为公理了。
+是的，这也意味着你需要创造性地思考才能知道需要用哪些公理来证明目标公式。
 </LocalizedMarkdown>
 </Speak>
 

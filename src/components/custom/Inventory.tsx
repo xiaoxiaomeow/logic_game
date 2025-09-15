@@ -32,7 +32,7 @@ function Inventory() {
 							{proof.axioms.map(axiom => (
 								<Button key={axiom.name} size="sm" onClick={event => {
 									if (axiom instanceof SingleAxiom) setInputCommand("axiom " + axiom.axiom.toCode());
-									else if (axiom.codes.length > 0) setInputCommand("schema " + axiom.codes[0] + " ");
+									else if (axiom.codes.length > 0) setInputCommand("axiom $" + axiom.codes[0] + " ");
 									event.stopPropagation();
 								}}>
 									<MarkdownWithLatex>{t(axiom.name)}</MarkdownWithLatex>
@@ -45,7 +45,7 @@ function Inventory() {
 							{logicAxioms.map(logicAxiom => logicAxiom.axiom).map(axiom => (
 								<Button key={axiom.name} size="sm" onClick={event => {
 									if (axiom instanceof SingleAxiom) setInputCommand("axiom " + axiom.axiom.toCode());
-									else if (axiom.codes.length > 0) setInputCommand("schema " + axiom.codes[0] + " ");
+									else if (axiom.codes.length > 0) setInputCommand("axiom $" + axiom.codes[0] + " ");
 									event.stopPropagation();
 								}}>
 									<MarkdownWithLatex>{t(axiom.name)}</MarkdownWithLatex>

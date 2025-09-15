@@ -9,7 +9,6 @@ export const RightParenthesisToken = createToken({ name: "RightParen", pattern: 
 // commands
 export const AxiomToken = createToken({ name: "Axiom", pattern: /(axiom|axi)/ });
 export const DeductionToken = createToken({ name: "Deduction", pattern: /(deduction|ded)/ });
-export const AxiomSchemaToken = createToken({ name: "AxiomSchema", pattern: /(schema|sch)/ });
 export const SubstitutionToken = createToken({ name: "Substitution", pattern: /(substitution|sub)/ });
 // logic operators
 export const ImpliesToken = createToken({ name: "Implies", pattern: /->/ });
@@ -17,8 +16,9 @@ export const NotToken = createToken({ name: "Not", pattern: /!/ });
 // vars
 export const IdentifierToken = createToken({ name: "Identifier", pattern: /[a-zA-Z0-9_^{}\\]+/ });
 export const LineToken = createToken({ name: "Line", pattern: /\$[0-9]+/ });
+export const ReferenceToken = createToken({ name: "Reference", pattern: /\$[a-zA-Z][a-zA-Z0-9_]*/ });
 // collection
-export const Tokens = [WhiteSpaceToken, LeftParenthesisToken, RightParenthesisToken, AxiomToken, DeductionToken, AxiomSchemaToken, SubstitutionToken, ImpliesToken, NotToken, IdentifierToken, LineToken];
+export const Tokens = [WhiteSpaceToken, LeftParenthesisToken, RightParenthesisToken, AxiomToken, DeductionToken, SubstitutionToken, ImpliesToken, NotToken, IdentifierToken, LineToken, ReferenceToken];
 
 let lexer: Lexer | null = null;
 let parser: Parser | null = null;
@@ -86,8 +86,8 @@ class Parser extends CstParser {
 		]);
 	});
 	private axiomSchema = this.RULE("axiomSchema", () => {
-		this.CONSUME(AxiomSchemaToken);
-		this.CONSUME(IdentifierToken);
+		this.CONSUME(AxiomToken);
+		this.CONSUME(ReferenceToken);
 		this.AT_LEAST_ONE(() => this.SUBRULE(this.formula));
 	});
 	private substitution = this.RULE("substitution", () => {
@@ -142,7 +142,7 @@ export interface DeductionNode {
 	formula?: CstNode[];
 }
 export interface AxiomSchemaNode {
-	Identifier: IToken[];
+	Reference: IToken[];
 	formula: CstNode[];
 }
 export interface SubstitutionNode {
@@ -212,7 +212,7 @@ class Visitor extends getParser().getBaseCstVisitorConstructorWithDefaults() {
 		}
 	}
 	axiomSchema(ctx: AxiomSchemaNode): ProofCommand {
-		const name = ctx.Identifier[0].image;
+		const name = ctx.Reference[0].image.substring(1);
 		const formulas: Formula[] = ctx.formula.map(f => this.visit(f) as Formula);
 		return new AxiomSchemaCommand(name, formulas);
 	}

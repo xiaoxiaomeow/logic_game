@@ -1,0 +1,205 @@
+import { parseFormula } from "/src/logic/Parser";
+import { PropositionalLogic } from "/src/logic/LogicSystem";
+
+export const p = parseFormula('p');
+export const q = parseFormula('q');
+export const r = parseFormula('r');
+export const ptop = parseFormula('p->p');
+export const ptoqtor = parseFormula('p->q->r');
+export const qtoptor = parseFormula('q->p->r');
+export const ptoqtop = parseFormula('p->q->p');
+export const scary = parseFormula('(p->(p->p)->p)->(p->p->p)->p->p');
+export const target = parseFormula('q->p->p');
+export const chapterId = "00_propositional_logic";
+
+export const meta = {
+	chapterId: chapterId,
+	id: "05_theorem",
+	name: "Level.PropositionalLogic.Theorem.Name",
+	statement: "$\\vdash q\\to p\\to p$",
+	logicSystem: PropositionalLogic,
+	axioms: [],
+	target: target,
+	type: "main",
+	prereqs: [{type: "level", chapterId: chapterId, levelId: "04_logic_axiom", isHard: true}]
+}
+
+import Speak from "/src/components/custom/Speak";
+import ConversationProgresser from "/src/components/custom/ConversationProgresser";
+import LocalizedMarkdown from "/src/components/custom/LocalizedMarkdown";
+import Star from "/src/components/custom/Star";
+import Sapphire from "/src/components/custom/Sapphire";
+import Topaz from "/src/components/custom/Topaz";
+import FormulaLatex from "/src/components/custom/FormulaLatex";
+import ResumeUntil from "/src/components/custom/ResumeUntil";
+
+<ConversationProgresser>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+You said that the semantics meaning of <FormulaLatex formula={ptoqtor} /> is "if you can prove both <FormulaLatex formula={p} /> and <FormulaLatex formula={q} />, then you can prove <FormulaLatex formula={r} />". Then we should expect that <FormulaLatex formula={p} /> and <FormulaLatex formula={q} /> commutes here, that is, <FormulaLatex formula={qtoptor} /> should have the same semantics meaning. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+你说过 <FormulaLatex formula={ptoqtor} /> 的语义是“如果你能证明 <FormulaLatex formula={p} /> 和 <FormulaLatex formula={q} />，你就能证明 <FormulaLatex formula={r} />”。那么我们应该期望这里 <FormulaLatex formula={p} /> 和 <FormulaLatex formula={q} /> 是可以交换的，也就是说 <FormulaLatex formula={qtoptor} /> 应该有同样的语义。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+As a special case, <FormulaLatex formula={ptoqtop} /> is an axiom, so we should expect <FormulaLatex formula={target} /> to be provable as well.
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+作为特例，<FormulaLatex formula={ptoqtop} /> 是一个公理，所以我们应该期望 <FormulaLatex formula={target} /> 也是可证的。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+That sounds easy - if I just interpret <FormulaLatex formula={target} /> the other way, it is just the <FormulaLatex formula={ptop} /> I proved last time, plus a weakening axiom. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+听起来很简单——如果我把 <FormulaLatex formula={target} /> 换一种方式理解，它不就是我上次证明过的 <FormulaLatex formula={ptop} /> 加上一个弱化公理吗。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+Sure. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+当然。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+Uh, but do I need to repeat the proof of <FormulaLatex formula={ptop} /> again? Oh! I might finally find some good use of <Topaz />. Wait a second...
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+呃，但是我需要再重复一遍 <FormulaLatex formula={ptop} /> 的证明吗？哦！我可能终于找到<Topaz />的好用处了。等一下……
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+Hey <Topaz />!
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+嘿，<Topaz />！
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="topaz">
+<LocalizedMarkdown locale="en">
+Hey <Topaz />!
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+嘿，<Topaz />！
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+Oh. That goofy cockatoo. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+哦。那只笨笨的玄凤鹦鹉。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+Don't call <Topaz /> goofy. <Topaz />, remember this: <FormulaLatex formula={scary} />  
+...  
+<FormulaLatex formula={ptop} />
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+不准说<Topaz />笨。<Topaz />，记住这个：<FormulaLatex formula={scary} />  
+...  
+<FormulaLatex formula={ptop} />
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="topaz">
+<LocalizedMarkdown locale="en">
+<FormulaLatex formula={scary} />  
+...  
+<FormulaLatex formula={ptop} />
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+<FormulaLatex formula={scary} />  
+...  
+<FormulaLatex formula={ptop} />
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+Done! Now whenever I need <FormulaLatex formula={ptop} />, I can just ask <Topaz />. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+好了，现在每次我需要 <FormulaLatex formula={ptop} /> 的时候，我就可以找<Topaz />了。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+Well, that is indeed a smarter way than aksing me to allow you to produce directly any previously proved formula. Let's just call any formula <Topaz /> remembers a **theorem**. What is important is that you being able to produce a theorem directly is neither a new axiom nor a new rule of the game: the game stays where it is. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+嗯，这确实比让我允许你直接制造任何之前证明过的公式要聪明得多。我们就把<Topaz />记住的任何公式叫做一个**定理**。重要的是，你能直接制造一个定理这件事不是任何新的公理也不是新的游戏规则：游戏还是原来的游戏。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+Humm. Why specifically pointing out this? 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+唔。为什么专门强调这件事？
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="sapphire">
+<LocalizedMarkdown locale="en">
+The reason is that when we want to show something about our game, say, "a formula is provable if and only if it is semantically true", we still only need to take care of the axioms and the deduction rule. We never need to worry about theorems, as the "rule" of being able to produce a theorem is never part of the game. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+原因是如果我们想要讨论一些关于游戏的东西，比如“一个公式是可证的当且仅当它语义上是正确的”，我们仍然只需要处理公理和推理规则。我们从来不需要担心定理，因为能够制造一个定理的“规则”从来都不是游戏的一部分。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="star">
+<LocalizedMarkdown locale="en">
+Sounds convincing. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+听起来很有说服力。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="topaz">
+<LocalizedMarkdown locale="en">
+Sounds convincing. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+听起来很有说服力。
+</LocalizedMarkdown>
+</Speak>
+
+<Speak speaker="author">
+<LocalizedMarkdown locale="en">
+Using theorems is similar to using axioms. To produce a theorem, navigate to the Theorems tab of your Inventory, and click that theorem. Or you can directly type `theorem` or `the` followed by either
+- a formula that is a theorem. 
+- a `$` symbol followed by a line number where the formula on that line is a theorem. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+使用定理和使用公理类似。要制造一个定理，打开物品栏的定理面板，然后点击那个定理。或者你也可以直接输入 `theorem` 或 `the`，然后输入：
+- 一个是定理的公式，或
+- 一个 `$` 符号加上一个行号，对应的行上的公式需要是一个定理。
+</LocalizedMarkdown>
+</Speak>
+
+<ResumeUntil condition={ (level, _) => level.isCompleteOrModified() } text="ConversationProgresser.CompleteLevelToContinue"/>
+
+</ConversationProgresser>
