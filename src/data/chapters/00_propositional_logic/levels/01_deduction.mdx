@@ -1,6 +1,6 @@
 import { parseFormula } from "/src/logic/Parser";
 import { PropositionalLogic } from "/src/logic/LogicSystem";
-import { SingleAxiom } from "/src/logic/AxiomSchema";
+import { AxiomSchema } from "/src/logic/Axiom";
 
 export const axiom1 = parseFormula('p->q');
 export const axiom2 = parseFormula('p');
@@ -13,7 +13,7 @@ export const meta = {
 	name: "Level.PropositionalLogic.Deduction.Name",
 	statement: "$\\{p\\to q,p\\}\\vdash q$",
 	logicSystem: PropositionalLogic,
-	axioms: [new SingleAxiom(axiom1), new SingleAxiom(axiom2)],
+	axioms: [new AxiomSchema(axiom1), new AxiomSchema(axiom2)],
 	target: target,
 	type: "main",
 	prereqs: [{type: "level", chapterId: chapterId, levelId: "00_axiom"}]

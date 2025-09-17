@@ -1,35 +1,20 @@
-import { weakening, chain, type AxiomSchema } from "./AxiomSchema";
+import { weakening, chain, UnlockableAxiom } from "./Axiom";
 import type { Level } from "./Level";
-import { isUnlocked, type PrereqInfo, type UnlockTreeItem } from "./Unlockables";
+import { isUnlocked } from "./Unlockables";
 
 export class LogicSystem {
 	name: string;
-	logicAxioms: LogicAxiom[];
-	constructor(name: string, logicAxioms: LogicAxiom[]) {
+	logicAxioms: UnlockableAxiom[];
+	constructor(name: string, logicAxioms: UnlockableAxiom[]) {
 		this.name = name;
 		this.logicAxioms = logicAxioms;
 	}
-	getUnlockedLogicAxioms(upToLevel: Level | null = null): LogicAxiom[] {
+	getUnlockedLogicAxioms(upToLevel: Level | null = null): UnlockableAxiom[] {
 		return this.logicAxioms.filter(axiom => isUnlocked(axiom, upToLevel));
 	}
 }
 
-export class LogicAxiom implements UnlockTreeItem {
-	axiom: AxiomSchema;
-	prereq: Partial<PrereqInfo>[];
-	constructor(axiom: AxiomSchema, prereq: Partial<PrereqInfo>[]) {
-		this.axiom = axiom;
-		this.prereq = prereq;
-	}
-	isMet(): Boolean {
-		return true;
-	}
-	getPrereqs(): Partial<PrereqInfo>[] {
-		return this.prereq;
-	}
-}
-
 export const PropositionalLogic = new LogicSystem("Language.PropositionalLogic.Name", [
-	new LogicAxiom(weakening, [{ type: "level", chapterId: "00_propositional_logic", levelId: "03_axiom_schema" }]),
-	new LogicAxiom(chain, [{ type: "level", chapterId: "00_propositional_logic", levelId: "03_axiom_schema" }]),
+	new UnlockableAxiom(weakening, [{ type: "level", chapterId: "00_propositional_logic", levelId: "03_axiom_schema" }]),
+	new UnlockableAxiom(chain, [{ type: "level", chapterId: "00_propositional_logic", levelId: "03_axiom_schema" }]),
 ]);

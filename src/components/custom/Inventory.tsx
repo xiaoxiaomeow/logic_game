@@ -1,11 +1,10 @@
 import { useUIStore } from "@/contexts/UIStore";
-import type { LogicAxiom } from "@/logic/LogicSystem";
 import type Proof from "@/logic/Proof";
 import getUnlockedProofMethods, { ProofMethod } from "@/logic/ProofMethod";
 import { Button, Flex, Tabs, Text, VStack, Wrap } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import MarkdownWithLatex from "./MarkdownWithLatex";
-import { SingleAxiom } from "@/logic/AxiomSchema";
+import { UnlockableAxiom } from "@/logic/Axiom";
 import { isUnlocked } from "@/logic/Unlockables";
 
 function Inventory() {
@@ -16,7 +15,7 @@ function Inventory() {
 	const setInputCommand: (command: string) => void = useUIStore(state => state.setInputCommand);
 	const t = useTranslation().t;
 	const proofMethods: ProofMethod[] = getUnlockedProofMethods();
-	const logicAxioms: LogicAxiom[] = proof != null ? proof.level.meta.logicSystem.getUnlockedLogicAxioms(level) : [];
+	const logicAxioms: UnlockableAxiom[] = proof != null ? proof.level.meta.logicSystem.getUnlockedLogicAxioms(level) : [];
 	return (
 		<VStack width="100%" background="logic.subtle" gap="0">
 			<Flex width="100%" justifyContent="center" padding="4px 4px" background="logic.emphasized">
@@ -33,7 +32,7 @@ function Inventory() {
 						<Wrap>
 							{proof.axioms.map(axiom => (
 								<Button key={axiom.name} size="sm" onClick={event => {
-									if (axiom instanceof SingleAxiom) setInputCommand("axiom " + axiom.axiom.toCode());
+									if (axiom.freeFormulaVariables.length === 0) setInputCommand("axiom " + axiom.axiom.toCode());
 									else if (axiom.codes.length > 0) setInputCommand("axiom $" + axiom.codes[0] + " ");
 									event.stopPropagation();
 								}}>
@@ -46,7 +45,7 @@ function Inventory() {
 						<Wrap>
 							{logicAxioms.map(logicAxiom => logicAxiom.axiom).map(axiom => (
 								<Button key={axiom.name} size="sm" onClick={event => {
-									if (axiom instanceof SingleAxiom) setInputCommand("axiom " + axiom.axiom.toCode());
+									if (axiom.freeFormulaVariables.length === 0) setInputCommand("axiom " + axiom.axiom.toCode());
 									else if (axiom.codes.length > 0) setInputCommand("axiom $" + axiom.codes[0] + " ");
 									event.stopPropagation();
 								}}>

@@ -1,4 +1,4 @@
-import type { AxiomSchema } from "./AxiomSchema";
+import type { AxiomSchema } from "./Axiom";
 import { AtomicFormula, Implies, type Formula } from "./Formula";
 import type { Level } from "./Level";
 import { parseCommand, parseFormula } from "./Parser";

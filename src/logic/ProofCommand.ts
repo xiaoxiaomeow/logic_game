@@ -1,4 +1,4 @@
-import type { AxiomSchema } from "./AxiomSchema";
+import type { AxiomSchema } from "./Axiom";
 import { AtomicFormula, Formula, Implies } from "./Formula";
 import type Proof from "./Proof";
 import { ByAxiom, ByDeduction, ByLogicAxiom, BySubstitution, ProofLine, ProvedFormulaLine, UnprovedFormulaLine } from "./Proof";

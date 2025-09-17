@@ -4,7 +4,7 @@ import type { Formula } from "./Formula";
 import { getLevelState } from "./LevelState";
 import type { Chapter } from "./Chapter";
 import type { UnlockTreeItem, PrereqInfo } from "./Unlockables";
-import type { AxiomSchema } from "./AxiomSchema";
+import type { AxiomSchema } from "./Axiom";
 
 export interface LevelMeta {
 	id: string;

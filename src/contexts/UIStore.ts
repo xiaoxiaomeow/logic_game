@@ -66,16 +66,11 @@ export const useUIStore: UseBoundStore<StoreApi<UIStore>> = create<UIStore>(set 
 	proofs: [],
 	displayingIndex: -1,
 	setProof: (proof: Proof) => set((state: UIStore) => {
-		console.log(state.displayingIndex);
-		console.log(state.proofs);
-		console.log(proof);
 		const proofs: Proof[] = state.proofs.slice(0, state.displayingIndex + 1);
 		proofs.push(proof);
 		return { proofs: proofs, displayingIndex: proofs.length - 1 };
 	}),
 	undo: () => set((state: UIStore) => {
-		console.log(state.displayingIndex);
-		console.log(state.proofs);
 		if (state.displayingIndex > 0) return {
 			displayingIndex: state.displayingIndex - 1,
 			lineIndex: Math.min(state.lineIndex, state.proofs[state.displayingIndex - 1].lines.length - 1)
