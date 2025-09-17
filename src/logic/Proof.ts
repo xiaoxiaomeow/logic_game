@@ -3,6 +3,7 @@ import { AtomicFormula, Implies, type Formula } from "./Formula";
 import type { Level } from "./Level";
 import { parseCommand, parseFormula } from "./Parser";
 import type { ExcecutionResult, ProofCommand } from "./ProofCommand";
+import type { UnlockableTheorem } from "./Theorem";
 import { isUnlocked } from "./Unlockables";
 
 class Proof {
@@ -55,7 +56,7 @@ class Proof {
 		try {
 			const command: ProofCommand = parseCommand(input);
 			if (isUnlocked(command, this.level)) return command.excecute(this, lineIndex);
-			else return { success: false, errorMessage: "The command is not unlocked. "}
+			else return { success: false, errorMessage: "The command is not unlocked. " }
 		} catch (error) {
 			if (error instanceof Error) {
 				console.log(error);
@@ -122,6 +123,8 @@ class Proof {
 			return new ByLogicAxiom();
 		} else if (jsonObject.type === "ByDeduction") {
 			return new ByDeduction(parseFormula((jsonObject as any).formula));
+		} else if (jsonObject.type === "ByLogicTheorem") {
+			return new ByLogicTheorem();
 		} else if (jsonObject.type === "BySubstitution") {
 			return new BySubstitution(parseFormula((jsonObject as any).formula), parseFormula((jsonObject as any).atomicFormula) as AtomicFormula, parseFormula((jsonObject as any).replacement));
 		} else return null;
@@ -134,7 +137,7 @@ class Proof {
 export abstract class ProofLine {
 	abstract validate(proof: Proof, index: number): boolean;
 	abstract key(): string;
-	abstract getLineDescription(localizer: (key: string, content: {}) => string, proof: Proof): string;
+	abstract getLineDescription(localizer: (key: string, content: {}) => string, proof: Proof, index: number): string;
 	abstract getProvedFormula(): Formula | null;
 	abstract getRequiredFormulas(): Formula[];
 	abstract toJsonObject(): {};
@@ -152,7 +155,7 @@ export class UnprovedFormulaLine extends ProofLine {
 	key(): string {
 		return "UnprovedFormulaLine/" + this.formula.toCode();
 	}
-	getLineDescription(localizer: (key: string, content: {}) => string, _: Proof): string {
+	getLineDescription(localizer: (key: string, content: {}) => string, _proof: Proof, _index: number): string {
 		return localizer("ProofLine.FormulaLine.Description", {});
 	}
 	getProvedFormula(): Formula | null {
@@ -169,10 +172,11 @@ export class UnprovedFormulaLine extends ProofLine {
 	}
 }
 
-export class ProvedFormulaLine {
+export class ProvedFormulaLine extends ProofLine {
 	formula: Formula;
 	deductionMethod: DeductionMethod;
 	constructor(formula: Formula, deductionMethod: DeductionMethod) {
+		super();
 		this.formula = formula;
 		this.deductionMethod = deductionMethod;
 	}
@@ -182,8 +186,8 @@ export class ProvedFormulaLine {
 	key(): string {
 		return "ProvedFormulaLine/" + this.formula.toCode() + "/" + this.deductionMethod.key();
 	}
-	getLineDescription(localizer: (key: string, content: {}) => string, proof: Proof): string {
-		return this.deductionMethod.getLongDescription(localizer, proof);
+	getLineDescription(localizer: (key: string, content: {}) => string, proof: Proof, index: number): string {
+		return this.deductionMethod.getLongDescription(localizer, proof, index);
 	}
 	getProvedFormula(): Formula | null {
 		return this.formula;
@@ -203,10 +207,15 @@ export class ProvedFormulaLine {
 export abstract class DeductionMethod {
 	abstract validate(proof: Proof, index: number): boolean;
 	abstract key(): string;
-	abstract getShortDescription(localizer: (key: string, content: {}) => string, proof: Proof): string;
-	abstract getLongDescription(localizer: (key: string, content: {}) => string, proof: Proof): string;
+	abstract getShortDescription(localizer: (key: string, content: {}) => string, proof: Proof, index: number): string;
+	abstract getLongDescription(localizer: (key: string, content: {}) => string, proof: Proof, index: number): string;
 	abstract getRequiredFormulas(): Formula[];
 	abstract toJsonObject(): {};
+	expandable(): boolean {
+		return false;
+	}
+	expand(_proof: Proof, _index: number, _getLevelProof: (chapterId: string, levelId: string) => Proof | null) {
+	}
 }
 
 export class ByAxiom extends DeductionMethod {
@@ -217,10 +226,10 @@ export class ByAxiom extends DeductionMethod {
 	key(): string {
 		return "ByAxiom";
 	}
-	getShortDescription(localizer: (key: string, content: {}) => string, _: Proof): string {
+	getShortDescription(localizer: (key: string, content: {}) => string, _proof: Proof, _index: number): string {
 		return localizer("DeductionMethod.ByAxiom.ShortDescription", {});
 	}
-	getLongDescription(localizer: (key: string, content: {}) => string, _: Proof): string {
+	getLongDescription(localizer: (key: string, content: {}) => string, _proof: Proof, _index: number): string {
 		return localizer("DeductionMethod.ByAxiom.LongDescription", {});
 	}
 	getRequiredFormulas(): Formula[] {
@@ -241,10 +250,10 @@ export class ByLogicAxiom extends DeductionMethod {
 	key(): string {
 		return "ByLogicAxiom";
 	}
-	getShortDescription(localizer: (key: string, content: {}) => string, _: Proof): string {
+	getShortDescription(localizer: (key: string, content: {}) => string, _proof: Proof, _index: number): string {
 		return localizer("DeductionMethod.ByLogicAxiom.ShortDescription", {});
 	}
-	getLongDescription(localizer: (key: string, content: {}) => string, _: Proof): string {
+	getLongDescription(localizer: (key: string, content: {}) => string, _proof: Proof, _index: number): string {
 		return localizer("DeductionMethod.ByLogicAxiom.LongDescription", {});
 	}
 	getRequiredFormulas(): Formula[] {
@@ -312,6 +321,45 @@ export class ByDeduction extends DeductionMethod {
 			type: "ByDeduction",
 			formula: this.implies.toCode()
 		};
+	}
+}
+
+export class ByLogicTheorem extends DeductionMethod {
+	getLogicTheorem(proof: Proof, index: number): UnlockableTheorem | undefined {
+		const formulaLine: ProvedFormulaLine = proof.lines[index] as ProvedFormulaLine;
+		return proof.level.meta.logicSystem.getUnlockedLogicTheorems(proof.level).find(logicTheorem => logicTheorem.theorem.getFormulasFromAxiom(formulaLine.formula) != null);
+	}
+	validate(proof: Proof, index: number): boolean {
+		return this.getLogicTheorem(proof, index) !== undefined;
+	}
+	key(): string {
+		return "ByLogicTheorem";
+	}
+	getShortDescription(localizer: (key: string, content: {}) => string, _proof: Proof, _index: number): string {
+		return localizer("DeductionMethod.ByLogicTheorem.ShortDescription", {});
+	}
+	getLongDescription(localizer: (key: string, content: {}) => string, _proof: Proof, _index: number): string {
+		return localizer("DeductionMethod.ByLogicTheorem.LongDescription", {});
+	}
+	getRequiredFormulas(): Formula[] {
+		return [];
+	}
+	toJsonObject(): {} {
+		return {
+			type: "ByLogicTheorem"
+		};
+	}
+	override expandable(): boolean {
+		return true;
+	}
+	override expand(proof: Proof, index: number, getLevelProof: (chapterId: string, levelId: string) => Proof | null): void {
+		const theorem: UnlockableTheorem | undefined = this.getLogicTheorem(proof, index);
+		if (theorem != undefined) {
+			const theoremProof: Proof | null = getLevelProof(theorem.theorem.chapterId, theorem.theorem.levelId);
+			if (theoremProof !== null && theoremProof.validate()) {
+				
+			}
+		}
 	}
 }
 

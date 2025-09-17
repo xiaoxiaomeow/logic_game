@@ -8,9 +8,10 @@
     "LevelSelector.Level": "Level: ",
     "ErrorMessage.Title": "Error Message",
     "Inventory.Title": "Inventory",
+    "Inventory.ProofMethods": "Proofs",
     "Inventory.Axioms": "Axioms",
     "Inventory.LogicAxioms": "Logic Axioms",
-    "Inventory.ProofMethods": "Proofs",
+    "Inventory.LogicTheorems": "Logic Theorems",
     "ProofBoard.Statement": "Statement",
     "ProofBoard.Language": "Language",
     "ProofBoard.Axioms": "Axioms",
@@ -36,6 +37,8 @@
     "DeductionMethod.ByLogicAxiom.LongDescription": "The formula on this line is a logic axiom.",
     "DeductionMethod.ByDeduction.ShortDescription": "deduction using ({{impliesIndex}}) ({{phiIndex}})",
     "DeductionMethod.ByDeduction.LongDescription": "The formula on this line is obtained by ({{impliesIndex}}) and ({{phiIndex}}) using deduction.",
+    "DeductionMethod.ByLogicTheorem.ShortDescription": "logic theorem",
+    "DeductionMethod.ByLogicTheorem.LongDescription": "The formula on this line is a logic theorem.",
     "DeductionMethod.BySubstitution.ShortDescription": "substituting {{atomicFormula}} in ({{formulaIndex}})",
     "DeductionMethod.BySubstitution.LongDescription": "The formula on this line is obtained by substituting {{atomicFormula}} with ${{replacement}}$ in ({{formulaIndex}})",
     "ProofMethod.Axiom.Name": "Axiom",
@@ -58,5 +61,6 @@
     "Level.PropositionalLogic.LogicAxiom.Name": "Logic Axiom",
     "Level.PropositionalLogic.Theorem.Name": "Theorem",
 	"AxiomSchema.Weakening.Name": "$\\varphi\\to\\psi\\to\\varphi$",
-	"AxiomSchema.Chain.Name": "$(\\varphi\\to\\psi\\to\\chi)\\to(\\varphi\\to\\psi)\\to\\varphi\\to\\chi$"
+	"AxiomSchema.Chain.Name": "$(\\varphi\\to\\psi\\to\\chi)\\to(\\varphi\\to\\psi)\\to\\varphi\\to\\chi$",
+	"TheoremSchema.Identity.Name": "$p\\to p$"
 }

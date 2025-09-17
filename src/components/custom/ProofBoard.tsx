@@ -99,7 +99,7 @@ function LevelInfo(props: ProofBoardInput) {
 			</HStack>
 			{level.meta.axioms.length > 0 ? <HStack width="100%">
 				<Text fontWeight="bold">{t("ProofBoard.Axioms")}</Text>
-				<MarkdownWithLatex>{level.meta.axioms.map(axiom => t(axiom.name)).join(", ")}</MarkdownWithLatex>
+				<MarkdownWithLatex>{level.meta.axioms.map(axiom => t(axiom.getName())).join(", ")}</MarkdownWithLatex>
 			</HStack> : null}
 			<HStack width="100%">
 				<Text fontWeight="bold">{t("ProofBoard.Target")}</Text>
@@ -148,7 +148,7 @@ function ProofEditor() {
 								if (line instanceof ProvedFormulaLine) return (
 									<Flex justifyContent="space-between">
 										<FormulaLatex formula={line.formula}></FormulaLatex>
-										<MarkdownWithLatex>{line.deductionMethod.getShortDescription((key: string, content: {}) => t(key, content), proof)}</MarkdownWithLatex>
+										<MarkdownWithLatex>{line.deductionMethod.getShortDescription((key: string, content: {}) => t(key, content), proof, index)}</MarkdownWithLatex>
 									</Flex>
 								);
 								else if (line instanceof UnprovedFormulaLine) return (

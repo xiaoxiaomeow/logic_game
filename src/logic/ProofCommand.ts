@@ -1,7 +1,8 @@
 import type { AxiomSchema } from "./Axiom";
 import { AtomicFormula, Formula, Implies } from "./Formula";
 import type Proof from "./Proof";
-import { ByAxiom, ByDeduction, ByLogicAxiom, BySubstitution, ProofLine, ProvedFormulaLine, UnprovedFormulaLine } from "./Proof";
+import { ByAxiom, ByDeduction, ByLogicAxiom, ByLogicTheorem, BySubstitution, ProofLine, ProvedFormulaLine, UnprovedFormulaLine } from "./Proof";
+import type { TheoremSchema } from "./Theorem";
 import type { PrereqInfo, UnlockTreeItem } from "./Unlockables";
 
 export interface ExcecutionResult {
@@ -78,7 +79,7 @@ export class AxiomSchemaCommand extends ProofCommand {
 		}
 		if (axiomSchema != null) {
 			if (!axiomSchema.verifyFormulas(this.formulas)) return { success: false, errorMessage: `The formula cannot be substitute into the axiom schema.` };
-			const formula: Formula = axiomSchema.getAxiomFromFormulas(this.formulas);
+			const formula: Formula | null = axiomSchema.getAxiomFromFormulas(this.formulas);
 			const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula, new ByAxiom());
 			return { success: true, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
 		}
@@ -131,6 +132,58 @@ export class DeductionCommand extends ProofCommand {
 			const newLine: ProvedFormulaLine = new ProvedFormulaLine(psi, new ByDeduction(formula));
 			return { success: true, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
 		} else return { success: false, errorMessage: `The formula $${formula.toLatex()}$ is not of the form $\\varphi\\implies\\psi$.` }
+	}
+}
+
+export class TheoremCommand extends ProofCommand {
+	formula: Formula | number;
+	constructor(formula: Formula | number) {
+		super([]);
+		this.formula = formula;
+	}
+	override excecute(proof: Proof, lineIndex: number): Partial<ExcecutionResult> {
+		let formula: Formula;
+		if (typeof (this.formula) === "number") {
+			if (0 <= this.formula && this.formula < proof.lines.length) {
+				const proofLine: ProofLine = proof.lines[this.formula];
+				const provedFormula: Formula | null = proofLine.getProvedFormula();
+				if (provedFormula != null) formula = provedFormula;
+				else return { success: false, errorMessage: `Line ${this.formula} does not prove any formula.` }
+			}
+			else return { success: false, errorMessage: `Line ${this.formula} does not exist in the proof.` };
+		}
+		else formula = this.formula;
+
+		if (proof.level.meta.logicSystem.getUnlockedLogicTheorems(proof.level).some(logicTheorem => logicTheorem.theorem.getFormulasFromAxiom(formula) != null)) {
+			const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula, new ByLogicTheorem());
+			return { success: true, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
+		} else return { success: false, errorMessage: `Formula $${formula.toLatex()}$ is not a theorem.` };
+	}
+}
+
+export class TheoremSchemaCommand extends ProofCommand {
+	code: string;
+	formulas: Formula[];
+	constructor(code: string, formulas: Formula[]) {
+		super([{ type: "level", chapterId: "00_propositional_logic", levelId: "02_association" }]);
+		this.code = code;
+		this.formulas = formulas;
+	}
+	override excecute(proof: Proof, lineIndex: number): Partial<ExcecutionResult> {
+		let logicTheoremSchema: TheoremSchema | null = null;
+		for (const theorem of proof.level.meta.logicSystem.getUnlockedLogicTheorems(proof.level).map(logicTheorem => logicTheorem.theorem)) {
+			if (theorem.codes.some(code => code === this.code)) {
+				logicTheoremSchema = theorem;
+				break;
+			}
+		}
+		if (logicTheoremSchema != null) {
+			if (!logicTheoremSchema.verifyFormulas(this.formulas)) return { success: false, errorMessage: `The formula cannot be substitute into the axiom schema.` };
+			const formula: Formula = logicTheoremSchema.getAxiomFromFormulas(this.formulas);
+			const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula, new ByLogicTheorem());
+			return { success: true, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
+		}
+		else return { success: false, errorMessage: `Theorem schema with code "${this.code}" not found.` };
 	}
 }
 

@@ -8,9 +8,10 @@
     "LevelSelector.Level": "关卡：",
     "ErrorMessage.Title": "错误信息",
     "Inventory.Title": "物品栏",
+    "Inventory.ProofMethods": "证明",
     "Inventory.Axioms": "公理",
     "Inventory.LogicAxioms": "逻辑公理",
-    "Inventory.ProofMethods": "证明",
+    "Inventory.LogicTheorems": "逻辑定理",
     "ProofBoard.Statement": "陈述",
     "ProofBoard.Language": "语言",
     "ProofBoard.Axioms": "公理",
@@ -36,6 +37,8 @@
     "DeductionMethod.ByLogicAxiom.LongDescription": "这一行上的公式是逻辑公理。",
     "DeductionMethod.ByDeduction.ShortDescription": "({{impliesIndex}}) ({{phiIndex}}) 推理",
     "DeductionMethod.ByDeduction.LongDescription": "这一行上的公式是由 ({{impliesIndex}}) 和 ({{phiIndex}}) 推理得到的。",
+    "DeductionMethod.ByLogicTheorem.ShortDescription": "逻辑定理",
+    "DeductionMethod.ByLogicTheorem.LongDescription": "这一行上的公式是逻辑定理。",
     "DeductionMethod.BySubstitution.ShortDescription": "替换 ({{formulaIndex}}) 中的 ${{atomicFormula}}$",
     "DeductionMethod.BySubstitution.LongDescription": "这一行上的公式是通过用 ${{replacement}}$ 替换 ({{formulaIndex}}) 中的 ${{atomicFormula}}$ 得到的。",
     "ProofMethod.Axiom.Name": "公理",
@@ -58,5 +61,6 @@
     "Level.PropositionalLogic.LogicAxiom.Name": "逻辑公理",
     "Level.PropositionalLogic.Theorem.Name": "定理",
 	"AxiomSchema.Weakening.Name": "$\\varphi\\to\\psi\\to\\varphi$",
-	"AxiomSchema.Chain.Name": "$(\\varphi\\to\\psi\\to\\chi)\\to(\\varphi\\to\\psi)\\to\\varphi\\to\\chi$"
+	"AxiomSchema.Chain.Name": "$(\\varphi\\to\\psi\\to\\chi)\\to(\\varphi\\to\\psi)\\to\\varphi\\to\\chi$",
+	"TheoremSchema.Identity.Name": "$p\\to p$"
 }

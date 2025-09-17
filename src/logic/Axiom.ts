@@ -5,23 +5,23 @@ export class AxiomSchema {
 	axiom: Formula;
 	freeFormulaVariables: AtomicFormula[];
 
-	name: string;
+	name: string | null;
 	codes: string[];
 	description: string | null;
 	constructor(axiom: Formula, freeFormulaVariables: AtomicFormula[] = [], name: string | null = null, description: string | null = null, codes: string[] = []) {
 		this.axiom = axiom;
 		this.freeFormulaVariables = freeFormulaVariables;
-		this.name = name ?? `$${axiom.toLatex()}$`;
+		this.name = name;
 		this.codes = codes;
 		this.description = description;
+	}
+	getName(): string {
+		return this.name ?? `$${this.axiom.toLatex()}$`
 	}
 	verifyFormulas(formulas: Formula[]): boolean {
 		return formulas.length === this.freeFormulaVariables.length;
 	}
-	getAxiomFromFormulas(formulas: Formula[]): Formula | null {
-		if (!this.verifyFormulas(formulas)) {
-			return null;
-		}
+	getAxiomFromFormulas(formulas: Formula[]): Formula {
 		let result: Formula = this.axiom;
 		for (let i = 0; i < this.freeFormulaVariables.length; i++) {
 			result = result.replaceAtomicFormula(this.freeFormulaVariables[i], formulas[i]);
