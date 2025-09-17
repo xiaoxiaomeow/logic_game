@@ -11,7 +11,9 @@ import type { Level } from "@/logic/Level";
 function ConversationProgresser(props: { children: ReactNode }) {
 	const setConversationProgress: (progress: number) => void = useUIStore(state => state.setConversationProgress);
 	const conversationProgress: number = useUIStore(state => state.conversationProgress);
-	const proof: Proof | null = useUIStore(state => state.proof);
+	const proofs: Proof[] = useUIStore(state => state.proofs);
+	const displayingIndex: number = useUIStore(state => state.displayingIndex);
+	const proof: Proof | null = displayingIndex >= 0 ? proofs[displayingIndex] : null;
 	const level: Level | null = useUIStore(state => state.level);
 	const children: ReactNode[] = React.Children.toArray(props.children);
 	useEffect(() => {

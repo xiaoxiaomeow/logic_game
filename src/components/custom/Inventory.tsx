@@ -2,14 +2,16 @@ import { useUIStore } from "@/contexts/UIStore";
 import type { LogicAxiom } from "@/logic/LogicSystem";
 import type Proof from "@/logic/Proof";
 import getUnlockedProofMethods, { ProofMethod } from "@/logic/ProofMethod";
-import { isHardUnlocked } from "@/logic/Unlockables";
 import { Button, Flex, Tabs, Text, VStack, Wrap } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import MarkdownWithLatex from "./MarkdownWithLatex";
 import { SingleAxiom } from "@/logic/AxiomSchema";
+import { isUnlocked } from "@/logic/Unlockables";
 
 function Inventory() {
-	const proof: Proof | null = useUIStore(state => state.proof);
+	const proofs: Proof[] = useUIStore(state => state.proofs);
+	const displayingIndex: number = useUIStore(state => state.displayingIndex);
+	const proof: Proof | null = displayingIndex >= 0 ? proofs[displayingIndex] : null;
 	const level = useUIStore(state => state.level);
 	const setInputCommand: (command: string) => void = useUIStore(state => state.setInputCommand);
 	const t = useTranslation().t;
@@ -56,7 +58,7 @@ function Inventory() {
 					{proof != null && proofMethods.length > 0 ? <Tabs.Content value="proofMethods" padding="8px 8px">
 						<Wrap>
 							{proofMethods.map(method => (
-								<Button key={method.name} disabled={!isHardUnlocked(method, level)} size="sm" onClick={event => {
+								<Button key={method.name} disabled={!isUnlocked(method, level)} size="sm" onClick={event => {
 									setInputCommand(method.getCommand(proof));
 									event.stopPropagation();
 								}}>

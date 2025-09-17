@@ -23,9 +23,6 @@ export class Chapter implements UnlockTreeItem {
 	isMet(): Boolean {
 		return this.levels.every(level => level.isMet() || level.meta.type !== "main");
 	}
-	isHardMet(): Boolean {
-		return this.levels.every(level => level.isHardMet() || level.meta.type !== "main");
-	}
 	getPrereqs(): PrereqInfo[] {
 		return this.meta.prereqs;
 	}

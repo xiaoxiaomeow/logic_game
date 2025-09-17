@@ -2,7 +2,6 @@ import { HStack, VStack } from '@chakra-ui/react';
 import { Outlet } from 'react-router-dom';
 
 import Header from './Header';
-import Footer from './Footer';
 import type { ReactNode } from 'react';
 
 function Layout() {
@@ -10,7 +9,6 @@ function Layout() {
 		<VStack height="100%" gap="0">
 			<Header></Header>
 			<Outlet></Outlet>
-			<Footer></Footer>
 		</VStack>
 	);
 }

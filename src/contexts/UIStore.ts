@@ -1,6 +1,6 @@
-import type { Formula } from '@/logic/Formula';
+import { Formula } from '@/logic/Formula';
 import type { Level } from '@/logic/Level';
-import type Proof from '@/logic/Proof';
+import Proof from '@/logic/Proof';
 import { create, type StoreApi, type UseBoundStore } from 'zustand';
 
 export interface UIStore {
@@ -20,8 +20,12 @@ export interface UIStore {
 	previousFormula: () => void;
 	nextFormula: () => void;
 	clearFormulas: () => void;
-	proof: Proof | null;
-	setProof: (proof: Proof | null) => void;
+	proofs: Proof[];
+	displayingIndex: number;
+	setProof: (proof: Proof) => void;
+	undo: () => void;
+	redo: () => void;
+	clearProofs: () => void;
 	lineIndex: number;
 	setLineIndex: (lineIndex: number) => void;
 	inputCommand: string;
@@ -59,8 +63,36 @@ export const useUIStore: UseBoundStore<StoreApi<UIStore>> = create<UIStore>(set 
 		else return {};
 	}),
 	clearFormulas: () => set({ formulas: [], inspectingIndex: -1 }),
-	proof: null,
-	setProof: (proof: Proof | null) => set({ proof: proof }),
+	proofs: [],
+	displayingIndex: -1,
+	setProof: (proof: Proof) => set((state: UIStore) => {
+		console.log(state.displayingIndex);
+		console.log(state.proofs);
+		console.log(proof);
+		const proofs: Proof[] = state.proofs.slice(0, state.displayingIndex + 1);
+		proofs.push(proof);
+		return { proofs: proofs, displayingIndex: proofs.length - 1 };
+	}),
+	undo: () => set((state: UIStore) => {
+		console.log(state.displayingIndex);
+		console.log(state.proofs);
+		if (state.displayingIndex > 0) return {
+			displayingIndex: state.displayingIndex - 1,
+			lineIndex: Math.min(state.lineIndex, state.proofs[state.displayingIndex - 1].lines.length - 1)
+		};
+		else return {};
+	}),
+	redo: () => set((state: UIStore) => {
+		if (state.displayingIndex < state.proofs.length - 1) return {
+			displayingIndex: state.displayingIndex + 1,
+			lineIndex: Math.min(state.lineIndex, state.proofs[state.displayingIndex + 1].lines.length - 1)
+		};
+		else return {};
+	}),
+	clearProofs: () => set((state: UIStore) => {
+		state.proofs = state.proofs.slice(0, state.displayingIndex + 1);
+		return { proofs: [], displayingIndex: -1 };
+	}),
 	lineIndex: -1,
 	setLineIndex: (lineIndex: number) => set({ lineIndex: lineIndex }),
 	inputCommand: "",

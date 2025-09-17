@@ -15,7 +15,6 @@ export interface LevelMeta {
 	target: Formula;
 	type: "main" | "side" | "joke";
 	prereqs: PrereqInfo[];
-	hardPrereqs: PrereqInfo[];
 }
 
 export interface LevelModule {
@@ -38,14 +37,8 @@ export class Level implements UnlockTreeItem {
 	isMet(): Boolean {
 		return this.isCompleteOrModified();
 	}
-	isHardMet(): Boolean {
-		return this.isComplete();
-	}
 	getPrereqs(): PrereqInfo[] {
 		return this.meta.prereqs;
-	}
-	getHardPrereqs(): PrereqInfo[] {
-		throw this.meta.hardPrereqs;
 	}
 	isComplete(): Boolean {
 		return getLevelState(this) === "complete";

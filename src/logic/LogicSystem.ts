@@ -24,9 +24,6 @@ export class LogicAxiom implements UnlockTreeItem {
 	isMet(): Boolean {
 		return true;
 	}
-	isHardMet(): Boolean {
-		return true;
-	}
 	getPrereqs(): Partial<PrereqInfo>[] {
 		return this.prereq;
 	}

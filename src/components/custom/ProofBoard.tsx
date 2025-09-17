@@ -4,7 +4,7 @@ import FormulaLatex from "./FormulaLatex";
 import MarkdownWithLatex from "./MarkdownWithLatex";
 import Proof, { UnprovedFormulaLine, ProofLine, ProvedFormulaLine } from "@/logic/Proof";
 import { useUIStore } from "@/contexts/UIStore";
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { FaChevronRight, FaRegTrashAlt } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { useTranslation } from "react-i18next";
@@ -20,8 +20,11 @@ export interface ProofBoardInput {
 function ProofBoard(props: ProofBoardInput) {
 	const level: Level = props.level;
 	const key: string = level.chapter.meta.id + "/" + level.meta.id;
-	const proof: Proof | null = useUIStore(state => state.proof);
-	const setProof: (proof: Proof | null) => void = useUIStore(state => state.setProof);
+	const proofs: Proof[] = useUIStore(state => state.proofs);
+	const displayingIndex: number = useUIStore(state => state.displayingIndex);
+	const proof: Proof | null = displayingIndex >= 0 ? proofs[displayingIndex] : null;
+	const setProof: (proof: Proof) => void = useUIStore(state => state.setProof);
+	const clearProofs: () => void = useUIStore(state => state.clearProofs);
 	const navigate = useNavigate();
 	useEffect(() => {
 		const jsonString = localStorage.getItem(key);
@@ -30,6 +33,7 @@ function ProofBoard(props: ProofBoardInput) {
 			json = JSON.parse(jsonString) as { type: string }[];
 		}
 		const proof: Proof = new Proof(level, level.meta.axioms, level.meta.target, null, json);
+		clearProofs();
 		setProof(proof);
 	}, []);
 	useEffect(() => {
@@ -106,32 +110,16 @@ function LevelInfo(props: ProofBoardInput) {
 }
 
 function ProofEditor() {
-	const proof: Proof | null = useUIStore(state => state.proof);
-	const setProof: (proof: Proof | null) => void = useUIStore(state => state.setProof);
+	const proofs: Proof[] = useUIStore(state => state.proofs);
+	const displayingIndex: number = useUIStore(state => state.displayingIndex);
+	const proof: Proof | null = displayingIndex >= 0 ? proofs[displayingIndex] : null;
+	const setProof: (proof: Proof) => void = useUIStore(state => state.setProof);
 	const lineIndex = useUIStore(state => state.lineIndex);
 	const setLineIndex = useUIStore(state => state.setLineIndex);
 	const t = useTranslation().t;
-	const keydown: (event: KeyboardEvent) => void = useCallback(
-		(event: KeyboardEvent) => {
-			if (proof != null && event.key === "ArrowUp" && lineIndex > 0) {
-				setLineIndex(lineIndex - 1);
-				event.stopPropagation();
-			}
-			if (proof != null && event.key === "ArrowDown" && lineIndex < proof.lines.length - 1) {
-				setLineIndex(lineIndex + 1);
-				event.stopPropagation();
-			}
-		}, [proof, lineIndex]
-	);
 	useEffect(() => {
 		setLineIndex(0);
 	}, []);
-	useEffect(() => {
-		document.addEventListener("keydown", keydown);
-		return () => {
-			document.removeEventListener("keydown", keydown);
-		}
-	}, [proof, lineIndex]);
 	if (proof != null) return (
 		<VStack padding="8px 8px" marginBottom="auto">
 			<Table.Root variant="line" size="sm">
@@ -175,9 +163,10 @@ function ProofEditor() {
 							<Table.Cell borderBottomWidth={0} padding="4px">{(() => {
 								if (line instanceof ProvedFormulaLine) return (
 									<IconButton size="2xs" variant="ghost" onClick={event => {
-										const newIndex = proof.remove(index);
+										const proofCopy = proof.copy();
+										const newIndex = proofCopy.remove(index);
+										setProof(proofCopy);
 										setLineIndex(newIndex);
-										setProof(proof.copy());
 										event.stopPropagation();
 									}}>
 										<FaRegTrashAlt />
@@ -185,9 +174,10 @@ function ProofEditor() {
 								);
 								if (line instanceof UnprovedFormulaLine) return (
 									<IconButton size="2xs" variant="ghost" disabled={proof.isFormulaRequired(line.formula, index)} onClick={event => {
-										const newIndex = proof.remove(index);
+										const proofCopy = proof.copy();
+										const newIndex = proofCopy.remove(index);
+										setProof(proofCopy);
 										setLineIndex(newIndex);
-										setProof(proof.copy());
 										event.stopPropagation();
 									}}>
 										<FaRegTrashAlt />
@@ -209,8 +199,10 @@ function CommandEditor() {
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const inputCommand: string = useUIStore(state => state.inputCommand);
 	const setInputCommand: (command: string) => void = useUIStore(state => state.setInputCommand);
-	const proof: Proof | null = useUIStore(state => state.proof);
-	const setProof = useUIStore(state => state.setProof);
+	const proofs: Proof[] = useUIStore(state => state.proofs);
+	const displayingIndex: number = useUIStore(state => state.displayingIndex);
+	const proof: Proof | null = displayingIndex >= 0 ? proofs[displayingIndex] : null;
+	const setProof: (proof: Proof) => void = useUIStore(state => state.setProof);
 	const lineIndex = useUIStore(state => state.lineIndex);
 	const setLineIndex = useUIStore(state => state.setLineIndex);
 	const setErrorMessage = useUIStore(state => state.setErrorMessage);
@@ -222,12 +214,13 @@ function CommandEditor() {
 	const canExcecute: boolean = proof != null && lineIndex >= 0 && lineIndex < proof.lines.length;
 	const excecute: () => void = () => {
 		if (proof != null && canExcecute) {
-			const result: Partial<ExcecutionResult> = proof.excecute(inputCommand, lineIndex);
+			const proofCopy = proof.copy();
+			const result: Partial<ExcecutionResult> = proofCopy.excecute(inputCommand, lineIndex);
 			if (result.success) {
 				setErrorMessage("");
 				setInputCommand("");
 				if (result.newLineIndex != null) setLineIndex(result.newLineIndex);
-				setProof(proof.copy());
+				setProof(proofCopy);
 			}
 			else if (result.errorMessage != null) {
 				console.log(result.errorMessage);

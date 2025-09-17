@@ -6,7 +6,9 @@ import Proof, { UnprovedFormulaLine, ProvedFormulaLine, type ProofLine } from "@
 import { useTranslation } from "react-i18next";
 
 function LineInspector() {
-	const proof: Proof | null = useUIStore(state => state.proof);
+	const proofs: Proof[] = useUIStore(state => state.proofs);
+	const displayingIndex: number = useUIStore(state => state.displayingIndex);
+	const proof: Proof | null = displayingIndex >= 0 ? proofs[displayingIndex] : null;
 	const lineIndex: number = useUIStore(state => state.lineIndex);
 	const proofLine: ProofLine | null = (proof != null && 0 <= lineIndex && lineIndex < proof.lines.length) ? proof.lines[lineIndex] : null;
 	const t = useTranslation().t;

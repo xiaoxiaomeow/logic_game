@@ -8,7 +8,6 @@ import type { Level } from "@/logic/Level";
 import Welcome from "@/data/Welcome.mdx";
 import { useNavigate } from "react-router-dom";
 import Inventory from "@/components/custom/Inventory";
-import type Proof from "@/logic/Proof";
 import { useTranslation } from "react-i18next";
 import { getLevelState } from "@/logic/LevelState";
 import { MDXComponents } from "@/components/ui/provider";
@@ -19,12 +18,12 @@ function LevelSelectorPage() {
 	const setChapterName: (chapterName: string) => void = useUIStore(state => state.setChapterName);
 	const setLevelName: (levelName: string) => void = useUIStore(state => state.setLevelName);
 	const clearFormulas: () => void = useUIStore(state => state.clearFormulas);
-	const setProof: (proof: Proof | null) => void = useUIStore(state => state.setProof);
+	const clearProofs: () => void = useUIStore(state => state.clearProofs);
 	const setLevel = useUIStore(state => state.setLevel);
 	const t = useTranslation().t;
 	useEffect(() => {
 		clearFormulas();
-		setProof(null);
+		clearProofs();
 		setLevel(null);
 	}, []);
 	useEffect(() => {

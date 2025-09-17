@@ -3,7 +3,7 @@ import { AtomicFormula, Implies, type Formula } from "./Formula";
 import type { Level } from "./Level";
 import { parseCommand, parseFormula } from "./Parser";
 import type { ExcecutionResult, ProofCommand } from "./ProofCommand";
-import { isHardUnlocked } from "./Unlockables";
+import { isUnlocked } from "./Unlockables";
 
 class Proof {
 	level: Level;
@@ -54,7 +54,7 @@ class Proof {
 	excecute(input: string, lineIndex: number): Partial<ExcecutionResult> {
 		try {
 			const command: ProofCommand = parseCommand(input);
-			if (isHardUnlocked(command, this.level)) return command.excecute(this, lineIndex);
+			if (isUnlocked(command, this.level)) return command.excecute(this, lineIndex);
 			else return { success: false, errorMessage: "The command is not unlocked. "}
 		} catch (error) {
 			if (error instanceof Error) {
@@ -127,7 +127,7 @@ class Proof {
 		} else return null;
 	}
 	copy(): Proof {
-		return new Proof(this.level, this.axioms, this.target, this.lines, null);
+		return new Proof(this.level, this.axioms, this.target, [... this.lines], null);
 	}
 }
 
