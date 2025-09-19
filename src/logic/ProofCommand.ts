@@ -217,7 +217,7 @@ export class SubstitutionCommand extends ProofCommand {
 				lineIndex++;
 			}
 
-			const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula.replaceAtomicFormula(this.atomicFormula, this.replacement), new BySubstitution(formula, this.atomicFormula, this.replacement));
+			const newLine: ProvedFormulaLine = new ProvedFormulaLine(formula.replaceAtomicFormula([this.atomicFormula], [this.replacement]), new BySubstitution(formula, this.atomicFormula, this.replacement));
 			return { success: true, newLineIndex: proof.provideProvedLine(newLine, lineIndex) }
 		} else return { success: false, errorMessage: `The formula $${this.atomicFormula.toLatex()}$ is not an atomic formula.` }
 	}

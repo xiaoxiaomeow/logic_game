@@ -84,7 +84,7 @@ class Parser extends CstParser {
 	private axiomSchema = this.RULE("axiomSchema", () => {
 		this.CONSUME(AxiomToken);
 		this.CONSUME(ReferenceToken);
-		this.AT_LEAST_ONE(() => this.SUBRULE(this.formula));
+		this.MANY(() => this.SUBRULE(this.formula));
 	});
 	private deduction = this.RULE("deduction", () => {
 		this.CONSUME(DeductionToken);
@@ -103,7 +103,7 @@ class Parser extends CstParser {
 	private theoremSchema = this.RULE("theoremSchema", () => {
 		this.CONSUME(TheoremToken);
 		this.CONSUME(ReferenceToken);
-		this.AT_LEAST_ONE(() => this.SUBRULE(this.formula));
+		this.MANY(() => this.SUBRULE(this.formula));
 	});
 	private substitution = this.RULE("substitution", () => {
 		this.CONSUME(SubstitutionToken);
@@ -230,7 +230,7 @@ class Visitor extends getParser().getBaseCstVisitorConstructorWithDefaults() {
 	}
 	axiomSchema(ctx: AxiomSchemaNode): ProofCommand {
 		const name = ctx.Reference[0].image.substring(1);
-		const formulas: Formula[] = ctx.formula.map(f => this.visit(f) as Formula);
+		const formulas: Formula[] = (ctx.formula ?? []).map(f => this.visit(f) as Formula);
 		return new AxiomSchemaCommand(name, formulas);
 	}
 	deduction(ctx: AxiomNode): ProofCommand {
@@ -255,7 +255,7 @@ class Visitor extends getParser().getBaseCstVisitorConstructorWithDefaults() {
 	}
 	theoremSchema(ctx: TheoremSchemaNode): ProofCommand {
 		const name = ctx.Reference[0].image.substring(1);
-		const formulas: Formula[] = ctx.formula.map(f => this.visit(f) as Formula);
+		const formulas: Formula[] = (ctx.formula ?? []).map(f => this.visit(f) as Formula);
 		return new TheoremSchemaCommand(name, formulas);
 	}
 	substitution(ctx: SubstitutionNode): ProofCommand {

@@ -59,8 +59,5 @@
     "Level.PropositionalLogic.Association.Name": "结合",
     "Level.PropositionalLogic.AxiomSchema.Name": "公理模式",
     "Level.PropositionalLogic.LogicAxiom.Name": "逻辑公理",
-    "Level.PropositionalLogic.Theorem.Name": "定理",
-	"AxiomSchema.Weakening.Name": "$\\varphi\\to\\psi\\to\\varphi$",
-	"AxiomSchema.Chain.Name": "$(\\varphi\\to\\psi\\to\\chi)\\to(\\varphi\\to\\psi)\\to\\varphi\\to\\chi$",
-	"TheoremSchema.Identity.Name": "$p\\to p$"
+    "Level.PropositionalLogic.Theorem.Name": "定理"
 }

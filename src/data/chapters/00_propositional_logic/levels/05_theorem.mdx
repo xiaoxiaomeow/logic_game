@@ -142,6 +142,21 @@ Done! Now whenever I need <FormulaLatex formula={ptop} />, I can just ask <Topaz
 </LocalizedMarkdown>
 </Speak>
 
+<Speak speaker="author">
+<LocalizedMarkdown locale="en">
+Using theorems is similar to using axioms. To produce a theorem, navigate to the Theorems tab of your Inventory, and click that theorem. Or you can directly type `theorem` or `the` followed by either
+- a formula that is a theorem. 
+- a `$` symbol followed by a line number where the formula on that line is a theorem. 
+</LocalizedMarkdown>
+<LocalizedMarkdown locale="zh">
+使用定理和使用公理类似。要制造一个定理，打开物品栏的定理面板，然后点击那个定理。或者你也可以直接输入 `theorem` 或 `the`，然后输入：
+- 一个是定理的公式，或
+- 一个 `$` 符号加上一个行号，对应的行上的公式需要是一个定理。
+</LocalizedMarkdown>
+</Speak>
+
+<ResumeUntil condition={ (level, _) => level.isCompleteOrModified() } text="ConversationProgresser.CompleteLevelToContinue"/>
+
 <Speak speaker="sapphire">
 <LocalizedMarkdown locale="en">
 Well, that is indeed a smarter way than aksing me to allow you to produce directly any previously proved formula. Let's just call any formula <Topaz /> remembers a **theorem**. What is important is that you being able to produce a theorem directly is neither a new axiom nor a new rule of the game: the game stays where it is. 
@@ -186,20 +201,5 @@ Sounds convincing.
 听起来很有说服力。
 </LocalizedMarkdown>
 </Speak>
-
-<Speak speaker="author">
-<LocalizedMarkdown locale="en">
-Using theorems is similar to using axioms. To produce a theorem, navigate to the Theorems tab of your Inventory, and click that theorem. Or you can directly type `theorem` or `the` followed by either
-- a formula that is a theorem. 
-- a `$` symbol followed by a line number where the formula on that line is a theorem. 
-</LocalizedMarkdown>
-<LocalizedMarkdown locale="zh">
-使用定理和使用公理类似。要制造一个定理，打开物品栏的定理面板，然后点击那个定理。或者你也可以直接输入 `theorem` 或 `the`，然后输入：
-- 一个是定理的公式，或
-- 一个 `$` 符号加上一个行号，对应的行上的公式需要是一个定理。
-</LocalizedMarkdown>
-</Speak>
-
-<ResumeUntil condition={ (level, _) => level.isCompleteOrModified() } text="ConversationProgresser.CompleteLevelToContinue"/>
 
 </ConversationProgresser>

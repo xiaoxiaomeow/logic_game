@@ -1,6 +1,6 @@
 export abstract class Formula {
 	abstract operatorPriority(): number;
-	abstract replaceAtomicFormula(atomicFormula: AtomicFormula, replacement: Formula): Formula;
+	abstract replaceAtomicFormula(atomicFormulas: AtomicFormula[], replacements: Formula[]): Formula;
 	abstract toCode(): string;
 	toCodeWithBracket(parentOperatorPriority: number): string {
 		if (this.operatorPriority() > parentOperatorPriority) return this.toCode();
@@ -52,8 +52,8 @@ export class Implies extends Formula {
 		this.phi = phi;
 		this.psi = psi;
 	}
-	replaceAtomicFormula(atomicFormula: AtomicFormula, replacement: Formula): Formula {
-		return new Implies(this.phi.replaceAtomicFormula(atomicFormula, replacement), this.psi.replaceAtomicFormula(atomicFormula, replacement));
+	replaceAtomicFormula(atomicFormulas: AtomicFormula[], replacements: Formula[]): Formula {
+		return new Implies(this.phi.replaceAtomicFormula(atomicFormulas, replacements), this.psi.replaceAtomicFormula(atomicFormulas, replacements));
 	}
 	operatorPriority(): number {
 		return 10;
@@ -98,8 +98,8 @@ export class Not extends Formula {
 		super();
 		this.phi = phi;
 	}
-	replaceAtomicFormula(atomicFormula: AtomicFormula, replacement: Formula): Formula {
-		return new Not(this.phi.replaceAtomicFormula(atomicFormula, replacement));
+	replaceAtomicFormula(atomicFormulas: AtomicFormula[], replacements: Formula[]): Formula {
+		return new Not(this.phi.replaceAtomicFormula(atomicFormulas, replacements));
 	}
 	operatorPriority(): number {
 		return 20;
@@ -141,8 +141,9 @@ export class AtomicFormula extends Formula {
 		super();
 		this.variableName = variableName;
 	}
-	replaceAtomicFormula(atomicFormula: AtomicFormula, replacement: Formula): Formula {
-		if (atomicFormula.equals(this)) return replacement;
+	replaceAtomicFormula(atomicFormulas: AtomicFormula[], replacements: Formula[]): Formula {
+		const index = atomicFormulas.findIndex(atomic => atomic.equals(this));
+		if (index != -1 && index < replacements.length) return replacements[index];
 		else return this;
 	}
 	operatorPriority(): number {

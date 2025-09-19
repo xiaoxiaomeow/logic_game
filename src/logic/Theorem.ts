@@ -5,8 +5,8 @@ import type { PrereqInfo, UnlockTreeItem } from "./Unlockables";
 export class TheoremSchema extends AxiomSchema {
 	chapterId: string;
 	levelId: string;
-	constructor(theorem: Formula, chapterId: string, levelId: string, freeFormulaVariables: AtomicFormula[] = [], name: string | null = null, description: string | null = null, codes: string[] = []) {
-		super(theorem, freeFormulaVariables, name, description, codes);
+	constructor(theorem: Formula, chapterId: string, levelId: string, freeFormulaVariables: AtomicFormula[] = [], codes: string[] = [], name: string | null = null, description: string | null = null) {
+		super(theorem, freeFormulaVariables, codes, name, description);
 		this.chapterId = chapterId;
 		this.levelId = levelId;
 	}
@@ -36,7 +36,5 @@ export const identity: TheoremSchema = new TheoremSchema(
 	"00_propositional_logic",
 	"04_logic_axiom",
 	[p],
-	"TheoremSchema.Identity.Name",
-	"TheoremSchema.Identity.Description",
 	["implies_identity", "imp_ide"]
 );

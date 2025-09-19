@@ -47,8 +47,8 @@ function Inventory() {
 						<Wrap>
 							{proof.axioms.map(axiom => (
 								<Button key={axiom.getName()} size="sm" onClick={event => {
-									if (axiom.freeFormulaVariables.length === 0) setInputCommand("axiom " + axiom.axiom.toCode());
-									else if (axiom.codes.length > 0) setInputCommand("axiom $" + axiom.codes[0] + " ");
+									if (axiom.codes.length > 0) setInputCommand("axiom $" + axiom.codes[0]);
+									else setInputCommand("axiom " + axiom.axiom.toCode());
 									event.stopPropagation();
 								}}>
 									<MarkdownWithLatex>{t(axiom.getName())}</MarkdownWithLatex>
@@ -60,8 +60,8 @@ function Inventory() {
 						<Wrap>
 							{logicAxioms.map(logicAxiom => logicAxiom.axiom).map(axiom => (
 								<Button key={axiom.getName()} size="sm" onClick={event => {
-									if (axiom.freeFormulaVariables.length === 0) setInputCommand("axiom " + axiom.axiom.toCode());
-									else if (axiom.codes.length > 0) setInputCommand("axiom $" + axiom.codes[0] + " ");
+									if (axiom.codes.length > 0) setInputCommand("axiom $" + axiom.codes[0]);
+									else setInputCommand("axiom " + axiom.axiom.toCode());
 									event.stopPropagation();
 								}}>
 									<MarkdownWithLatex>{t(axiom.getName())}</MarkdownWithLatex>

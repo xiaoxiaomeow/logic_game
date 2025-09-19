@@ -3,6 +3,7 @@ import { PropositionalLogic } from "/src/logic/LogicSystem";
 import { weakening } from "/src/logic/Axiom";
 
 export const p = parseFormula('p');
+export const q = parseFormula('q');
 export const ptoqtop = parseFormula('p->q->p');
 export const qtop = parseFormula('q->p');
 export const conclusion = weakening.getAxiomFromFormulas([qtop, p]);
@@ -117,10 +118,10 @@ That's it, well, for now. Later there will be some more. Back to the axiom schem
 <LocalizedMarkdown locale="en">
 To use an axiom schema, you can type `axiom` or `axi`, and then either: 
 
-- as before, provide a formula that matches any of the axiom achema given, or provide a line number to refer to such a formula. For instance, you can simply type `axiom p->q->p` to prove <FormulaLatex formula={ptoqtop} />. 
-- or, type a `$` symbol followed by the name of the axiom schema, in which case `weakening` or `wea` for the axiom schema in this level. Then you also need to provide two formulas specifying $\varphi$ and $\psi$. For instance, you can also type `axiom $weakening p q` to prove <FormulaLatex formula={ptoqtop} />. 
+- As before, provide a formula that matches any of the axiom achema given, or provide a line number to refer to such a formula. For instance, you can simply type `axiom p->q->p` to prove <FormulaLatex formula={ptoqtop} />. 
+- Or, type a `$` symbol followed by the name of the axiom schema, in which case `weakening` or `wea` for the axiom schema in this level. Then you also need to provide two formulas specifying $\varphi$ and $\psi$. For instance, you can also type `axiom $weakening p q` to prove <FormulaLatex formula={ptoqtop} />. 
 
-You can also click the axiom schema in the inventory to auto-fill `axiom $weakening `.
+You can also click the axiom schema in the inventory to auto-fill `axiom $weakening`. The axiom in the inventory is still displayed as <FormulaLatex formula={ptoqtop} />: If $\varphi$ and $\psi$ are not provided in the second case, they are automatically assigned to <FormulaLatex formula={p} /> and <FormulaLatex formula={q} />. 
 </LocalizedMarkdown>
 <LocalizedMarkdown locale="zh">
 要使用一个公理模式，你可以输入 `axiom` 或 `axi`，然后有两种方式：
@@ -128,7 +129,7 @@ You can also click the axiom schema in the inventory to auto-fill `axiom $weaken
 - 像之前一样，提供一个符合任意公理模式的公式，或者提供一个行号来引用这样的公式。比如说，你可以直接输入 `axiom p->q->p` 来证明 <FormulaLatex formula={ptoqtop} />。
 - 或者，输入一个 `$` 符号后跟公理模式的名字，对于这一关来说是 `weakening` 或 `wea`。然后你还需要提供两个公式来指定 $\varphi$ 和 $\psi$。比如说，你也可以输入 `axiom $weakening p q` 来证明 <FormulaLatex formula={ptoqtop} />。
 
-你也可以点击物品栏里的公理模式来自动填写 `axiom $weakening `。
+你也可以点击物品栏里的公理模式来自动填写 `axiom $weakening`。物品栏中的公理模式仍然写作 <FormulaLatex formula={ptoqtop} />：如果你在第二种使用方式中不提供 $\varphi$ 和 $\psi$，它们会被自动指定成 <FormulaLatex formula={p} /> 和 <FormulaLatex formula={q} />。
 </LocalizedMarkdown>
 </Speak>
 

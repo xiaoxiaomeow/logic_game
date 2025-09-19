@@ -4,29 +4,24 @@ import type { PrereqInfo, UnlockTreeItem } from "./Unlockables";
 export class AxiomSchema {
 	axiom: Formula;
 	freeFormulaVariables: AtomicFormula[];
-
-	name: string | null;
 	codes: string[];
+	name: string | null;
 	description: string | null;
-	constructor(axiom: Formula, freeFormulaVariables: AtomicFormula[] = [], name: string | null = null, description: string | null = null, codes: string[] = []) {
+	constructor(axiom: Formula, freeFormulaVariables: AtomicFormula[] = [], codes: string[] = [], name: string | null = null, description: string | null = null) {
 		this.axiom = axiom;
 		this.freeFormulaVariables = freeFormulaVariables;
-		this.name = name;
 		this.codes = codes;
+		this.name = name;
 		this.description = description;
 	}
 	getName(): string {
 		return this.name ?? `$${this.axiom.toLatex()}$`
 	}
-	verifyFormulas(formulas: Formula[]): boolean {
-		return formulas.length === this.freeFormulaVariables.length;
+	verifyFormulas(_formulas: Formula[]): boolean {
+		return true;
 	}
 	getAxiomFromFormulas(formulas: Formula[]): Formula {
-		let result: Formula = this.axiom;
-		for (let i = 0; i < this.freeFormulaVariables.length; i++) {
-			result = result.replaceAtomicFormula(this.freeFormulaVariables[i], formulas[i]);
-		}
-		return result;
+		return this.axiom.replaceAtomicFormula(this.freeFormulaVariables, formulas);
 	}
 	getFormulasFromAxiom(axiom: Formula): (Formula | null)[] | null {
 		return this.axiom.matches(axiom, this.freeFormulaVariables);
@@ -58,8 +53,6 @@ export const weakening: AxiomSchema = new AxiomSchema(
 		new Implies(q, p)
 	),
 	[p, q],
-	"AxiomSchema.Weakening.Name",
-	"AxiomSchema.Weakening.Description",
 	["weakening", "wea"]
 );
 export const chain: AxiomSchema = new AxiomSchema(
@@ -68,7 +61,5 @@ export const chain: AxiomSchema = new AxiomSchema(
 		new Implies(new Implies(p, q), new Implies(p, r))
 	),
 	[p, q, r],
-	"AxiomSchema.Chain.Name",
-	"AxiomSchema.Chain.Description",
 	["chain", "cha"]
 );
