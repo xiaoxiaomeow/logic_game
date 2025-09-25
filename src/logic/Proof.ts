@@ -382,7 +382,7 @@ export class BySubstitution extends DeductionMethod {
 	validate(proof: Proof, index: number): boolean {
 		const formulaLine: ProvedFormulaLine = proof.lines[index] as ProvedFormulaLine;
 		const formulaIndex = this.formulaIndex(proof);
-		return formulaIndex >= 0 && formulaIndex < index && formulaLine.formula.equals(this.formula.replaceAtomicFormula(this.atomicFormula, this.replacement));
+		return formulaIndex >= 0 && formulaIndex < index && formulaLine.formula.equals(this.formula.replaceAtomicFormula([this.atomicFormula], [this.replacement]));
 	}
 	key(): string {
 		return "BySubstitution/" + this.formula.toCode() + "/" + this.atomicFormula.toCode() + "/" + this.replacement.toCode();
